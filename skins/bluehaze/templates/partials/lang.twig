@@ -1,0 +1,12 @@
+{% set locales = {'pl_PL': 'PL', 'en_US': 'US'} %}
+
+  
+
+
+    {% for locale, name in locales %}
+		{% if locale() != locale %}
+			<li class="nav-item active"><a class="nav-link" href="{{ base_url() }}/translate/{{ locale }}"><img src="{{ base_url() }}/public/flags/{{ locale }}.png" alt="{{ name }}"></a></li>
+		{% endif %}
+	{% endfor %}
+
+ 

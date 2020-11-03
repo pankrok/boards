@@ -1,0 +1,114 @@
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+  <a class="navbar-brand" href="#">Admin Panel</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarCollapse"
+    aria-controls="navbarCollapse"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto sidenav" id="navAccordion">
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path_for('admin.home') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link nav-link-collapse"
+          href="#"
+          id="hasSubItems"
+          data-toggle="collapse"
+          data-target="#collapseSubItems1"
+          aria-controls="collapseSubItems1"
+          aria-expanded="false"
+        ><i class="fas fa-cogs"></i> {{ trans('configuration') }}</a>
+        <ul class="nav-second-level collapse" id="collapseSubItems1" data-parent="#navAccordion">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path_for('admin.settings') }}">
+              <span class="nav-link-text"><i class="fas fa-sliders-h"></i> {{ trans('settings') }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="nav-link-text"><i class="fas fa-puzzle-piece"></i> {{ trans('plugins') }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link nav-link-collapse"
+          href="#"
+          id="hasSubItems"
+          data-toggle="collapse"
+          data-target="#collapseSubItems2"
+          aria-controls="collapseSubItems2"
+          aria-expanded="false"
+        ><i class="fas fa-list-alt"></i> {{ trans('board') }}</a>
+        <ul class="nav-second-level collapse" id="collapseSubItems2" data-parent="#navAccordion">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path_for('admin.managment') }}">
+              <span class="nav-link-text"><i class="fas fa-tasks"></i> {{ trans('managment') }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="nav-link-text"><i class="fa fa-bullhorn"></i> {{ trans('annoucments') }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="nav-link-text"><i class="fas fa-bell"></i> {{ trans('notification') }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+       <li class="nav-item">
+        <a
+          class="nav-link nav-link-collapse"
+          href="#"
+          id="hasSubItems"
+          data-toggle="collapse"
+          data-target="#collapseSubItems3"
+          aria-controls="collapseSubItems3"
+          aria-expanded="false"
+        ><i class="fas fa-users-cog"></i> {{ trans('users, groups') }}</a>
+        <ul class="nav-second-level collapse" id="collapseSubItems3" data-parent="#navAccordion">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="nav-link-text"><i class="fas fa-users"></i> {{ trans('users') }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="nav-link-text"><i class="fas fa-object-group"></i> {{ trans('groups') }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="nav-link-text"><i class="fas fa-toggle-off"></i> {{ trans('awaiting for activation') }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="nav-link-text"><i class="fas fa-ban"></i> {{ trans('banned') }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+	   <li class="nav-item">
+            <a class="nav-link" href="{{ path_for('admin.auth.signout') }}">
+              <span class="nav-link-text"><i class="fas fa-sign-out-alt"></i> {{ trans('Log out') }}</span>
+            </a>
+          </li>
+    </ul>
+
+	
+  </div>
+  
+</nav>

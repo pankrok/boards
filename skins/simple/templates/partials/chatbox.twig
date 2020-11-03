@@ -1,0 +1,53 @@
+		<!-- chat -->
+		<div class="card border-light mb-3">
+		  <div class="card-header"><i class="far fa-comments"></i> <strong>Chat</strong>
+				<p class="onoff float-right"><input type="checkbox" value="0" id="checkboxID" data-toggle="collapse" data-target="#collapseChat" aria-expanded="true" aria-controls="collapseChat"><label for="checkboxID"></label></p>
+		  </div>
+		  <div class="collapse show" id="collapseChat">
+		  <div class="chatbox card-body">
+		  
+			<ul id="shouts" class="list-group list-group-flush">	
+				 {% for shout in chatbox %}
+				 <!-- one chat message -->
+				  <li value="{{ shout.id }}" class="list-group-item chatbox-li">
+				  <div class="row">
+					  <div class="col-2 col-sm-1">
+						<img src="{% if userData(shout.user_id).avatar %} {{ base_url() }}/cache/img/{{userData(shout.user_id)._38}}{% else %}{{ base_url() }}/public/img/avatar.png{% endif %}" class="rounded-circle chat-av" alt="{{ userData(shout.user_id).username }}" >
+					  </div>
+					  <div class="col-10 col-sm-11 fs-12">
+					  <div class="row">
+						  <div class="col-12">
+							<span><b class="float-left"><a href="{{ base_url() }}/user/{{ setString.toUrl(userData(shout.user_id).username) }}/{{ shout.user_id }}">{{ userData(shout.user_id).name_html|raw }}</a></b><i class="float-right fc-g">{{ userData(shout.user_id).updated_at }}</i>
+						  </div>
+						  <div class="col-12">
+							{{ shout.content }}
+						  </div>
+					  </div>	  
+					</div>
+				  </div>		
+				  </li>
+				  <!-- /one chat message -->
+				  {% endfor %}  
+				  <span id="chatend"></span>
+			</ul>
+		  </div>
+		  
+		  <div class="input-group mb-3">
+		  <input id="shout-content" type="text" class="form-control chatbox-input" placeholder="{% if auth.check == false %}{{ trans('you have to sign in to chat') }}{% else %}{{ trans('Enter your message here:') }}{% endif %}" aria-describedby="button-chatbox" {% if auth.check == false %}disabled{% endif %}>
+		  <input id="sav" type="hidden" value="{{ auth.user.avatar }}">
+		  <input id="suid" type="hidden" value="{{ auth.user.id }}">
+		  <input id="sname" type="hidden" value="{{ auth.user.username }}">
+		  <div class="input-group-append">
+			<button class="btn btn-outline-secondary chatbox-input {% if auth.check == false %}disabled{% endif %}" type="button" id="button-chatbox"><i class="far fa-paper-plane"></i></button>
+		  </div>
+		  
+		</div>  
+		</div>
+		  
+		</div>
+		<script>
+			var urlForChatbox = "{{ urlFor('postChatbox') }}" 
+			var urlForLoadMessages = "{{ urlFor('loadChatbox') }}" 
+			var urlForChatboxNew = "{{ urlFor('checkNewMessage') }}" 
+		</script>
+		<!-- /chat -->

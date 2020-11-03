@@ -1,0 +1,103 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+
+	<div class="row">
+
+	<!-- main register -->
+	<div class="col-lg-12 order-1">
+		
+		<div class="card border-light">
+			<div class="card-header">
+				<div class="float-left"><h1><i class="fas fa-user-plus"></i> Register</h1></div>
+				
+			</div>
+				<div class="card-body px-0 py-1" id="board-1">
+				<form action="{{ path_for('auth.signup') }}" method="post">
+					<div class="row">
+							<div class="col-md-12 mx-auto">
+								<div class="card m-2">
+								  <div class="card-header">
+									Szczegóły konta:
+								  </div>
+								  <div class="card-body">
+									<div class="row">
+									  <div class="col-md-12">
+										<div class="form-group">
+										<label for="name">{{ trans('Login') }}</label>
+										<input type="text" name="name" id="name"  class="form-control {{ errors.name ? 'is-invalid' : ''}}" value="{{ old.name }}">
+										<span class="invalid-feedback">{{ trans(errors.name | first) }}</span>
+										</div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="exampleInputEmail1">Email address</label>
+										<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+										<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+									  </div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="exampleInputEmail1">Confirm Email address</label>
+										<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+										<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+									  </div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="exampleInputPassword1">Password</label>
+										<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+									  </div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="exampleInputPassword1">Confirm Password</label>
+										<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+									  </div>
+									  </div>
+									</div>
+								  </div>
+								</div>
+								
+								<div class="card m-2">
+								  <div class="card-header">
+									Polecający:
+								 </div>
+								  <div class="card-body">
+									<input type="text" class="form-control" id="Polecający" aria-describedby="Polecający" placeholder="Polecający">
+									<small id="Polecający" class="form-text text-muted">Jeśli ktoś polecił Ci forum, wpisz tutaj jego login. Jeśli nie - pozostaw to pole puste.</small>
+								  </div>
+								</div>
+								
+							</div>
+							<div class="col-md-6 mx-auto">
+								  <div class="form-group form-check">
+									<input type="checkbox" class="form-check-input" id="exampleCheck1">
+									<label class="form-check-label" for="exampleCheck1">Check me out</label>
+								  </div>
+							</div>
+						<div class="col-md-12 mx-auto text-center my-1">
+						<button type="submint" class="btn btn-dark">{{ trans('Sign up') }}</button>
+                        {{ csrf.field | raw }}
+						</div>
+					</div>
+					</form>	
+				</div>	
+
+		</div>
+	</div>
+	<!-- /main register -->
+	
+	</div>
+
+{% endblock %}
+
+{% block endcontent %}
+<script>
+
+var urlFor = "{{ urlFor('auth.hint') }}";
+console.log(urlFor);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+User-agent: *
+Crawl-delay: 30
+Request-rate: 1/1s
+
+User-agent: *
+Allow: /cache/img/
+Disallow: /app/
+Disallow: /bootstrap/
+Disallow: /libs/
+Disallow: /lang/
+Disallow: /plugins/
+Disallow: /public/
+Disallow: /skins/

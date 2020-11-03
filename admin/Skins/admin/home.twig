@@ -1,0 +1,32 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+
+
+
+<main class="content-wrapper">
+  <div class="container-fluid">
+    <h1>{{ trans('settings') }}</h1>
+	<div class="row text-center">
+		<div class="col-md-3">
+			<h2><span class="badge badge-success">Version: {{ forumInfo.version }}</span></h2>
+		</div>
+		<div class="col-md-3">
+			<h2><span class="badge badge-warning">Reporded Posts: 23</span></h2>
+		</div>
+		<div class="col-md-3">
+			<h2><span class="badge badge-info">New</span></h2>
+		</div>
+		<div class="col-md-3">
+			<h2><span class="badge badge-primary">New</span></h2>
+		</div>
+
+	</div>
+  </div>
+</main>
+
+
+
+
+{% endblock %}
+

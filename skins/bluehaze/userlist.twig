@@ -1,0 +1,63 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+
+	<div class="row">
+
+	<!-- main board -->
+	
+	<div class="col-lg-12 order-1">
+		
+		{% if users %}
+		<div class="card-header"><i class="fas fa-users"></i> Użytkownicy</div>
+		<div class="card-body px-0 py-1 collapse show " id="board-{{ category.cat_id }}">
+					<ul class="list-group list-group-flush">
+						<!-- board legend 
+						<li class="list-group-item content-bg">
+						<div class="row w-100 fs-10b">
+						<div class="col-md-1"></div>
+						<div class="col-12 col-md-5">Forum</div>
+						<div class="col-3 d-none d-md-block ">Threads / Posts</div>
+						<div class="col-3 d-none d-md-block text-center">Last Post</div>
+						</div>
+						</li>
+						<!-- one board -->
+						{% for user in users %}
+						<li class="list-group-item">
+							<div class="row w-100">
+							<div class="col-2 col-md-1 pl-3 {{ board.read }} text-center">
+							<img src="{% if user.avatar %} {{ base_url() }}/cache/img/{{ user._38}}{% else %}{{ base_url() }}/public/img/avatar.png{% endif %}" class="rounded-circle chat-av" alt="{{ user.username }}" >
+							</div>
+							<div class="col-10 col-md-5">
+								<div class="row">
+									<div class="col-12 fs-15"><a href="{{ base_url()}}/board/{{ setString.toUrl(board.board_name) }}/{{ board.id }}">{{ user.name_html |raw }}</a></div>
+									<div class="col-12 fs-12">{{ user.group_name |raw }}</div>
+								</div>
+							</div>
+							<div class="col-4 mx-auto d-none d-md-block">od: {{ user.created_at }}<br/>aktywny: {{ user.last_active|date("Y-m-d H:m:i") }}</div>
+							<div class="col-1 d-none d-md-block">
+								
+							</div>
+							</div>
+						</li>
+						{% endfor %}
+						<!-- /one board -->							
+					</ul>
+		</div>
+		{% endif %}
+		
+	</div>
+	<!-- /main board -->
+	</div>
+
+{% endblock %}
+
+{% block endcontent %}
+<script>
+
+var urlFor = "{{ urlFor('auth.hint') }}";
+console.log(urlFor);
+
+</script>
+
+{% endblock %}
