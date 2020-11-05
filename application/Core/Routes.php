@@ -6,8 +6,17 @@ $app->get(PREFIX.'/', 'HomeController:index')->setName('home');
 $app->get(PREFIX.'/cron[/{key}]', 'CronController:main')->setName('cron');
 $app->get(PREFIX.'/s', 'HomeController:session');
 
+#category
+$app->get(PREFIX.'/category/{category}/{category_id}[/{page}]', 'CategoryController:getCategory')->setName('category.getCategory');
+
 #board
 $app->get(PREFIX.'/board/{board}/{board_id}[/{page}]', 'BoardController:getBoard')->setName('board.getBoard');
+
+#plot
+$app->get(PREFIX.'/plot/{plot}/{plot_id}[/[{page}]]', 'PlotController:getPlot')->setName('board.getPlot');
+$app->get(PREFIX.'/newplot/{board_id}', 'PlotController:newPlot')->setName('board.newPlot');
+$app->post(PREFIX.'/newplot/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
+$app->post(PREFIX.'/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
 
 #sign
 $app->get(PREFIX.'/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');
@@ -26,11 +35,7 @@ $app->get(PREFIX.'/user[/{username}/{uid}]', 'UserPanelController:getProfile')->
 $app->post(PREFIX.'/user[/{username}/{uid}]', 'UserPanelController:postProfilePicture')->setName('user.postPicture');
 $app->post(PREFIX.'/changedata', 'UserPanelController:postChangeData')->setName('user.postChangeData');
 
-#plot
-$app->get(PREFIX.'/plot/{plot}/{plot_id}[/[{page}]]', 'PlotController:getPlot')->setName('board.getPlot');
-$app->get(PREFIX.'/newplot/{board_id}', 'PlotController:newPlot')->setName('board.newPlot');
-$app->post(PREFIX.'/newplot/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
-$app->post(PREFIX.'/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
+
 
 
 #################

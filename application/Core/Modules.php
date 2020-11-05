@@ -18,10 +18,20 @@ return function(App $app)
 		return new Application\Modules\Home\HomeController($container);
 	});	
 	
+	$container->set('CategoryController', function($container)
+	{
+		return new Application\Modules\Board\CategoryController($container);
+	});
+	
 	$container->set('BoardController', function($container)
 	{
 		return new Application\Modules\Board\BoardController($container);
 	});	
+	
+	$container->set('PlotController', function($container)
+	{
+		return new Application\Modules\Board\PlotController($container);
+	});
 	
 	$container->set('UserPanelController', function($container)
 	{
@@ -37,10 +47,7 @@ return function(App $app)
 	  return new Application\Modules\Chatbox\ChatboxController($container);  
 	});
 	
-	$container->set('PlotController', function($container)
-	{
-		return new Application\Modules\Board\PlotController($container);
-	});
+
 	
 	$container->set('AdminHomeController', function($container)
 	{

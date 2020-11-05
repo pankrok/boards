@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace Application\Modules\Board;
 
+use Application\Models\PostsModel;
 use Application\Models\PlotsModel;
 use Application\Models\BoardsModel;
 use Application\Core\Controller;
@@ -31,10 +32,10 @@ class BoardController extends Controller
 			}
 			
 		}
-		
+	
 		$this->view->getEnvironment()->addGlobal('paginator', $data[1]);
 		$this->view->getEnvironment()->addGlobal('board_name', $data[2]);
-		if($data[0]) $this->view->getEnvironment()->addGlobal('board', [
+		$this->view->getEnvironment()->addGlobal('board', [
 															'plots' => $data[0], 
 															'board_id' => $arg['board_id'],
 															'board_url' => $arg['board'],
@@ -65,7 +66,22 @@ class BoardController extends Controller
 				->skip(($paginator->getCurrentPage() - 1)*$paginator->getItemsPerPage())
 				->take($paginator->getItemsPerPage())
 				->get()->toArray();
-					
+		
+		foreach($data as $k => $v)
+		{
+			$posts = PostsModel::where('plot_id', $v['id'])->count();
+			$lastPostData = PostsModel::orderBy('created_at', 'desc')
+										->join('users', 'users.id', '=', 'posts.user_id')
+										->select('users.username', 'posts.created_at')
+										->first()
+										->toArray();
+			
+			$data[$k]['all_posts'] = $posts;
+			$data[$k]['last_post_date'] = $lastPostData['created_at'];
+			$data[$k]['last_post_autor'] = $lastPostData['username'];
+		}
+
+		
 		return [$data, $paginator, $boardName];
 	}
 }

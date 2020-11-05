@@ -39,7 +39,7 @@
 									<div class="col-12 fs-12">{{ board.board_description|raw }}</div>
 								</div>
 							</div>
-							<div class="col-2 mx-auto d-none d-md-block">{{ board.plots_no }} / {{ board.posts_no }}</div>
+							<div class="col-2 mx-auto d-none d-md-block">{{ board.all_posts }} / {{ board.posts_no }}</div>
 							<div class="col-3 d-none d-md-block">
 								<div class="row text-center fs-12">
 								{% set last = board.last %}
@@ -90,7 +90,7 @@
 									<div class="col-12 fs-12"><a href="{{ base_url() }}/user/{{ setString.toUrl(plot.username) }}/{{ plot.author_id }}">{{ plot.username }}</a></div>
 								</div>
 							</div>	
-							<div class="col-4 col-md-2 text-center">{{ plot.replies }} / {{ plot.views }}</div>
+							<div class="col-4 col-md-2 text-center">{{ plot.all_posts }} / {{ plot.views }}</div>
 							<div class="col-2 d-none d-md-block text-center">
 							{% for i in 1..5 %}
 								{% set starClass = (plot.stars >= i ? "fas fa-star" : "far fa-star")  %}
@@ -100,8 +100,8 @@
 							</div>
 							<div class="col-2 d-none d-md-block text-center">
 								<div class="row text-center fs-12">
-									<div class="col-12"><i class="far fa-clock"></i> {{  plot.last_ca }}</div>
-									<div class="col-12">last reply: <a href="{{ plot.last_url }}">{{ plot.last_user_html|raw }}</a></div>
+									<div class="col-12"><i class="far fa-clock"></i> {{  plot.last_post_date }}</div>
+									<div class="col-12">last reply: <a href="{{ plot.last_url }}">{{ plot.last_post_autor }}</a></div>
 								</div>
 							</div>
 

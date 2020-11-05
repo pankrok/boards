@@ -17,9 +17,10 @@ class ExamplePlugin implements EventSubscriberInterface
 
     public function MyFooPlugin($data)
     {
-	   
+	   $myData = json_encode(\Application\Models\BoardsModel::first());
 	   $content = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
 					  <strong>'.$data->translate()->trans('plugin.Holy guacamole!') .'</strong> '.$data->translate()->trans('plugin.This is a plugin example!') .'<br />
+					  '.$myData.'
 					  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					  </button>
