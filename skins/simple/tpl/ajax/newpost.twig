@@ -1,0 +1,49 @@
+<div class="card mb-3" style="display: none;">
+<div class="card-body">
+  <div class="row mx-0">
+	<div class="col-2 border-right d-none d-md-block p-2 text-center">
+		<p class="fs-15b m-0"><a href="{@uurl@}">{@username@}</a></p>
+		<p class="fs-10b m-0 fc-green">online</p>
+		<img src="{@avatar@}" class="rounded-circle mx-auto d-block post-av" alt="{@username@}">
+		<div class="mx-auto w-75">
+		<p class="fs-12 m-0">{@user_grupe@}</p><br />
+		<p class="fs-12 m-0 fc-g "><span class="float-left">Posts:</span> <span class="float-right">4</span></p><br />
+		<p class="fs-12 m-0 fc-g "><span class="float-left">Plots:</span> <span class="float-right">4</span></p><br />
+		<p class="fs-12 m-0 fc-g "><span class="float-left">Reputatnion:</span> <span class="float-right"> 0</span></p><br />
+		</div>
+	</div>
+	<!-- mobile author -->
+	<div class="col-md-2 d-block d-md-none">
+		<div class="row mx-auto">
+			<div class="col-2 my-1 border-bottom">
+				<img src="{%avatar%}" class="rounded-circle mx-auto d-block post-av " alt="username">
+			</div>
+			<div class="col-10 my-1 border-bottom">
+			<p class="fs-12b mb-1"><a href="{@uurl@}">{@username@}</a></p>
+			<p class="fs-10 mb-1">Posted: {@date@}</p>
+			</div>
+		</div>
+	</div>
+	<!-- /mobile author -->
+	<div class="col-12 col-md-10">
+	  <div class="card-body">
+		<div class="d-none d-md-block card-title fs-10">Posted: {@created_at@}</div>
+		<p class="card-text">{@content@}</p>
+		<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+	  </div>
+	</div>
+  </div>
+</div>
+
+<div class="card-footer py-3 text-muted">
+				<small class="float-left my-auto">
+				<a id="post-edit-" class="post-edit fas fa-edit point"  title="{{ trans('edit') }}"></a>
+				</small>
+				
+				<small class="likebox float-right my-auto">
+				<span class="badge badge-secondary mr-3 my-1 fs-15">0 <i class="far fa-thumbs-up"></i></span>
+				<a id="like-" class="far fa-thumbs-up fa-2x likeit"></a>
+				</small>
+			  </div>
+		</div>
+</div>

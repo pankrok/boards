@@ -1,0 +1,161 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+<div class="row">
+	<!-- right module -->
+	
+	<div class="col-lg-3 order-2 d-none d-sm-block">
+	
+	<!-- module -->
+	<div class="card border-light mb-3">
+		  <div class="card-header"><i class="fa fa-bullhorn"></i> {{ trans('Announcements') }} </div>
+		  <div class="card-body">
+			<h5 class="card-title">Light card title</h5>
+			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+		  </div>
+	</div>
+	<!-- /module -->
+	
+	<!-- module -->
+	<div class="card border-light mb-3">
+		  <div class="card-header"><i class="fa fa-chart-bar"></i> {{ trans('Statistics') }}</div>
+		  <div class="card-body px-2">
+			<p class="card-text">
+			<ul class="list-group list-group-flush">
+				 <li class="list-group-item py-1">{{ trans('Members') }}: <span class="float-right">{{ stats.users }}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right">{{ stats.posts }}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Threads') }}: <span class="float-right">{{ stats.plots }}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Newest Member') }}: <span class="float-right"><b>{{ stats.lastUser.name_html|raw }}</b></span></li>
+			</ul>
+			</p>
+		  </div>
+	</div>
+	<!-- /module -->
+	
+	{% if auth.check %}
+	{% set id = auth.user.id %}
+	<!-- module -->
+	<div class="card border-light mb-3">
+		  <div class="card-header"><i class="fas fa-user-tag"></i> {{ trans('Your statistics') }}</div>
+		  <div class="card-body px-2">			
+			<img src="{% if auth.user.avatar %}{{ base_url() }}/cache/img/{{ auth.user._150 }}{% else %}{{ base_url() }}/skins/simple/img/!avatar.png{% endif %}" class="rounded-circle mx-auto d-block stat-av" alt="{{ auth.user.username }}">
+			<p class="text-center"><b>userActivity(id).username</b></p>
+			<ul class="list-group list-group-flush">
+				 <li class="list-group-item py-1">{{ trans('Group') }}: <span class="float-right"></span></li>
+				 <li class="list-group-item py-1">{{ trans('Reputatnion') }}: <span class="float-right"></span></li>
+				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right"></span></li>
+				 <li class="list-group-item py-1">{{ trans('My IP') }}: <span class="float-right"><b>Hidden</b></span></li>
+				 <li class="list-group-item py-1">{{ trans('Last visit') }}: <span class="float-right">{{ auth.user.updated_at }}</span></li>
+			</ul>
+		  </div>
+	</div>
+	<!-- /module -->
+	{% endif %}
+	
+	<!-- plugin example -->
+	{{ plugin_bar | raw }}
+	<!-- /plugin example -->
+	
+	</div>
+	
+	<!-- /right module -->
+	<!-- main board -->
+	
+	<div class="col-lg-9 order-1">
+	{% include 'templates/partials/chatbox.twig' %}
+				
+		<!-- board -->
+		{% for category in categories %}
+		<div class="card border-light mb-3">
+			<div class="card-header"><i class="fas fa-clipboard-list"></i> <a href="{{ base_url()}}/category/{{ setString.toUrl(category.name) }}/{{ category.id }}">{{ category.name|raw }}</a>
+			 <p class="onoff float-right"><input type="checkbox" value="0" id="checbox-board-{{ category.cat_id }}" data-toggle="collapse" data-target="#board-{{ category.cat_id }}" aria-expanded="true" aria-controls="board-{{ category.cat_id }}"><label for="checbox-board-{{ category.cat_id }}"></label></p>
+			</div>
+				<div class="card-body px-0 py-1 collapse show" id="board-{{ category.cat_id }}">
+					<ul class="list-group list-group-flush">
+						<!-- board legend -->
+						<li class="list-group-item bg-white">
+						<div class="row w-100 fs-10b">
+						<div class="col-md-1"></div>
+						<div class="col-9 col-md-5">Forum</div>
+						<div class="col-3 d-none d-md-block ">Threads / Posts</div>
+						<div class="col-3 text-center">Last Post</div>
+						</div>
+						</li>
+						
+						{% for board in (boards[category.id]) %}
+						<!-- one board -->{% set myVal = 0 %}
+												
+						<li class="list-group-item {% if myVal is even %}bg-white{% else %}bg-light{% endif %}">
+							<div class="row w-100">
+							<div class="col-2 col-md-1 pl-3 {{ board.read }} text-center"><i class="fas fa-comment fa-2x"></i></div>
+							<div class="col-7 col-md-5">
+								<div class="row">
+									<div class="col-12 fs-15"><a href="{{ base_url()}}/board/{{ setString.toUrl(board.board_name) }}/{{ board.id }}">{{ board.board_name }}</a></div>
+									{% for  childboard in board.childboard%} 
+									<div class="col-6 fs-12">
+									<a href="{{ base_url()}}/board/{{ setString.toUrl(childboard.board_name) }}/{{ childboard.id }}">
+									<i class="fas fa-arrow-right"></i> 
+									</a>
+									</div>
+									{% endfor %}
+									<div class="col-12 fs-12">{{ board.board_description | raw }}</div>
+								</div>
+							</div>
+							<div class="col-2 mx-auto d-none d-md-block">1 / 1</div>
+							<div class="col-3">
+								<div class="row text-center fs-12 d-none d-md-block">
+								{% set last = board.last %}
+									
+								<div class="col-12"><a href="{{ base_url() }}">New Plot</a> by 
+								<a href="{{ base_url() }}">Lorem 2</a></div>
+								<div class="col-12"><i class="far fa-clock"></i> 9:22 11.11.12</div>
+								</div>
+								<div class="row text-center fs-10 d-block d-md-none">
+									<div class="col-12 fs-12"><a href="{{ base_url() }}"><span class="badge badge-secondary">Ostatni post</span></a></div>
+									<div class="col-12"><a href="{{ base_url() }}">link</a></div>
+
+									
+								</div>
+							</div>
+							</div>
+						</li>
+						{% set myVal = myVal + 1 %}
+						{% endfor %}
+						<!-- /one board -->								
+					</ul>
+				</div>
+		</div>
+		{% endfor %}
+		<!-- /board -->		
+	</div>
+	<!-- /main board -->
+	
+	
+	
+	<!-- boardstats -->
+	<div class="col-12 order-3">
+	
+	<div class="card border-light mb-3">
+		<div class="card-header">Board Statistics <p class="onoff float-right"><input type="checkbox" value="0" id="checbox-board-stats" data-toggle="collapse" data-target="#board-stats" aria-expanded="true" aria-controls="board-stats"><label for="checbox-board-stats"></label></p></div>
+		
+		<div class="card-body collapse show" id="board-stats">
+			<h6 class="card-title"><b>{{ trans('Whos Online') }}:</b></h6>
+			<p class="card-text">{% for user in stats.online %}<a href="{{ base_url() }}/user/{{ setString.toUrl(user.username) }}/{{ user.id }}">{{ user.username_html  | raw }},</a> {% endfor %}</p>
+			<h6 class="card-title"><b>{{ trans('Group legend') }}:</b></h6>
+			<p class="card-text">{% for group in groups_legend %}{{ group.group_name|raw }}, {% endfor %}</p>
+			
+		</div>
+	</div>
+	
+	</div>
+	<!-- /boardstats -->
+
+	
+	</div>
+
+{% endblock %}
+
+{% block endcontent %}
+<script src="{{ base_url() }}/public/scripts/chatbox.js"></script>
+{% endblock %}
+

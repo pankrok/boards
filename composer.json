@@ -1,21 +1,21 @@
 {
-    "name": "Thunder Forum Script",
-    "description": "SDK for Dreamcommerce based shops REST-API",
+    "name": "pankrok/boards",
+    "description": "Simple forum script",
     "keywords": [""],
     "license": "MIT",
     "authors": [
         {
-            "name": "Jerzy Róg",
-            "email": "jr@s89.eu"
+            "name": "Pankrok",
+            "email": "admin@s89.eu"
         }
     ],
     "minimum-stability": "stable",
 	"config": { 
-		"vendor-dir": "libs/" 
+		"vendor-dir": "libraries" 
 	}, 
         "require": {
-    		"php": ">=7.1",
-			"slim/slim": "^4.2",
+    		"php": ">=7.2",
+			"slim/slim": "^4.5",
 			"slim/twig-view": "^2.0",
 			"respect/validation": "~1.0",
 			"illuminate/database": "^5.7",
@@ -25,15 +25,14 @@
 			"symfony/event-dispatcher": "^4.3",
 		    "slim/psr7": "^0.5.0",
 		    "php-di/php-di": "^6.0",
-        "phpmailer/phpmailer": "^6.1",
-        "jasongrimes/paginator": "~1.0",
-        "lorddashme/php-simple-captcha": "^1.2" 
+			"phpmailer/phpmailer": "^6.1",
+			"jasongrimes/paginator": "~1.0",
+			"lorddashme/php-simple-captcha": "^1.2" 
         },
    
     "autoload": {
         "psr-4": {
-            "App\\": "app",
-			"Admin\\": "admin",
+            "Application\\": "application",
             "Plugins\\": "plugins"
         }
     

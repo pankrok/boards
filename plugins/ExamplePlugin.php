@@ -19,8 +19,7 @@ class ExamplePlugin implements EventSubscriberInterface
     {
 	   
 	   $content = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-					  <strong>'.$data->translator->trans('plugin.Holy guacamole!') .'</strong> '.$data->translator->trans('plugin.This is a plugin example!') .'<br />
-					  
+					  <strong>'.$data->translate()->trans('plugin.Holy guacamole!') .'</strong> '.$data->translate()->trans('plugin.This is a plugin example!') .'<br />
 					  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					  </button>

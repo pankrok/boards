@@ -1,0 +1,176 @@
+{% extends 'templates/main.twig' %}
+
+{% block headblock %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+{% endblock %}
+
+{% block content %}
+
+	<div class="row">
+
+	<!-- main row -->
+	
+	<div id="posts" class="col-lg-12 order-1">
+		
+		<!-- Main Plot -->
+		<!-- paginator -->
+		{% include 'templates/partials/pagination.twig' %}	
+		<!-- /paginator -->
+		<div class="card my-2" >
+		  <div class="card-header">
+			<strong>{{ title }}</strong>
+		  </div>
+		 </div>		
+		{% for post in plot.posts %}
+		<!-- one posts -->
+		<div id="post-{{ post.id }}" class="card mb-3">
+		 <div class="card-body">
+		  <div class="row mx-0">
+			<div class="col-2 border-right d-none d-md-block p-2 text-center">
+				<p class="fs-15b m-0"><a href="{{ base_url() }}/user/{{ post.username }}/{{ post.user_id }}">{{ post.username }}</a></p>
+				<p class="fs-10b m-0 {% if 1==1%}fc-green{% else %}fc-g{% endif %}">{% if 1==1 %}online{% else %}offline{% endif %}</p>
+				<img src="{% if post.avatar %}
+				{{ base_url() }}/public/upload/avatars/{{post.avatar}}
+				{% else %}
+				{{ base_url() }}/public/img/avatar.png
+				{% endif %}" class="rounded-circle mx-auto d-block post-av" alt="username">
+				<div class="mx-auto w-75">
+				<p class="fs-12 m-0">grupa</p><br />
+
+				
+				<p class="fs-12 m-0 fc-g "><span class="float-left">Posts:</span> <span class="float-right">{{ post.posts }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">Plots:</span> <span class="float-right">{{ post.plots }}</span></p><br />
+				<!--<p class="fs-12 m-0 fc-g "><span class="float-left">Join:</span> <span class="float-right"> {{ post.created_at }}</span></p><br />-->
+				<p class="fs-12 m-0 fc-g "><span class="float-left">Reputatnion:</span> <span class="float-right">{{ post.reputation }}</span></p><br />
+				</div>
+			</div>
+			
+			<!-- mobile author -->
+			<div class="col-md-2 d-block d-md-none px-0">
+				<div class="row mx-auto">
+					<div class="col-2 my-1 border-bottom border-dark">
+						<img src="/public/img/avatar.png" class="rounded-circle mx-auto d-block post-av " alt="username">
+					</div>
+					<div class="col-10 my-1 border-bottom border-dark">
+					<p class="fs-12b mb-1"><a href="#">username</a></p>
+					<p class="fs-10 mb-1">Posted: stworzony o</p>
+					</div> 
+				</div>
+			</div>
+			<!-- /mobile author -->
+			<div class="col-12 col-md-10">
+			 
+				<div class="d-none d-md-block card-title fs-10">Posted: {{ post.created_at }}<a <a id="report-{{ post.id }}" href="#" class="float-right raport"><i class="fas fa-exclamation-circle"></i> {{ trans('Report post') }}</a></div>
+				<div id="content-{{ post.id }}" class="card-text">{{ post.content|raw }}</div>
+				
+			  
+			  
+			</div>
+		  </div>
+		</div>
+		<div class="card-footer py-3 text-muted">
+				{% if auth.admin or post.user_id == auth.check %}
+				<small class="float-left my-auto">
+				<a id="post-edit-{{ post.id }}" class="post-edit fas fa-edit point"  title="{{ trans('edit') }}"></a>
+				</small>
+				{% endif %}
+				<small class="likebox float-right my-auto">
+				<span class="badge badge-secondary mr-3 my-1 fs-15">{{ post.reputation }} <i class="far fa-thumbs-up"></i></span>
+				{% if auth.check %}<a id="like-{{ post.id }}" class="far fa-thumbs-up fa-2x likeit"></a>
+				{% endif %}</small>
+			  </div>
+		</div>
+		<!-- /one posts -->	
+		{% endfor %}
+	<!-- paginator -->
+	{% include 'templates/partials/pagination.twig' %}	
+	<!-- /paginator -->
+	</div>	
+
+	<!-- /Main Plot -->	
+	{% if auth.check and locked == 0 %}
+	<!-- Quick Reply -->
+	<div class="col-lg-12 order-3">
+		<div id="accordion">
+		    <div class="card mb-2">
+				<div class="card-header" id="headingTwo">
+				  <h5 class="mb-0" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					
+					  {{ trans('Quick reply') }}
+					
+				  </h5>
+				</div>
+				<div id="collapseTwo" class="collapse " aria-labelledby="headingTwo" data-parent="#accordion">
+				  <div class="card-body pb-0">
+					 <input type="hidden" id="plot" value="{{ plot.plot_id }}">
+					 <textarea id="quickReply" name="editor"></textarea>
+					 {{ csrf.field | raw }}
+					 <p class="mt-3 text-right"><button id="quickReply-btn" type="button" class="btn btn-light">{{ trans('send post') }}</button></p>
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>	
+	<!-- /Quick Reply -->	
+	{% endif %}
+	
+	<!-- /main row -->
+
+		
+	</div>
+
+{% endblock %}
+
+{% block endcontent %}
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script src="{{base_url() }}/public/scripts/plot.js"></script>
+<script>
+var urlForReply = "{{ urlFor('board.replyPost') }}";
+var likePost = " urlFor('board.likeit') ";
+
+
+
+{% if auth.admin %}
+	var aedit = new Jodit('#editPostJodit', {
+				autofocus: true,
+				height: "280",
+				toolbarAdaptive: false,
+				allowResizeX: false,
+				allowResizeY: false,
+			});
+	
+	function editPost(id, len){
+	
+		var csrfName = $('#csrf_name').val();
+		var csrfValue = $('#csrf_value').val();
+		
+		$.ajax({
+
+			  type: "POST",
+			  url: "{{ path_for('admin.editpost') }}",
+			  data: { 
+			  'content': 	$('#editPostJodit').val(),
+			  'post_id': 	(id).substring(10,len),
+			  "csrf_name" : csrfName,
+			  "csrf_value" : csrfValue
+			  },
+			  dataType: 'json',
+			  error: function(query){
+				console.log(query);
+			  },
+			  success: function(mydata){					
+				
+				$('#csrf_name').val(mydata['token']['csrf_name']);
+				$('#csrf_value').val(mydata['token']['csrf_value']);
+				$('#content'+(id).substring(9,len)).html($('#editPostJodit').val());
+				$('#editPost').modal('hide');
+			  }
+			});	
+		
+	}
+{% endif %}
+
+</script>
+
+
+{% endblock %}
