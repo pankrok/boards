@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace Application\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,8 +10,7 @@ class GroupsModel extends Model
     
     protected $fillable = 
         [
-            'name_html',
-            'grupe_html',
+            'username_html',
             'grupe_name',
 			'grupe_level',
         ];

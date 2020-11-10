@@ -27,15 +27,15 @@
 		 <div class="card-body">
 		  <div class="row mx-0">
 			<div class="col-2 border-right d-none d-md-block p-2 text-center">
-				<p class="fs-15b m-0"><a href="{{ base_url() }}/user/{{ post.username }}/{{ post.user_id }}">{{ post.username }}</a></p>
+				<p class="fs-15b m-0"><a href="{{ base_url() }}/user/{{ post.username }}/{{ post.user_id }}">{{ post.username_html | raw }}</a></p>
 				<p class="fs-10b m-0 {% if 1==1%}fc-green{% else %}fc-g{% endif %}">{% if 1==1 %}online{% else %}offline{% endif %}</p>
 				<img src="{% if post.avatar %}
-				{{ base_url() }}/public/upload/avatars/{{post.avatar}}
+				{{ base_url() }}/public/upload/avatars/{{post._85}}
 				{% else %}
 				{{ base_url() }}/public/img/avatar.png
 				{% endif %}" class="rounded-circle mx-auto d-block post-av" alt="username">
 				<div class="mx-auto w-75">
-				<p class="fs-12 m-0">grupa</p><br />
+				<p class="fs-12 m-0">{{ post.group | raw }}</p><br />
 
 				
 				<p class="fs-12 m-0 fc-g "><span class="float-left">Posts:</span> <span class="float-right">{{ post.posts }}</span></p><br />
@@ -125,8 +125,8 @@
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
 <script src="{{base_url() }}/public/scripts/plot.js"></script>
 <script>
-var urlForReply = "{{ urlFor('board.replyPost') }}";
-var likePost = " urlFor('board.likeit') ";
+var urlForReply = "{{ path_for('board.replyPost') }}";
+var likePost = " path_for('board.likeit') ";
 
 
 

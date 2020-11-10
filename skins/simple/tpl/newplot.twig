@@ -38,7 +38,7 @@
 {% block endcontent %}
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
 <script>
-var ajaxUrl = "{{ urlFor('board.newPlotPost') }}";
+var ajaxUrl = "{{ path_for('board.newPlotPost') }}";
 
 var editor = new Jodit('#newPlotEditor', {
     autofocus: true,

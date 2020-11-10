@@ -44,6 +44,6 @@ class Controller
 		else{
 			$protocol = 'http';
 		}
-		return $protocol . "://" . $_SERVER['HTTP_HOST'] . PREFIX;
+		return $protocol . "://" . $_SERVER['HTTP_HOST'] . substr($this->router->urlFor('home'), 0, -1);
 	}
 }

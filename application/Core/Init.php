@@ -5,6 +5,7 @@ declare(strict_types=1);
 use DI\Container;
 use Slim\Factory\AppFactory;
 use Respect\Validation\Validator as v;
+use Middlewares\TrailingSlash;
 
 session_start();
 require MAIN_DIR . '/libraries/autoload.php';
@@ -12,6 +13,18 @@ require MAIN_DIR . '/libraries/autoload.php';
 $container = new Container();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+$app->setBasePath((function () {
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+    $uri = (string) parse_url('http://a' . $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    if (stripos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
+        return $_SERVER['SCRIPT_NAME'];
+    }
+    if ($scriptDir !== '/' && stripos($uri, $scriptDir) === 0) {
+        return $scriptDir;
+    }
+    return '';
+})());
+
 
 $container = $app->getContainer();
 
@@ -141,6 +154,10 @@ $container->set('captcha', function($container) use ($routeParser) {
 
 $container->set('event', function($container) {
 	return new Application\Core\Modules\Plugins\PluginController($container);
+});
+
+$container->set('group', function() {
+	return new Application\Modules\User\GroupController();
 });
 
 $middleware = require 'Middleware.php';

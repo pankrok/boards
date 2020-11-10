@@ -38,9 +38,6 @@ function loadMoreShouts(offset){
 		  
 		  },
 		  dataType: 'json',
-		  error: function(){
-			console.log(query);
-		  },
 		  success: function(mydata){					
 			
 			$('#csrf_name').val(mydata['csrf']['csrf_name']);
@@ -69,11 +66,7 @@ function postShout(){
 		  
 		  },
 		  dataType: 'json',
-		  error: function(){
-			console.log(query);
-		  },
 		  success: function(mydata){					
-			
 			$('#csrf_name').val(mydata['csrf']['csrf_name']);
 			$('#csrf_value').val(mydata['csrf']['csrf_value']);
 			$('#shouts').append(mydata['shout']);
@@ -99,9 +92,6 @@ function getNewMessages(){
 		  
 		  },
 		  dataType: 'json',
-		  error: function(query){
-			console.log(query);
-		  },
 		  success: function(mydata){					
 			
 			$('#csrf_name').val(mydata['csrf']['csrf_name']);

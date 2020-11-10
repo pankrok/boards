@@ -183,6 +183,24 @@ class AuthController extends Controller
 		->withStatus(302);
 	}
 
+	public function postHintUsers($request, $response){
+		
+		$recommended = $request->getParsedBody()['recommended'];
+		$token = ($this->container->get('csrf')->generateToken());
+		$data['csrf'] = [
+			'csrf_name' => $token['csrf_name'],
+			'csrf_value' => $token['csrf_value']
+		];
+		$users = UserModel::select('users.username')->where('username', 'like', '%'.$recommended.'%')->get();
+		
+		foreach($users as $k => $v){
 
+			$data['username'][$k] = $v->username;
+		}
+
+		$response->getBody()->write(json_encode($data));
+		return $response->withHeader('Content-Type', 'application/json')
+						->withStatus(201);
+	}
 
 	}

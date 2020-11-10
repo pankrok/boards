@@ -22,7 +22,7 @@
 					  <div class="col-10 col-sm-11 fs-12">
 					  <div class="row">
 						  <div class="col-12">
-							<span><b class="float-left"><a href="{{ base_url() }}/user/{{ setString.toUrl(shout.username) }}/{{ shout.user_id }}"">{{ shout.username }}</a></b><i class="float-right fc-g">{{ shout.updated_at}}</i>
+							<span><b class="float-left"><a href="{{ base_url() }}/user/{{ setString.toUrl(shout.username) }}/{{ shout.user_id }}"">{{ shout.username_html | raw }}</a></b><i class="float-right fc-g">{{ shout.updated_at}}</i>
 						  </div>
 						  <div class="col-12">
 							{{ shout.content }}
@@ -50,8 +50,8 @@
 		  
 		</div>
 		<script>
-			var urlForChatbox = "{{ urlFor('postChatbox') }}" 
-			var urlForLoadMessages = "{{ urlFor('loadChatbox') }}" 
-			var urlForChatboxNew = "{{ urlFor('checkNewMessage') }}"  
+			var urlForChatbox = "{{ path_for('postChatbox') }}" 
+			var urlForLoadMessages = "{{ path_for('loadChatbox') }}" 
+			var urlForChatboxNew = "{{ path_for('checkNewMessage') }}"  
 		</script>
 		<!-- /chat -->

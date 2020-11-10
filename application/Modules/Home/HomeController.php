@@ -30,6 +30,17 @@ class HomeController extends Controller
 		$this->view->getEnvironment()->addGlobal('categories', $categories);
 		$this->view->getEnvironment()->addGlobal('boards', $boards);
 		
+		if($this->auth->check())
+		{
+			$username = $this->group->getGroupDate($this->auth->user()['main_group'], $this->auth->user()['username']);
+			$user = $this->auth->user();
+			
+			$user['username'] = $username['username'];
+			$user['group'] = $username['group'];
+			
+			$this->view->getEnvironment()->addGlobal('user', $user);
+		}
+		
 		
 		$this->event->addGlobalEvent('home.loaded');	
 		return $this->view->render($response, 'home.twig');	;
@@ -46,8 +57,9 @@ class HomeController extends Controller
 	
 	protected function getBoards()
 	{
-		
+		$boards = [];
 		$handler = \Application\Models\BoardsModel::orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
+		
 		foreach($handler as $k => $v)
 		{
 		

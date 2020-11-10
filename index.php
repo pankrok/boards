@@ -12,7 +12,6 @@ ini_set( 'display_errors', 'on');
 $t = (microtime(true)); #remove from production!
 
 DEFINE('MAIN_DIR', __DIR__);
-DEFINE('PREFIX', '');
 
 require MAIN_DIR . '/application/Core/Init.php';
 $app->run();

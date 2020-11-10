@@ -42,9 +42,9 @@ class UserPanelController extends Controller
 				$canEdit = false;
 			}
 			
-			$data = UserModel::find($arg['uid']);
-			if($data->avatar != null)
-				$data->join('images', 'users.avatar', '=', 'images.id')->get();
+			$data = UserModel::leftJoin('images', 'users.avatar', '=', 'images.id')
+							->select('users.*', 'images._150')
+							->find($arg['uid']);
 			
 			$this->view->getEnvironment()->addGlobal('profile', $data);
 			$this->view->getEnvironment()->addGlobal('can_edit', $canEdit);

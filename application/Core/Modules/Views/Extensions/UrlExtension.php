@@ -14,14 +14,7 @@ class UrlExtension extends AbstractExtension
 	
 	public function __construct($router, $urlMaker)
 	{
-		if(isset($_SERVER['HTTPS'])){
-			$protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-		}
-		else{
-			$protocol = 'http';
-		}
-		
-		$this->base_url = $protocol . "://" . $_SERVER['HTTP_HOST'] . PREFIX;
+		$this->base_url = substr($router->urlFor('home'), 0, -1);
 		$this->router = $router;
 		$this->urlMaker = $urlMaker;
 	}
@@ -31,7 +24,7 @@ class UrlExtension extends AbstractExtension
 		return 	[
 			new TwigFunction('base_url', [$this, 'base_url']),
 			new TwigFunction('path_for', [$this, 'path_for']),
-			new TwigFunction('urlFor', [$this, 'urlFor']),
+	#		new TwigFunction('urlFor', [$this, 'urlFor']),
 			new TwigFunction('toUrl', [$this, 'toUrl'])
 		];
 		

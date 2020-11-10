@@ -1,10 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Application\Modules\Board;
 
 use Application\Models\PlotsModel;
 use Application\Models\PostsModel;
 use Application\Models\PlotsReadModel;
 use Application\Models\BoardsModel;
+use Application\Models\UserModel;
+use Application\Models\ImagesModel;
 use Application\Core\Controller;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
@@ -38,26 +43,6 @@ class PlotController extends Controller
 		}
 	}
 	
-	protected function csftToken()
-	{
-		$token = ($this->container->get('csrf')->generateToken());
-		return [
-			'csrf_name' => $token['csrf_name'],
-			'csrf_value' => $token['csrf_value']
-		];
-	}
-	
-	protected function base_url()
-	{
-		if(isset($_SERVER['HTTPS'])){
-			$protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-		}
-		else{
-			$protocol = 'http';
-		}
-		return $protocol . "://" . $_SERVER['HTTP_HOST'] . PREFIX;
-	}
-	
 	public function getPlot($request, $response, $arg)
 	{
 		
@@ -75,9 +60,17 @@ class PlotController extends Controller
 				->skip(($paginator->getCurrentPage()-1)*$paginator->getItemsPerPage())
 				->take($paginator->getItemsPerPage())
 				->join('users', 'users.id', '=', 'posts.user_id')
-				->select('posts.*', 'users.avatar', 'users.username', 'users.user_group', 'users.posts', 'users.plots')
-				->get();
-			
+				->leftJoin('images', 'users.avatar', '=', 'images.id')
+				->select('posts.*', 'users.avatar', 'users.username', 'users.main_group', 'users.posts', 'users.plots', 'images._85')
+				->get();	
+		
+		foreach($data as $k => $v)
+		{
+			$group = $this->group->getGroupDate($v->main_group, $v->username);
+			$data[$k]->username_html = $group['username'];
+			$data[$k]->group = $group['group'];
+		}
+		
 		$plot = PlotsModel::find($arg['plot_id']);
 
 		
@@ -125,18 +118,24 @@ class PlotController extends Controller
 		$data['csrf'] = self::csftToken();
 
 		if($this->auth->check() && !$locked){
-			$user = $this->auth->user();
+			
+			$user =UserModel::find($this->auth->user()['id']);
+			 ;
 			PostsModel::create([
 				'user_id' => $user->id,
 				'plot_id' => $request->getParsedBody()['plot_id'],
 				'content' => $request->getParsedBody()['content'],				
 			]);
-			$avatar = $user->avatar ? self::base_url() .'/cache/img/'.$user->_85 : self::base_url() .'/public/img/avatar.png';
-			$uurl = self::base_url() .'/user/'. $this->urlMaker->toUrl($user->username) .'/'. $user->user_id;
+			
+			if($user->avatar)			
+				$avatar = ImagesModel::find($user->avatar);
+			
+			$avatar = $user->avatar ? self::base_url() .'/public/upload/avatars/'.$avatar->_85 : self::base_url() .'/public/img/avatar.png';	
+			$uurl = self::base_url() .'/user/'. $this->urlMaker->toUrl($user->username) .'/'. $user->id;
 			
 			$data['response'] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/ajax/newpost.twig');
 			$replace = [$uurl, $user->username, $avatar,  $user->user_grupe, $user->user_groupe, $user->posts, $user->plots, $user->created_at, $user->reputation, date("Y-m-d H:i:s"), ($request->getParsedBody()['content'])];
-			$find = ['{@uurl@}', '{@username@}', '{@avatar@}', '{@user_grupe@}', '{@posts@}', '{@plots@}', '{@join@}', '{@rep@}', '{@date@}', '{@created_at@}', '{@content@}'];
+			$find = ['{{uurl}}', '{{username}}', '{{avatar}}', '{{user_grupe}}', '{{posts}}', '{{plots}}', '{{join}}', '{{rep}}', '{{date}}', '{{created_at}}', '{{content}}'];
 			
 			$data['response'] = str_replace($find, $replace, $data['response']);
 			

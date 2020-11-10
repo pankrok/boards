@@ -105,7 +105,13 @@
 
 {% block endcontent %}
 
-<script type="text/javascript" src="{{ base_url() }}/public/js/jquery.autocomplete.js"></script>
-<script type="text/javascript" src="{{ base_url() }}/public/js/userAutocomplete.js"></script>
+<script>
+
+var urlFor = "{{ path_for('auth.hint') }}";
+
+</script>
+
+<script type="text/javascript" src="{{ base_url() }}/public/scripts/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/public/scripts/userAutocomplete.js"></script>
 
 {% endblock %}

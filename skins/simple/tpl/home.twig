@@ -33,13 +33,13 @@
 	<!-- /module -->
 	
 	{% if auth.check %}
-	{% set id = auth.user.id %}
 	<!-- module -->
 	<div class="card border-light mb-3">
 		  <div class="card-header"><i class="fas fa-user-tag"></i> {{ trans('Your statistics') }}</div>
 		  <div class="card-body px-2">			
-			<img src="{% if auth.user.avatar %}{{ base_url() }}/cache/img/{{ auth.user._150 }}{% else %}{{ base_url() }}/skins/simple/img/!avatar.png{% endif %}" class="rounded-circle mx-auto d-block stat-av" alt="{{ auth.user.username }}">
-			<p class="text-center"><b>userActivity(id).username</b></p>
+			<img src="{% if user.avatar %}{{ base_url() }}/public/upload/avatars/{{ user._150 }}{% else %}{{ base_url() }}/public/img/avatar.png{% endif %}" class="rounded-circle mx-auto d-block stat-av" alt="{{ auth.user.username }}">
+			<p class="text-center"><b>{{ user.username | raw}}</b></p>
+			<p class="text-center small"><b>{{ user.group | raw}}</b></p>
 			<ul class="list-group list-group-flush">
 				 <li class="list-group-item py-1">{{ trans('Group') }}: <span class="float-right"></span></li>
 				 <li class="list-group-item py-1">{{ trans('Reputatnion') }}: <span class="float-right"></span></li>

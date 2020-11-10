@@ -22,7 +22,8 @@ class Auth
   
     public function user()
     {  
-    if(isset($_SESSION['user'])) return UserModel::find($_SESSION['user'])->makeHidden(['password'])->toArray();
+		$a = UserModel::leftJoin('images', 'images.id', '=', 'users.avatar')->select('users.*', 'images._38', 'images._85', 'images._150')->find($_SESSION['user'])->makeHidden(['password'])->toArray();
+		if(isset($_SESSION['user'])) return $a;		
     }
     
   /**
@@ -80,7 +81,7 @@ class Auth
   
   public function logout()
   {
-    
+    $_SESSION['user'] = NULL;
     unset($_SESSION['user']);
     if(isset(($_SESSION['admin']))) unset($_SESSION['admin']);
     

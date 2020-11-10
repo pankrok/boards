@@ -27,7 +27,7 @@
 		    "php-di/php-di": "^6.0",
 			"phpmailer/phpmailer": "^6.1",
 			"jasongrimes/paginator": "~1.0",
-			"lorddashme/php-simple-captcha": "^1.2" 
+			"lorddashme/php-simple-captcha": "^1.2"
         },
    
     "autoload": {

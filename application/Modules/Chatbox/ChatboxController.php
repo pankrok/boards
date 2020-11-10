@@ -17,25 +17,6 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 class ChatboxController extends Controller
 {
     
-	protected function csftToken()
-	{
-		$token = ($this->container->get('csrf')->generateToken());
-		return [
-			'csrf_name' => $token['csrf_name'],
-			'csrf_value' => $token['csrf_value']
-		];
-	}
-	
-	private function baserUrl()
-	{
-		if(isset($_SERVER['HTTPS'])){
-			$protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-		}
-		else{
-			$protocol = 'http';
-		}
-		return $protocol . "://" . $_SERVER['HTTP_HOST'] . PREFIX;
-	}
 	/**
     * Remove session and redirect to home page
     *
@@ -51,21 +32,24 @@ class ChatboxController extends Controller
 			$data = ChatboxModel::skip($offset)
 								->take(10)
 								->join('users', 'users.id', '=', 'chatbox.user_id')
-								->join('images', 'users.avatar', '=', 'images.id')
-								->select('chatbox.*', 'images._38', 'users.username', 'users.avatar')
+								->leftJoin('images', 'users.avatar', '=', 'images.id')
+								->select('chatbox.*', 'images._38', 'users.username', 'users.main_group', 'users.avatar')
 								->get();
-			// poprawić pobieranie avatorów
-			
+			foreach($data as $k => $v)
+			{
+				$group = $this->group->getGroupDate($v->main_group, $v->username);
+				$data[$k]->username_html = $group['username'];
+			}
 						
 		if($data) $this->view->getEnvironment()->addGlobal('chatbox', $data);
 	}
 	
 	public function postChatMessage($request, $response)
 	{
-		$base_url = self::baserUrl();
-		$user = UserModel::find($_SESSION['user']);		
-		if($user->avatar != NULL)
-			$user->join('images', 'users.avatar', '=', 'images.id')->find($_SESSION['user']);
+		$base_url = self::base_url();
+		$user = UserModel::leftJoin('images', 'users.avatar', '=', 'images.id')
+						->find($_SESSION['user']);		
+		
 		
 		$token = ($this->container->get('csrf')->generateToken());
 		$data['csrf'] = self::csftToken();
@@ -83,7 +67,7 @@ class ChatboxController extends Controller
 			$shout = htmlspecialchars($request->getParsedBody()['shout']);
 			
 			$data['shout'] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'//tpl/ajax/newshout.twig');
-			$replace = [$id->id, $uurl, $user->username, $user->name_html, $avatar,  date("Y-m-d H:i:s"), $shout];
+			$replace = [$id->id, $uurl, $user->username, $user->username, $avatar,  date("Y-m-d H:i:s"), $shout];
 			$find = ['{@$id@}', '{@uurl@}', '{@username@}', '{@username_html@}', '{@avatar@}', '{@date@}', '{@shout@}'];
 			
 			$data['shout'] = str_replace($find, $replace, $data['shout']);
@@ -97,7 +81,7 @@ class ChatboxController extends Controller
 	
 	public function loadMoreMessages($request, $response){
 		
-		$base_url = self::baserUrl();
+		$base_url = self::base_url();
 		$i = 1;
 		
 		$data['csrf'] = self::csftToken();
@@ -116,8 +100,8 @@ class ChatboxController extends Controller
 			->take(10)
 			->orderBy('chatbox.id', 'asc')
 			->join('users', 'users.id', '=', 'chatbox.user_id')
-			->join('images', 'users.avatar', '=', 'images.id')
-			->select('chatbox.*', 'images._38', 'users.username', 'users.avatar')
+			->leftJoin('images', 'users.avatar', '=', 'images.id')
+			->select('chatbox.*', 'images._38', 'users.username', 'users.avatar', 'users.user_group')
 			->get();
 			
 		$data['chatbox'][0] = '<span id="scrollHere"></span>';
@@ -128,7 +112,9 @@ class ChatboxController extends Controller
 			
 			$data['chatbox'][$i] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/ajax/newshout.twig');
 			
-			$replace = [$shout->id, $uurl, $shout->username, $shout->username, $avatar, $shout->created_at, $shout->content];
+			$username_html = $this->group->getGroupDate($shout->user_group, $shout->username);
+			
+			$replace = [$shout->id, $uurl, $shout->username, $username_html['username'], $avatar, $shout->created_at, $shout->content];
 			$find = ['{@$id@}', '{@uurl@}', '{@username@}', '{@username_html@}', '{@avatar@}', '{@date@}', '{@shout@}'];
 			$data['chatbox'] = str_replace($find, $replace, $data['chatbox']);
 			
@@ -142,7 +128,7 @@ class ChatboxController extends Controller
 	
 	public function checkNewMessage($request, $response){
 		
-		$base_url = self::baserUrl();
+		$base_url = self::base_url();
 		$i = 0;
 		$last = null;
 		
@@ -158,7 +144,9 @@ class ChatboxController extends Controller
 		foreach($chatbox as $shout){
 			if($request->getParsedBody()['lastShout'] < $shout->id) 
 			{	
-				$user = UserModel::join('images', 'users.avatar', '=', 'images.id')->find($shout->user_id);
+				$user = UserModel::joinLeft('images', 'users.avatar', '=', 'images.id')
+					->select('users.*', 'images._38')
+					->find($shout->user_id);
 				$avatar = $user->avatar ? $base_url. $this->settings['images']['path'] .$user->_38 : $base_url.'/public/img/avatar.png';
 				$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($user->username).'/'.$shout->user_id;
 				

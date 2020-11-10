@@ -13,6 +13,7 @@ namespace Application\Middleware;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
+use Slim\Routing\RouteContext;
 
 class TrailingShashMiddleware extends Middleware
 {
@@ -20,6 +21,14 @@ class TrailingShashMiddleware extends Middleware
 	public function __invoke (Request $request, RequestHandler $handler) {
 		$uri = $request->getUri();
 		$path = $uri->getPath();
+		
+		$routeContext = RouteContext::fromRequest($request);
+		$route = $routeContext->getRoute();
+		
+		if($route->getName() == 'home')
+		{
+			return $handler->handle($request);
+		}
 		
 		if ($path != '/' && substr($path, -1) == '/') {
 			// recursively remove slashes when its more than 1 slash
