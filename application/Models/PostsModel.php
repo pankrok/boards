@@ -13,6 +13,7 @@ class PostsModel extends Model
 			'user_id',
 			'plot_id',
 			'content',
+			'post_reputation',
 			'hidden',
         ];
     

@@ -75,7 +75,7 @@
 				</small>
 				{% endif %}
 				<small class="likebox float-right my-auto">
-				<span class="badge badge-secondary mr-3 my-1 fs-15">{{ post.reputation }} <i class="far fa-thumbs-up"></i></span>
+				<span class="badge badge-secondary mr-3 my-1 fs-15">{{ post.post_reputation }} <i class="far fa-thumbs-up"></i></span>
 				{% if auth.check %}<a id="like-{{ post.id }}" class="far fa-thumbs-up fa-2x likeit"></a>
 				{% endif %}</small>
 			  </div>
@@ -126,7 +126,7 @@
 <script src="{{base_url() }}/public/scripts/plot.js"></script>
 <script>
 var urlForReply = "{{ path_for('board.replyPost') }}";
-var likePost = " path_for('board.likeit') ";
+var likePost = "{{ path_for('board.likeit') }}";
 
 
 

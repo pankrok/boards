@@ -162,7 +162,7 @@ class AuthController extends Controller
 			'username' => $request->getParsedBody()['username'],
 			'password' => password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT),
 			'recommended_by' => $request->getParsedBody()['recommended'],
-			//'user_group' => $this->settings['users']['default-group']
+			'main_group' => $this->settings['board']['default_group']
 		]);
 		$this->flash->addMessage('info', 'Account created.');
 

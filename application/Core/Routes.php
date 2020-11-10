@@ -18,6 +18,7 @@ $app->get('/plot/{plot}/{plot_id}[/[{page}]]', 'PlotController:getPlot')->setNam
 $app->get('/newplot/{board_id}', 'PlotController:newPlot')->setName('board.newPlot');
 $app->post('/newplot/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
 $app->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
+$app->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
 
 #sign
 $app->get('/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');

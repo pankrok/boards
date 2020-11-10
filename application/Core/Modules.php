@@ -47,7 +47,10 @@ return function(App $app)
 	  return new Application\Modules\Chatbox\ChatboxController($container);  
 	});
 	
-
+	$container->set('StatisticController', function ($container) {
+	  return new Application\Modules\Statistic\StatisticController($container);  
+	});
+	
 	
 	$container->set('AdminHomeController', function($container)
 	{

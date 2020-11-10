@@ -22,7 +22,7 @@ class UserModel extends Model
 			'posts',
 			'plots',
 			'avatar',
-			'reg_date',
+			'reputation',
 			'last_active',
 			'last_post',
 			'online_time',

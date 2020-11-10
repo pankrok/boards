@@ -35,13 +35,22 @@ class HomeController extends Controller
 			$username = $this->group->getGroupDate($this->auth->user()['main_group'], $this->auth->user()['username']);
 			$user = $this->auth->user();
 			
+			if($user['avatar'])
+			{
+				$user['avatar'] =  self::base_url() . '/public/upload/avatars/' . $user['_150'];
+			}
+			else
+			{
+				$user['avatar'] = self::base_url() . '/public/img/avatar.png';
+			}
+			
 			$user['username'] = $username['username'];
 			$user['group'] = $username['group'];
 			
 			$this->view->getEnvironment()->addGlobal('user', $user);
 		}
 		
-		
+		$this->view->getEnvironment()->addGlobal('stats', $this->StatisticController->getStats());
 		$this->event->addGlobalEvent('home.loaded');	
 		return $this->view->render($response, 'home.twig');	;
 	
@@ -51,6 +60,12 @@ class HomeController extends Controller
 	{
 		
 		$categories = \Application\Models\CategoryModel::orderBy('category_order', 'DESC')->get()->toArray(); 
+		
+		foreach($categories as $k => $v)
+		{
+			$categories[$k]['url'] = self::base_url() . '/category/' . $this->urlMaker->toUrl($v['name'])	. '/' . $v['id'];
+		}
+		
 		return $categories;
 		
 	}	
@@ -62,10 +77,19 @@ class HomeController extends Controller
 		
 		foreach($handler as $k => $v)
 		{
-		
+			$lastpost = \Application\Models\PlotsModel::orderBy('updated_at', 'DESC')
+													->where('board_id', '=', $v['id'])
+													->leftJoin('users', 'users.id', 'plots.author_id')
+													->select('plots.*', 'users.username')
+													->first();
 			$boards[$v['category_id']][$v['id']] = $v;
+			$boards[$v['category_id']][$v['id']]['url'] = self::base_url() . '/board/' . $this->urlMaker->toUrl($v['board_name'])	. '/' . $v['id'];
+			$boards[$v['category_id']][$v['id']]['last_post_data'] = $lastpost;
 		
 		}
+		
+		$boards['groups_legend'] = \Application\Models\GroupsModel::select('grupe_name')->get()->toArray();
+		
 		return $boards;
 	}
 	

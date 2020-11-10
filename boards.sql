@@ -1,13 +1,22 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Database: `boards`
+--
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brd_boards`
+--
 
 CREATE TABLE `brd_boards` (
   `id` int(11) NOT NULL,
@@ -16,8 +25,8 @@ CREATE TABLE `brd_boards` (
   `category_id` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `board_order` int(11) DEFAULT NULL,
-  `plots_number` int(11) DEFAULT NULL,
-  `posts_number` int(11) DEFAULT NULL,
+  `plots_number` int(11) DEFAULT '0',
+  `posts_number` int(11) DEFAULT '0',
   `last_post_date` int(11) DEFAULT NULL,
   `last_post_author` varchar(255) DEFAULT NULL,
   `visability` tinyint(1) DEFAULT '1',
@@ -28,7 +37,7 @@ CREATE TABLE `brd_boards` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_categories`
+-- Table structure for table `brd_categories`
 --
 
 CREATE TABLE `brd_categories` (
@@ -43,7 +52,7 @@ CREATE TABLE `brd_categories` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_chatbox`
+-- Table structure for table `brd_chatbox`
 --
 
 CREATE TABLE `brd_chatbox` (
@@ -57,7 +66,7 @@ CREATE TABLE `brd_chatbox` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_groups`
+-- Table structure for table `brd_groups`
 --
 
 CREATE TABLE `brd_groups` (
@@ -70,17 +79,17 @@ CREATE TABLE `brd_groups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Zrzut danych tabeli `brd_groups`
+-- Dumping data for table `brd_groups`
 --
 
 INSERT INTO `brd_groups` (`id`, `username_html`, `grupe_name`, `grupe_level`, `updated_at`, `created_at`) VALUES
-(1, '<i class=\"fa fa-star\" aria-hidden=\"true\" style=\"color:red\">{{username}}</i>\r\n', '<strong style=\"color:red\"><i class=\"fas fa-circle-notch fa-spin\"></i> Admin</strong>', 10, '2020-11-06 14:06:32', '0000-00-00 00:00:00'),
-(2, '{{username}}', 'user', 1, '2020-11-06 14:06:45', '0000-00-00 00:00:00');
+(1, '<b class=\"fa fa-plus-circle\"> {{username}}</b>', 'user', 1, '2020-11-06 14:06:45', '0000-00-00 00:00:00'),
+(2, '<i class=\"fa fa-star\" aria-hidden=\"true\" style=\"color:red\"> {{username}}</i>\r\n', '<strong style=\"color:red\"><i class=\"fas fa-circle-notch fa-spin\"></i> Admin</strong>', 10, '2020-11-06 14:06:32', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_images`
+-- Table structure for table `brd_images`
 --
 
 CREATE TABLE `brd_images` (
@@ -94,7 +103,21 @@ CREATE TABLE `brd_images` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_plotread`
+-- Table structure for table `brd_likeit`
+--
+
+CREATE TABLE `brd_likeit` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brd_plotread`
 --
 
 CREATE TABLE `brd_plotread` (
@@ -107,7 +130,7 @@ CREATE TABLE `brd_plotread` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_plots`
+-- Table structure for table `brd_plots`
 --
 
 CREATE TABLE `brd_plots` (
@@ -120,6 +143,7 @@ CREATE TABLE `brd_plots` (
   `pinned` tinyint(1) DEFAULT NULL,
   `pinned_order` int(11) DEFAULT NULL,
   `locked` tinyint(1) NOT NULL DEFAULT '0',
+  `posts_nuber` int(11) DEFAULT '0',
   `views` int(11) NOT NULL DEFAULT '0',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
@@ -128,7 +152,7 @@ CREATE TABLE `brd_plots` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_plugins`
+-- Table structure for table `brd_plugins`
 --
 
 CREATE TABLE `brd_plugins` (
@@ -144,7 +168,7 @@ CREATE TABLE `brd_plugins` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_posts`
+-- Table structure for table `brd_posts`
 --
 
 CREATE TABLE `brd_posts` (
@@ -152,6 +176,7 @@ CREATE TABLE `brd_posts` (
   `user_id` int(11) NOT NULL,
   `plot_id` int(11) NOT NULL,
   `content` text NOT NULL,
+  `post_reputation` int(11) NOT NULL DEFAULT '0',
   `hidden` tinyint(1) NOT NULL DEFAULT '1',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
@@ -160,7 +185,7 @@ CREATE TABLE `brd_posts` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `brd_users`
+-- Table structure for table `brd_users`
 --
 
 CREATE TABLE `brd_users` (
@@ -174,7 +199,7 @@ CREATE TABLE `brd_users` (
   `posts` varchar(255) NOT NULL DEFAULT '0',
   `plots` varchar(255) NOT NULL DEFAULT '0',
   `avatar` varchar(255) DEFAULT NULL,
-  `reg_date` varchar(255) NOT NULL,
+  `reputation` int(11) NOT NULL DEFAULT '0',
   `last_active` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `last_post` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `online_time` int(11) NOT NULL,
@@ -201,48 +226,54 @@ CREATE TABLE `brd_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Indeksy dla zrzutów tabel
+-- Indexes for dumped tables
 --
 
 --
--- Indeksy dla tabeli `brd_boards`
+-- Indexes for table `brd_boards`
 --
 ALTER TABLE `brd_boards`
   ADD PRIMARY KEY (`id`),
   ADD KEY `brd_fgk` (`category_id`);
 
 --
--- Indeksy dla tabeli `brd_categories`
+-- Indexes for table `brd_categories`
 --
 ALTER TABLE `brd_categories`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeksy dla tabeli `brd_chatbox`
+-- Indexes for table `brd_chatbox`
 --
 ALTER TABLE `brd_chatbox`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeksy dla tabeli `brd_groups`
+-- Indexes for table `brd_groups`
 --
 ALTER TABLE `brd_groups`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeksy dla tabeli `brd_images`
+-- Indexes for table `brd_images`
 --
 ALTER TABLE `brd_images`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeksy dla tabeli `brd_plotread`
+-- Indexes for table `brd_likeit`
+--
+ALTER TABLE `brd_likeit`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `brd_plotread`
 --
 ALTER TABLE `brd_plotread`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeksy dla tabeli `brd_plots`
+-- Indexes for table `brd_plots`
 --
 ALTER TABLE `brd_plots`
   ADD PRIMARY KEY (`id`),
@@ -250,99 +281,105 @@ ALTER TABLE `brd_plots`
   ADD KEY `brd_fgk_3` (`board_id`);
 
 --
--- Indeksy dla tabeli `brd_plugins`
+-- Indexes for table `brd_plugins`
 --
 ALTER TABLE `brd_plugins`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeksy dla tabeli `brd_posts`
+-- Indexes for table `brd_posts`
 --
 ALTER TABLE `brd_posts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeksy dla tabeli `brd_users`
+-- Indexes for table `brd_users`
 --
 ALTER TABLE `brd_users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT dla tabel zrzutów
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT dla tabeli `brd_boards`
+-- AUTO_INCREMENT for table `brd_boards`
 --
 ALTER TABLE `brd_boards`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_categories`
+-- AUTO_INCREMENT for table `brd_categories`
 --
 ALTER TABLE `brd_categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_chatbox`
+-- AUTO_INCREMENT for table `brd_chatbox`
 --
 ALTER TABLE `brd_chatbox`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_groups`
+-- AUTO_INCREMENT for table `brd_groups`
 --
 ALTER TABLE `brd_groups`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_images`
+-- AUTO_INCREMENT for table `brd_images`
 --
 ALTER TABLE `brd_images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_plotread`
+-- AUTO_INCREMENT for table `brd_likeit`
+--
+ALTER TABLE `brd_likeit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `brd_plotread`
 --
 ALTER TABLE `brd_plotread`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_plots`
+-- AUTO_INCREMENT for table `brd_plots`
 --
 ALTER TABLE `brd_plots`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_plugins`
+-- AUTO_INCREMENT for table `brd_plugins`
 --
 ALTER TABLE `brd_plugins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_posts`
+-- AUTO_INCREMENT for table `brd_posts`
 --
 ALTER TABLE `brd_posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `brd_users`
+-- AUTO_INCREMENT for table `brd_users`
 --
 ALTER TABLE `brd_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Ograniczenia dla zrzutów tabel
+-- Constraints for dumped tables
 --
 
 --
--- Ograniczenia dla tabeli `brd_boards`
+-- Constraints for table `brd_boards`
 --
 ALTER TABLE `brd_boards`
   ADD CONSTRAINT `brd_fgk` FOREIGN KEY (`category_id`) REFERENCES `brd_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ograniczenia dla tabeli `brd_plots`
+-- Constraints for table `brd_plots`
 --
 ALTER TABLE `brd_plots`
   ADD CONSTRAINT `brd_fgk_2` FOREIGN KEY (`author_id`) REFERENCES `brd_users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

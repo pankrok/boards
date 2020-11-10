@@ -9,6 +9,7 @@ use Application\Models\PostsModel;
 use Application\Models\PlotsReadModel;
 use Application\Models\BoardsModel;
 use Application\Models\UserModel;
+use Application\Models\LikeitModel;
 use Application\Models\ImagesModel;
 use Application\Core\Controller;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -23,8 +24,11 @@ class PlotController extends Controller
     
 	protected function lastPost($plotId)
 	{
-		$data = PostsModel::orderBy('created_at', 'desc')->where('plot_id', $plotId)->first();
-		$data = strtotime($data->created_at);
+		$data = PostsModel::orderBy('created_at', 'desc')->where('plot_id', $plotId)->first()->toArray();
+		if($data['created_at'])
+			$data = strtotime($data['created_at']);
+		else
+			$data = 0;
 			
 		return $data;
 	}
@@ -45,9 +49,15 @@ class PlotController extends Controller
 	
 	public function getPlot($request, $response, $arg)
 	{
-		
-		$currentPage = $arg['page'];
-		
+		if(isset($arg['page']) && $arg['page'] > 0)
+        {
+			$currentPage = $arg['page'];
+        }
+    	else
+        {
+        	$currentPage = 1;
+        }
+        
 		$totalItems = PostsModel::where('plot_id', $arg['plot_id'])->count();
 		$itemsPerPage = $this->settings['pagination']['plots'];
 		
@@ -61,7 +71,7 @@ class PlotController extends Controller
 				->take($paginator->getItemsPerPage())
 				->join('users', 'users.id', '=', 'posts.user_id')
 				->leftJoin('images', 'users.avatar', '=', 'images.id')
-				->select('posts.*', 'users.avatar', 'users.username', 'users.main_group', 'users.posts', 'users.plots', 'images._85')
+				->select('posts.*', 'users.avatar', 'users.username', 'users.reputation', 'users.main_group', 'users.posts', 'users.plots', 'images._85')
 				->get();	
 		
 		foreach($data as $k => $v)
@@ -112,7 +122,7 @@ class PlotController extends Controller
 	public function replyPost($request, $response)
 	{
 	
-		$plot = PlotsModel::select('locked')->find($request->getParsedBody()['plot_id']);
+		$plot = PlotsModel::select('locked', 'board_id')->find($request->getParsedBody()['plot_id']);
 		$locked = $plot->locked;
 		
 		$data['csrf'] = self::csftToken();
@@ -140,11 +150,17 @@ class PlotController extends Controller
 			$data['response'] = str_replace($find, $replace, $data['response']);
 			
 			
-			$user->posts = $user->posts+1;
+			$user->posts++;
 			$user->save();
 			
-			$boardID = PlotsModel::select('board_id')->find('board_id' ,$request->getParsedBody()['plot_id']);
-						
+			$user_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];
+			
+			$board = BoardsModel::find($plot->board_id);
+			$board->last_post_date = time();
+			$board->last_post_author = $user_html;
+			$board ->posts_number++;	
+			$board->save();
+			
 			PlotsReadModel::create([
 				'plot_id' => $request->getParsedBody()['plot_id'],
 				'user_id' => $_SESSION['user'],
@@ -178,6 +194,7 @@ class PlotController extends Controller
 		if($request->getParsedBody()['board_id'])
 		{
 			
+			
 			$board = BoardsModel::find($request->getParsedBody()['board_id']);
 			
 			if(!$board->locked && $request->getParsedBody()['content'] != '' &&  $request->getParsedBody()['topic'] != '') 
@@ -197,7 +214,20 @@ class PlotController extends Controller
 					'content' => $request->getParsedBody()['content'],
 					'hidden' => 0
 				]);
-			
+				
+				$user =UserModel::find($this->auth->user()['id']);
+				$user->posts++;
+				$user->plots++;
+				$user->save();
+				
+				$user_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];
+				
+				$board->plots_number++;
+				$board->posts_number++;
+				$board->last_post_date = time();
+				$board->last_post_author = $user_html;
+				$board->save();
+				
 				$data['redirect'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($newPlot->plot_name) . '/' . $newPlot->id;					
 			
 			}
@@ -212,7 +242,8 @@ class PlotController extends Controller
 				
 				$this->translator->trans('lang.post or topic is empty');
 			}
-		
+			
+			$user = null;
 			
 		}
 		$response->getBody()->write(json_encode($data));		
@@ -243,4 +274,64 @@ class PlotController extends Controller
 						->withStatus(201);	
 		
 	}
+	
+	
+	public function likeit($request, $response)
+	{
+		
+		$data['csrf'] = self::csftToken();
+		$postID = substr($request->getParsedBody()['post_id'], 5);
+		$data['likeit'] = LikeitModel::where([
+			['user_id', intval($_SESSION['user'])],
+			['post_id', intval($postID)]
+		])->first();
+		if(!$data['likeit'])
+		{
+			
+			
+			$post = PostsModel::find($postID);
+			
+			if($post->user_id == $_SESSION['user']) 
+			{
+				$data['likeit'] = ' <div id="overlay" style="display: none;"><div id="text" class="alert alert-danger fade show" role="alert">
+								  <strong>'.$this->translator->trans('lang.you cant like your own post').'</strong>
+								</div></div>';	
+				$response->getBody()->write(json_encode($data));		
+				return $response->withHeader('Content-Type', 'application/json')
+						->withStatus(201);	
+			}
+			
+			$post->post_reputation++;
+			$post->timestamps = false;
+			$post->save();
+			
+			$user = UserModel::find($post->user_id);
+			$user->reputation++;
+			$user->save();
+
+			
+			LikeitModel::create([
+				'user_id' => intval($_SESSION['user']),
+				'post_id' => intval($postID)
+			]);
+			
+			$data['likeit'] = ' <div id="overlay" style="display: none;"><div id="text" class="alert alert-success fade show" role="alert">
+								  <strong>'.$this->translator->trans('lang.reputation added').'</strong>
+								</div></div>';
+			
+
+		}
+		else
+		{
+			$data['likeit'] = ' <div id="overlay" style="display: none;""><div id="text" class=" alert alert-danger fade show" role="alert">
+								  <strong>'.$this->translator->trans('lang.you add reputation to this post').'</strong>
+								</div></div>';
+		}
+			
+		$response->getBody()->write(json_encode($data));		
+		return $response->withHeader('Content-Type', 'application/json')
+						->withStatus(201);	
+	}
+	
+	
 }

@@ -22,10 +22,10 @@
 		  <div class="card-body px-2">
 			<p class="card-text">
 			<ul class="list-group list-group-flush">
-				 <li class="list-group-item py-1">{{ trans('Members') }}: <span class="float-right">{{ stats.users }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right">{{ stats.posts }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Threads') }}: <span class="float-right">{{ stats.plots }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Newest Member') }}: <span class="float-right"><b>{{ stats.lastUser.name_html|raw }}</b></span></li>
+				 <li class="list-group-item py-1">{{ trans('Members') }}: <span class="float-right">{{ stats.users_count }}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right">{{ stats.posts_count }}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Threads') }}: <span class="float-right">{{ stats.plots_count }}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Newest Member') }}: <span class="float-right"><b>{{ stats.last_user | raw }}</b></span></li>
 			</ul>
 			</p>
 		  </div>
@@ -37,13 +37,12 @@
 	<div class="card border-light mb-3">
 		  <div class="card-header"><i class="fas fa-user-tag"></i> {{ trans('Your statistics') }}</div>
 		  <div class="card-body px-2">			
-			<img src="{% if user.avatar %}{{ base_url() }}/public/upload/avatars/{{ user._150 }}{% else %}{{ base_url() }}/public/img/avatar.png{% endif %}" class="rounded-circle mx-auto d-block stat-av" alt="{{ auth.user.username }}">
+			<img src="{{ user.avatar }}" class="rounded-circle mx-auto d-block stat-av" alt="{{ auth.user.username }}">
 			<p class="text-center"><b>{{ user.username | raw}}</b></p>
-			<p class="text-center small"><b>{{ user.group | raw}}</b></p>
 			<ul class="list-group list-group-flush">
-				 <li class="list-group-item py-1">{{ trans('Group') }}: <span class="float-right"></span></li>
-				 <li class="list-group-item py-1">{{ trans('Reputatnion') }}: <span class="float-right"></span></li>
-				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right"></span></li>
+				 <li class="list-group-item py-1">{{ trans('Group') }}: <span class="float-right">{{ user.group | raw}}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Reputatnion') }}: <span class="float-right">{{ user.reputation }}</span></li>
+				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right">{{ user.posts }}</span></li>
 				 <li class="list-group-item py-1">{{ trans('My IP') }}: <span class="float-right"><b>Hidden</b></span></li>
 				 <li class="list-group-item py-1">{{ trans('Last visit') }}: <span class="float-right">{{ auth.user.updated_at }}</span></li>
 			</ul>
@@ -67,7 +66,7 @@
 		<!-- board -->
 		{% for category in categories %}
 		<div class="card border-light mb-3">
-			<div class="card-header"><i class="fas fa-clipboard-list"></i> <a href="{{ base_url()}}/category/{{ setString.toUrl(category.name) }}/{{ category.id }}">{{ category.name|raw }}</a>
+			<div class="card-header"><i class="fas fa-clipboard-list"></i> <a href="{{ category.url }}">{{ category.name|raw }}</a>
 			 <p class="onoff float-right"><input type="checkbox" value="0" id="checbox-board-{{ category.cat_id }}" data-toggle="collapse" data-target="#board-{{ category.cat_id }}" aria-expanded="true" aria-controls="board-{{ category.cat_id }}"><label for="checbox-board-{{ category.cat_id }}"></label></p>
 			</div>
 				<div class="card-body px-0 py-1 collapse show" id="board-{{ category.cat_id }}">
@@ -77,8 +76,8 @@
 						<div class="row w-100 fs-10b">
 						<div class="col-md-1"></div>
 						<div class="col-9 col-md-5">Forum</div>
-						<div class="col-3 d-none d-md-block ">Threads / Posts</div>
-						<div class="col-3 text-center">Last Post</div>
+						<div class="col-3 d-none d-md-block ">{{ trans('Threads') }} / {{ trans('Posts') }}</div>
+						<div class="col-3 text-center">{{ trans('Last post') }}</div>
 						</div>
 						</li>
 						
@@ -90,7 +89,7 @@
 							<div class="col-2 col-md-1 pl-3 {{ board.read }} text-center"><i class="fas fa-comment fa-2x"></i></div>
 							<div class="col-7 col-md-5">
 								<div class="row">
-									<div class="col-12 fs-15"><a href="{{ base_url()}}/board/{{ setString.toUrl(board.board_name) }}/{{ board.id }}">{{ board.board_name }}</a></div>
+									<div class="col-12 fs-15"><a href="{{ board.url }}">{{ board.board_name }}</a></div>
 									{% for  childboard in board.childboard%} 
 									<div class="col-6 fs-12">
 									<a href="{{ base_url()}}/board/{{ setString.toUrl(childboard.board_name) }}/{{ childboard.id }}">
@@ -101,21 +100,28 @@
 									<div class="col-12 fs-12">{{ board.board_description | raw }}</div>
 								</div>
 							</div>
-							<div class="col-2 mx-auto d-none d-md-block">1 / 1</div>
+							<div class="col-2 mx-auto d-none d-md-block">{{ board.plots_number }} / {{ board.posts_number }}</div>
 							<div class="col-3">
+							{% if board.last_post_date %}
 								<div class="row text-center fs-12 d-none d-md-block">
-								{% set last = board.last %}
 									
-								<div class="col-12"><a href="{{ base_url() }}">New Plot</a> by 
-								<a href="{{ base_url() }}">Lorem 2</a></div>
-								<div class="col-12"><i class="far fa-clock"></i> 9:22 11.11.12</div>
+								<div class="col-12"><a href="{{ base_url() }}/plot/{{ setString.toUrl(board.last_post_data.plot_name) }}/{{ board.last_post_data.id }}">{{ board.last_post_data.plot_name }}</a> {{ trans('by') }} 
+								<a href="{{ base_url() }}/user/{{  setString.toUrl(board.last_post_data.username) }}/{{ board.last_post_data.author_id }}">{{ board.last_post_author | raw }}</a></div>
+								<div class="col-12"><i class="far fa-clock"></i> {{ board.last_post_date | date("Y-m-d H:i:s") }}</div>
 								</div>
 								<div class="row text-center fs-10 d-block d-md-none">
-									<div class="col-12 fs-12"><a href="{{ base_url() }}"><span class="badge badge-secondary">Ostatni post</span></a></div>
-									<div class="col-12"><a href="{{ base_url() }}">link</a></div>
-
-									
+									<div class="col-12 fs-12 text-center">
+										<a href="{{ base_url() }}/plot/{{ setString.toUrl(board.last_post_data.plot_name) }}/{{ board.last_post_data.id }}">
+											<span class="badge badge-secondary">{{ trans('Last post') }}</span>
+										</a>
+									</div>
+									<div class="col-12">
+										<a href="{{ base_url() }}/user/{{  setString.toUrl(board.last_post_data.username) }}/{{ board.last_post_data.author_id }}" class="text-center"	>
+										{{ board.last_post_author | raw }}
+										</a>
+									</div>									
 								</div>
+							{% endif %}
 							</div>
 							</div>
 						</li>
@@ -142,7 +148,7 @@
 			<h6 class="card-title"><b>{{ trans('Whos Online') }}:</b></h6>
 			<p class="card-text">{% for user in stats.online %}<a href="{{ base_url() }}/user/{{ setString.toUrl(user.username) }}/{{ user.id }}">{{ user.username_html  | raw }},</a> {% endfor %}</p>
 			<h6 class="card-title"><b>{{ trans('Group legend') }}:</b></h6>
-			<p class="card-text">{% for group in groups_legend %}{{ group.group_name|raw }}, {% endfor %}</p>
+			<p class="card-text">{% for group in boards.groups_legend %}{{ group.grupe_name |raw }}, {% endfor %}</p>
 			
 		</div>
 	</div>
