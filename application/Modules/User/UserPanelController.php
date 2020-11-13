@@ -4,6 +4,7 @@ namespace Application\Modules\User;
 
 use Application\Models\UserModel;
 use Application\Models\UserDataModel;
+use Application\Models\PostsModel;
 use Application\Models\ImagesModel;
 use Application\Core\Controller;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -20,7 +21,7 @@ class UserPanelController extends Controller
 	private function moveUploadedFile($directory, $uploadedFile)
 	{
 		$extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-		$basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+		$basename = bin2hex(random_bytes(8));
 		$filename = sprintf('%s.%0.8s', $basename, $extension);
 
 		$uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
@@ -28,6 +29,25 @@ class UserPanelController extends Controller
 		return $filename;
 	}
 
+	private function getUserdata($uid)
+	{
+		
+		$data = UserDataModel::where('user_id', '=', $uid)->first();
+		if(isset($data)) $data->toArray();
+		return $data;
+		
+	}
+	
+	private function findPage($created, $plotId)
+	{
+		$count = ceil(PostsModel::where([
+									['created_at', '<=' ,$created],
+									['plot_id', '=' ,$plotId]
+									])
+								->count() / $this->settings['pagination']['plots'] );
+								
+		return $count;
+	}
 	
 	public function getProfile($request, $response, $arg)
 	{
@@ -46,20 +66,31 @@ class UserPanelController extends Controller
 							->select('users.*', 'images._150')
 							->find($arg['uid']);
 			
+			$posts = PostsModel::orderBy('created_at', 'desc')
+								->leftJoin('plots', 'posts.plot_id', '=', 'plots.id')
+								->select('posts.*', 'plots.plot_name')
+								->where('posts.user_id', $arg['uid'])
+								->get()->toArray();
+								
+							
+			foreach($posts as $k => $v)
+			{
+				$page = self::findPage($v['created_at'], $v['plot_id']);
+				$posts[$k]['url'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($v['plot_name']) . '/' . $v['plot_id'] . '/'. $page . '#post-'. $v['id'];		
+			}			
+			
+			$this->view->getEnvironment()->addGlobal('posts', $posts);
 			$this->view->getEnvironment()->addGlobal('profile', $data);
 			$this->view->getEnvironment()->addGlobal('can_edit', $canEdit);
 			$this->view->getEnvironment()->addGlobal('title', $data->username);
 			$this->view->getEnvironment()->addGlobal('id', $arg['uid']);
 			
-			/*$data = $this->userdata->getData($arg['uid']);
-			
-			
-			$this->view->getEnvironment()->addGlobal('id', $arg['uid']);
-			$this->view->getEnvironment()->addGlobal('profile', $data);
-			$this->view->getEnvironment()->addGlobal('additional', $this->userdata->getAdditionalData($arg['uid']));
-			$this->view->getEnvironment()->addGlobal('posts', $this->userdata->getPosts($arg['uid']));
-			$this->view->getEnvironment()->addGlobal('title', $data->username);
-			*/
+			$additionalData = self::getUserdata($arg['uid']);
+	
+			if(isset($additionalData))
+				$this->view->getEnvironment()->addGlobal('additional', $additionalData);
+
+
 			
 		}
 		return $this->view->render($response, 'user/profile.twig');
@@ -142,7 +173,7 @@ class UserPanelController extends Controller
         
 			if (!$validation->faild())
 			{
-				$password = $this->auth->user();
+				$password = UserModel::find($this->auth->user()['id']);
 				$password->password = password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT);
 				$password->save();
 			}
@@ -153,16 +184,18 @@ class UserPanelController extends Controller
         
 			if (!$validation->faild())
 			{
-				$mail = $this->auth->user();
+				$mail = UserModel::find($this->auth->user()['id']);
 				$mail->password = password_hash($request->getParsedBody()['email'], PASSWORD_DEFAULT);
 				$mail->save();
 			}
 		$user->save();
 		}
-		$user	= $this->auth->user();
+		$user= $this->auth->user();
+		
+		$url = self::base_url() . '/user/' . $this->urlMaker->toUrl($user['username']) . '/' . $user['id'];
 		
 		return $response
-				->withHeader('Location', $this->router->urlFor('home'))
+				->withHeader('Location', $url)
 				->withStatus(302);
 	}
 	

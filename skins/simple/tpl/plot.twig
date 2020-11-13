@@ -27,21 +27,17 @@
 		 <div class="card-body">
 		  <div class="row mx-0">
 			<div class="col-2 border-right d-none d-md-block p-2 text-center">
-				<p class="fs-15b m-0"><a href="{{ base_url() }}/user/{{ post.username }}/{{ post.user_id }}">{{ post.username_html | raw }}</a></p>
+				<p class="fs-15b m-0"><a href="{{ post.user_url }}">{{ post.username_html | raw }}</a></p>
 				<p class="fs-10b m-0 {% if 1==1%}fc-green{% else %}fc-g{% endif %}">{% if 1==1 %}online{% else %}offline{% endif %}</p>
-				<img src="{% if post.avatar %}
-				{{ base_url() }}/public/upload/avatars/{{post._85}}
-				{% else %}
-				{{ base_url() }}/public/img/avatar.png
-				{% endif %}" class="rounded-circle mx-auto d-block post-av" alt="username">
+				<img src="{{ post.avatar }}" class="rounded-circle mx-auto d-block post-av" alt="{{ post.username }}">
 				<div class="mx-auto w-75">
 				<p class="fs-12 m-0">{{ post.group | raw }}</p><br />
 
 				
-				<p class="fs-12 m-0 fc-g "><span class="float-left">Posts:</span> <span class="float-right">{{ post.posts }}</span></p><br />
-				<p class="fs-12 m-0 fc-g "><span class="float-left">Plots:</span> <span class="float-right">{{ post.plots }}</span></p><br />
-				<!--<p class="fs-12 m-0 fc-g "><span class="float-left">Join:</span> <span class="float-right"> {{ post.created_at }}</span></p><br />-->
-				<p class="fs-12 m-0 fc-g "><span class="float-left">Reputatnion:</span> <span class="float-right">{{ post.reputation }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Posts') }}:</span> <span class="float-right">{{ post.posts }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Plots') }}:</span> <span class="float-right">{{ post.plots }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Join') }}:</span> <span class="float-right"> {{ post.created_at }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Reputatnion') }}:</span> <span class="float-right">{{ post.reputation }}</span></p><br />
 				</div>
 			</div>
 			
@@ -49,10 +45,10 @@
 			<div class="col-md-2 d-block d-md-none px-0">
 				<div class="row mx-auto">
 					<div class="col-2 my-1 border-bottom border-dark">
-						<img src="/public/img/avatar.png" class="rounded-circle mx-auto d-block post-av " alt="username">
+						<img src="{{ post.avatar }}" class="rounded-circle mx-auto d-block post-av " alt="{{ post.username }}">
 					</div>
 					<div class="col-10 my-1 border-bottom border-dark">
-					<p class="fs-12b mb-1"><a href="#">username</a></p>
+					<p class="fs-12b mb-1"><a href="#">{{ post.username_html | raw }}</a></p>
 					<p class="fs-10 mb-1">Posted: stworzony o</p>
 					</div> 
 				</div>
@@ -127,49 +123,47 @@
 <script>
 var urlForReply = "{{ path_for('board.replyPost') }}";
 var likePost = "{{ path_for('board.likeit') }}";
-
-
-
 {% if auth.admin %}
-	var aedit = new Jodit('#editPostJodit', {
-				autofocus: true,
-				height: "280",
-				toolbarAdaptive: false,
-				allowResizeX: false,
-				allowResizeY: false,
-			});
-	
-	function editPost(id, len){
-	
-		var csrfName = $('#csrf_name').val();
-		var csrfValue = $('#csrf_value').val();
+$(function() {
+		var aedit = new Jodit('#editPostJodit', {
+					autofocus: true,
+					height: "280",
+					toolbarAdaptive: false,
+					allowResizeX: false,
+					allowResizeY: false,
+				});
 		
-		$.ajax({
+		function editPost(id, len){
+		
+			var csrfName = $('#csrf_name').val();
+			var csrfValue = $('#csrf_value').val();
+			
+			$.ajax({
 
-			  type: "POST",
-			  url: "{{ path_for('admin.editpost') }}",
-			  data: { 
-			  'content': 	$('#editPostJodit').val(),
-			  'post_id': 	(id).substring(10,len),
-			  "csrf_name" : csrfName,
-			  "csrf_value" : csrfValue
-			  },
-			  dataType: 'json',
-			  error: function(query){
-				console.log(query);
-			  },
-			  success: function(mydata){					
-				
-				$('#csrf_name').val(mydata['token']['csrf_name']);
-				$('#csrf_value').val(mydata['token']['csrf_value']);
-				$('#content'+(id).substring(9,len)).html($('#editPostJodit').val());
-				$('#editPost').modal('hide');
-			  }
-			});	
-		
-	}
+				  type: "POST",
+				  url: "{{ path_for('admin.editpost') }}",
+				  data: { 
+				  'content': 	$('#editPostJodit').val(),
+				  'post_id': 	(id).substring(10,len),
+				  "csrf_name" : csrfName,
+				  "csrf_value" : csrfValue
+				  },
+				  dataType: 'json',
+				  error: function(query){
+					console.log(query);
+				  },
+				  success: function(mydata){					
+					
+					$('#csrf_name').val(mydata['token']['csrf_name']);
+					$('#csrf_value').val(mydata['token']['csrf_value']);
+					$('#content'+(id).substring(9,len)).html($('#editPostJodit').val());
+					$('#editPost').modal('hide');
+				  }
+				});	
+			
+		}
+});
 {% endif %}
-
 </script>
 
 

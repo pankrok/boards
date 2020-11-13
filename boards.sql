@@ -1,3 +1,12 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.4
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: Nov 13, 2020 at 03:09 PM
+-- Server version: 10.1.47-MariaDB-0+deb9u1
+-- PHP Version: 7.4.12
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -185,6 +194,24 @@ CREATE TABLE `brd_posts` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `brd_userdata`
+--
+
+CREATE TABLE `brd_userdata` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `surname` varchar(255) NOT NULL,
+  `rank` varchar(255) NOT NULL,
+  `sex` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `website` varchar(255) NOT NULL,
+  `bday` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `brd_users`
 --
 
@@ -293,6 +320,13 @@ ALTER TABLE `brd_posts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `brd_userdata`
+--
+ALTER TABLE `brd_userdata`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `brd_users`
 --
 ALTER TABLE `brd_users`
@@ -360,6 +394,12 @@ ALTER TABLE `brd_plugins`
 -- AUTO_INCREMENT for table `brd_posts`
 --
 ALTER TABLE `brd_posts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `brd_userdata`
+--
+ALTER TABLE `brd_userdata`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

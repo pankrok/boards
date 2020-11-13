@@ -7,59 +7,13 @@
 	<!-- main board -->
 	<!-- new plot button -->
 	<div class="col-lg-12 order-0 my-2">
-		<a class="btn btn-secondary float-right" href="{{ base_url() }}/newplot/{{ board.board_id }}" role="button">{{ trans('Start new plot') }}</a>
+		<a class="btn btn-secondary float-right" href="{{ new_plot }}" role="button">{{ trans('Start new plot') }}</a>
 	</div>
 	<div class="col-lg-12 order-2 my-2">
-		<a class="btn btn-secondary float-right" href="{{ base_url() }}/newplot/{{ board.board_id }}" role="button">{{ trans('Start new plot') }}</a>
+		<a class="btn btn-secondary float-right" href="{{ new_plot }}" role="button">{{ trans('Start new plot') }}</a>
 	</div>
 	<!-- new plot button -->
-	<div class="col-lg-12 order-1">
-		
-		{% if checkcb %}
-		<div class="card-header"><i class="fas fa-clipboard-list"></i> Subforums: {{ title }}</div>
-		<div class="card-body px-0 py-1 collapse show" id="board-{{ category.cat_id }}">
-					<ul class="list-group list-group-flush">
-						<!-- board legend -->
-						<li class="list-group-item bg-light">
-						<div class="row w-100 fs-10b">
-						<div class="col-md-1"></div>
-						<div class="col-12 col-md-5">Forum</div>
-						<div class="col-3 d-none d-md-block ">Threads / Posts</div>
-						<div class="col-3 d-none d-md-block text-center">Last Post</div>
-						</div>
-						</li>
-						<!-- one board -->
-						{% for board in childbords %}
-						<li class="list-group-item {% if board.board_order is even %}bg-white{% else %}bg-light{% endif %}">
-							<div class="row w-100">
-							<div class="col-2 col-md-1 pl-3 {{ board.read }} text-center"><i class="fas fa-comment fa-2x"></i></div>
-							<div class="col-10 col-md-5">
-								<div class="row">
-									<div class="col-12 fs-15"><a href="{{ base_url()}}/board/{{ setString.toUrl(board.board_name) }}/{{ board.id }}">{{ board.board_name|raw }}</a></div>
-									<div class="col-12 fs-12">{{ board.board_description|raw }}</div>
-								</div>
-							</div>
-							<div class="col-2 mx-auto d-none d-md-block">{{ board.all_posts }} / {{ board.posts_no }}</div>
-							<div class="col-3 d-none d-md-block">
-								<div class="row text-center fs-12">
-								{% set last = board.last %}
-								{% if last.plot_name %}
-								<div class="col-12"><a href="{{ base_url() }}/plot/{{ setString.toUrl(last.plot_name) }}/{{ last.plot_id }}/{{ board.endpage }}#post-{{ last.id }}">{{ last.plot_name }}</a> by 
-								<a href="#"> userData(last.user_id).username</a></div>
-								<div class="col-12"><i class="far fa-clock"></i> {{ last.created_at }}</div>
-								{% else %}
-								<div class="col-12"> - </div>
-								{% endif %}
-								</div>
-							</div>
-							</div>
-						</li>
-						{% endfor %}
-						<!-- /one board -->							
-					</ul>
-		</div>
-		{% endif %}
-		
+	<div class="col-lg-12 order-1">		
 		<!-- Category Board -->
 				
 		<div class="card border-light">
@@ -76,7 +30,7 @@
 							<div class="col-6 col-md-5">Topic / Author</div>	
 							<div class="col-4 col-md-2 text-center">Replies / Views</div>
 							<div class="col-2 d-none d-md-block text-center">Rating</div>
-							<div class="col-2 d-none d-md-block text-center">Last Post</div>
+							<div class="col-2 d-none d-md-block text-center">Last post</div>
 						</div>
 						</li>
 						{% for plot in board.plots %}
@@ -86,8 +40,8 @@
 							<div class="col-1 col-md-1"><i class="fas fa-file"></i></div>
 							<div class="col-6 col-md-5">
 								<div class="row">
-									<div class="col-12"><h2><a href="{{ base_url() }}/plot/{{ setString.toUrl(plot.plot_name) }}/{{ plot.id }}/{{plot.lastPage}}">{{ plot.plot_name }}</a></h2></div>
-									<div class="col-12 fs-12"><a href="{{ base_url() }}/user/{{ setString.toUrl(plot.username) }}/{{ plot.author_id }}">{{ plot.username }}</a></div>
+									<div class="col-12"><h2><a href="{{ plot.url }}">{{ plot.plot_name }}</a></h2></div>
+									<div class="col-12 fs-12">{{ trans('by') }} <a href="{{ plot.user_url }}">{{ plot.username_html | raw }}</a></div>
 								</div>
 							</div>	
 							<div class="col-4 col-md-2 text-center">{{ plot.all_posts }} / {{ plot.views }}</div>
@@ -100,8 +54,8 @@
 							</div>
 							<div class="col-2 d-none d-md-block text-center">
 								<div class="row text-center fs-12">
+									<div class="col-12"><a href="{{ plot.last_post_autor_url }}">{{ plot.last_post_autor | raw }}</a></div>
 									<div class="col-12"><i class="far fa-clock"></i> {{  plot.last_post_date }}</div>
-									<div class="col-12">last reply: <a href="{{ plot.last_url }}">{{ plot.last_post_autor }}</a></div>
 								</div>
 							</div>
 

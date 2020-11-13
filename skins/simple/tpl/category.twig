@@ -20,9 +20,9 @@
             <li class="list-group-item bg-white">
             <div class="row w-100 fs-10b">
             <div class="col-md-1"></div>
-            <div class="col-12 col-md-5">Forum</div>
-            <div class="col-3 d-none d-md-block text-center">Threads / Posts</div>
-            <div class="col-3 d-none d-md-block text-center">Last Post</div>
+            <div class="col-12 col-md-5">{{ trans('Board') }}</div>
+            <div class="col-3 d-none d-md-block text-center">{{ trans('Threads') }} / {{ trans('Posts') }}</div>
+            <div class="col-3 d-none d-md-block text-center">{{ trans('Last post') }}</div>
             </div>
             </li>
 			
@@ -33,18 +33,17 @@
               <div class="col-2 col-md-1 pl-3 fc-g text-center"><i class="fas fa-comment fa-2x"></i></div>
               <div class="col-10 col-md-5">
                 <div class="row">
-                <div class="col-12 fs-15"><h2><a href="{{ base_url()}}/board/{{ setString.toUrl(board.board_name) }}/{{ board.id }}">{{ board.board_name }}</a></h2></div>
+                <div class="col-12 fs-15"><h2><a href="{{ board.url }}">{{ board.board_name }}</a></h2></div>
                 <div class="col-12 fs-12">{{ board.board_description | raw }}</div>
                 </div>
               </div>
-              <div class="col-2 mx-auto d-none d-md-block text-center">{{ board.plots_no }} / {{ board.posts_no }}</div>
+              <div class="col-2 mx-auto d-none d-md-block text-center">{{ board.plots_number }} / {{ board.posts_number }}</div>
               <div class="col-3 d-none d-md-block">
                 <div class="row text-center fs-12">
-				{% set last = board.last %}
-				{% if last.plot_name %}
-				<div class="col-12"><a href="{{ base_url() }}/plot/{{ setString.toUrl(last.plot_name) }}/{{ last.plot_id }}/{{ board.endpage }}#post-{{ last.id }}">{{ last.plot_name }}</a> by 
-				<a href="#"> userData(last.user_id).username</a></div>
-				<div class="col-12"><i class="far fa-clock"></i> {{ last.created_at }}</div>
+				{% if board.last_post_url %}
+				<div class="col-12"><a href="{{ board.last_post_url }}">{{ board.plot_name }}</a> by 
+				<a href="{{ last_post_author_url }}"> {{ board.last_post_author | raw }}</a></div>
+				<div class="col-12"><i class="far fa-clock"></i> {{ board.created_at }}</div>
 				{% else %}
 				<div class="col-12"> - </div>
 				{% endif %}
@@ -55,8 +54,6 @@
             </li>
             <!-- /one board -->
            {% endfor %}
-		   
-		   
             <!-- /one board -->            
           </ul>
         </div>

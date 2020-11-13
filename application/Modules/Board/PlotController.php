@@ -71,12 +71,14 @@ class PlotController extends Controller
 				->take($paginator->getItemsPerPage())
 				->join('users', 'users.id', '=', 'posts.user_id')
 				->leftJoin('images', 'users.avatar', '=', 'images.id')
-				->select('posts.*', 'users.avatar', 'users.username', 'users.reputation', 'users.main_group', 'users.posts', 'users.plots', 'images._85')
+				->select('posts.*', 'users.avatar', 'users.username', 'users.reputation', 'users.main_group', 'users.posts', 'users.plots', 'images._85', 'images._38')
 				->get();	
 		
 		foreach($data as $k => $v)
 		{
 			$group = $this->group->getGroupDate($v->main_group, $v->username);
+			$data[$k]->user_url = self::base_url() .'/user/'. $v->username .'/'. $v->user_id ;
+			$data[$k]->avatar = $v->avatar ? self::base_url() . $this->settings['images']['path'] . $v->_85 : self::base_url() . '/public/img/avatar.png';
 			$data[$k]->username_html = $group['username'];
 			$data[$k]->group = $group['group'];
 		}

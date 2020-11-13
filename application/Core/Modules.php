@@ -15,7 +15,7 @@ return function(App $app)
 	
 	$container->set('HomeController', function($container)
 	{
-		return new Application\Modules\Home\HomeController($container);
+		return new Application\Modules\Board\HomeController($container);
 	});	
 	
 	$container->set('CategoryController', function($container)

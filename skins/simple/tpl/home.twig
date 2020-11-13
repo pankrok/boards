@@ -2,6 +2,8 @@
 
 {% block content %}
 <div class="row">
+
+
 	<!-- right module -->
 	
 	<div class="col-lg-3 order-2 d-none d-sm-block">
@@ -67,15 +69,15 @@
 		{% for category in categories %}
 		<div class="card border-light mb-3">
 			<div class="card-header"><i class="fas fa-clipboard-list"></i> <a href="{{ category.url }}">{{ category.name|raw }}</a>
-			 <p class="onoff float-right"><input type="checkbox" value="0" id="checbox-board-{{ category.cat_id }}" data-toggle="collapse" data-target="#board-{{ category.cat_id }}" aria-expanded="true" aria-controls="board-{{ category.cat_id }}"><label for="checbox-board-{{ category.cat_id }}"></label></p>
+			 <p class="onoff float-right"><input type="checkbox" value="0" id="checbox-board-{{ category.id }}" data-toggle="collapse" data-target="#board-{{ category.id }}" aria-expanded="true" aria-controls="board-{{ category.id }}"><label for="checbox-board-{{ category.id }}"></label></p>
 			</div>
-				<div class="card-body px-0 py-1 collapse show" id="board-{{ category.cat_id }}">
+				<div class="card-body px-0 py-1 collapse show" id="board-{{ category.id }}">
 					<ul class="list-group list-group-flush">
 						<!-- board legend -->
 						<li class="list-group-item bg-white">
 						<div class="row w-100 fs-10b">
 						<div class="col-md-1"></div>
-						<div class="col-9 col-md-5">Forum</div>
+						<div class="col-9 col-md-5">{{ trans('Board') }}</div>
 						<div class="col-3 d-none d-md-block ">{{ trans('Threads') }} / {{ trans('Posts') }}</div>
 						<div class="col-3 text-center">{{ trans('Last post') }}</div>
 						</div>
@@ -105,18 +107,18 @@
 							{% if board.last_post_date %}
 								<div class="row text-center fs-12 d-none d-md-block">
 									
-								<div class="col-12"><a href="{{ base_url() }}/plot/{{ setString.toUrl(board.last_post_data.plot_name) }}/{{ board.last_post_data.id }}">{{ board.last_post_data.plot_name }}</a> {{ trans('by') }} 
-								<a href="{{ base_url() }}/user/{{  setString.toUrl(board.last_post_data.username) }}/{{ board.last_post_data.author_id }}">{{ board.last_post_author | raw }}</a></div>
+								<div class="col-12"><a href="{{ board.last_post_url }}">{{ board.last_post_data.plot_name }}</a> {{ trans('by') }} 
+								<a href="{{ board.last_post_author_url }}">{{ board.last_post_author | raw }}</a></div>
 								<div class="col-12"><i class="far fa-clock"></i> {{ board.last_post_date | date("Y-m-d H:i:s") }}</div>
 								</div>
 								<div class="row text-center fs-10 d-block d-md-none">
 									<div class="col-12 fs-12 text-center">
-										<a href="{{ base_url() }}/plot/{{ setString.toUrl(board.last_post_data.plot_name) }}/{{ board.last_post_data.id }}">
+										<a href="{{ board.last_post_url }}">
 											<span class="badge badge-secondary">{{ trans('Last post') }}</span>
 										</a>
 									</div>
 									<div class="col-12">
-										<a href="{{ base_url() }}/user/{{  setString.toUrl(board.last_post_data.username) }}/{{ board.last_post_data.author_id }}" class="text-center"	>
+										<a href="{{ board.last_post_author_url }}" class="text-center"	>
 										{{ board.last_post_author | raw }}
 										</a>
 									</div>									

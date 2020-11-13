@@ -37,8 +37,8 @@
 								
 								<div class="col-12">
 								  <div class="card-body">
-								  <a href="{{ base_url() }}/plot/{{ toUrl(post.plot_name) }}/{{post.plot_id}}/{{post.page}}#post-{{ post.id }}"><h5 class="card-title">{{ post.plot_name }}</h5></a>
-									<div class="d-none d-md-block card-title fs-10">Posted: {{ post.created_at }}<a href="#" class="float-right"><i class="fas fa-exclamation-circle"></i> {{ trans('Report post') }}</a></div>
+								  <a href="{{ post.url}}"><h5 class="card-title">{{ post.plot_name }}</h5></a>
+									<div class="d-none d-md-block card-title fs-10">Posted: {{ post.created_at }}</div>
 									<p class="card-text">{{ post.content|raw }}</p>						
 								  </div>
 								</div>

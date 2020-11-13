@@ -108,8 +108,8 @@ $container->set('adminView', function($container){
 	
 	$twigSettings = $container->get('settings')['admin'];
     $view = new \Slim\Views\Twig(MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',[
-        'cache' => (bool)$twigSettings['cache'],
-        'debug' => (bool)$twigSettings['debug'],
+        'cache' => false,
+        'debug' => false,
     ]);
     
     $router = $container->get('router');

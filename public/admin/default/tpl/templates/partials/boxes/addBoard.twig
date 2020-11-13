@@ -6,7 +6,7 @@
 <form action="{{ path_for('admin.add.board') }}" method="post" id="addBoard">
   <div class="row">
 		<div class="form-group col-4">
-		<label for="SelectCategory">Select Category:</label>
+		<label for="SelectCategory">{{ trans('admin.select category') }}:</label>
 		<select class="form-control" id="SelectCategory" name="cat_id">
 		  {% for category in categories %}
 		  <option value="{{ category.id }}">{{ category.name }}</option>	  
@@ -14,20 +14,20 @@
 		</select>
 	  </div>
 	  <div class="form-group col-4">
-		<label for="boardName">Board name</label>
+		<label for="boardName">{{ trans('admin.board name') }}</label>
 		<input type="text" class="form-control" id="boardName" name="name">
 	  </div>
 	  <div class="form-group col-4">
-		<label for="boardOrder">Board order</label>
+		<label for="boardOrder">{{ trans('admin.board order') }}</label>
 		<input type="text" class="form-control" id="boardOrder" name="order">
 	  </div>
   </div> 
   <div class="form-group">
-    <label for="BoardDesc">Board description</label>
+    <label for="BoardDesc">{{ trans('admin.board description') }}</label>
     <textarea class="form-control" id="BoardDesc" rows="3" name="desc"></textarea>
   </div>
   <div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
    </div>
 </form>
 </div>

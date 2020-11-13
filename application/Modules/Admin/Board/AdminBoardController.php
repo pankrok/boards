@@ -43,8 +43,6 @@ class AdminBoardController extends Controller
 				$data->save();
 			}
 			
-			
-			
 		}
 
 		return $response
@@ -109,10 +107,8 @@ class AdminBoardController extends Controller
 	
 	protected function getCategories()
 	{
-		
 		$categories = \Application\Models\CategoryModel::orderBy('category_order', 'DESC')->get(); 
-		return $categories;
-		
+		return $categories;	
 	}	
 	
 	protected function getBoards()
@@ -121,9 +117,7 @@ class AdminBoardController extends Controller
 		$handler = \Application\Models\BoardsModel::orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
 		foreach($handler as $k => $v)
 		{
-		
-			$boards[$v['category_id']][$v['id']] = $v;
-		
+			$boards[$v['category_id']][$v['id']] = $v;	
 		}
 		return $boards;
 	}

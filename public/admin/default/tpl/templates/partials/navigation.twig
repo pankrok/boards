@@ -11,16 +11,16 @@
 					  data-target="#collapseSubItems1"
 					  aria-controls="collapseSubItems1"
 					  aria-expanded="false"
-					><i class="fas fa-cogs"></i><span class="d-none d-md-inline"> {{ trans('configuration') }}</span></a>
+					><i class="fas fa-cogs"></i><span class="d-none d-md-inline"> {{ trans('admin.configuration') }}</span></a>
 					<ul class="nav-second-level collapse" id="collapseSubItems1" data-parent="#navAccordion">
 					  <li class="nav-item">
-						<a class="nav-link" href="{{ ('admin.settings') }}">
-						  <span class="nav-link-text"><i class="fas fa-sliders-h"></i> {{ trans('settings') }}</span>
+						<a class="nav-link" href="#">
+						  <span class="nav-link-text"><i class="fas fa-sliders-h"></i> {{ trans('admin.settings') }}</span>
 						</a>
 					  </li>
 					  <li class="nav-item">
 						<a class="nav-link" href="#">
-						  <span class="nav-link-text"><i class="fas fa-puzzle-piece"></i> {{ trans('plugins') }}</span>
+						  <span class="nav-link-text"><i class="fas fa-puzzle-piece"></i> {{ trans('admin.plugins') }}</span>
 						</a>
 					  </li>
 					</ul>
@@ -34,21 +34,21 @@
 					  data-target="#collapseSubItems2"
 					  aria-controls="collapseSubItems2"
 					  aria-expanded="false"
-					><i class="fas fa-list-alt"></i><span class="d-none d-md-inline"> {{ trans('board') }}</span></a>
+					><i class="fas fa-list-alt"></i><span class="d-none d-md-inline"> {{ trans('admin.board') }}</span></a>
 					<ul class="nav-second-level collapse" id="collapseSubItems2" data-parent="#navAccordion">
 					  <li class="nav-item">
 						<a class="nav-link" href="{{ path_for('admin.boards') }}">
-						  <span class="nav-link-text"><i class="fas fa-tasks"></i> {{ trans('managment') }}</span>
+						  <span class="nav-link-text"><i class="fas fa-tasks"></i> {{ trans('admin.managment') }}</span>
 						</a>
 					  </li>
 					  <li class="nav-item">
 						<a class="nav-link" href="#">
-						  <span class="nav-link-text"><i class="fa fa-bullhorn"></i> {{ trans('annoucments') }}</span>
+						  <span class="nav-link-text"><i class="fa fa-bullhorn"></i> {{ trans('admin.annoucments') }}</span>
 						</a>
 					  </li>
 					  <li class="nav-item">
 						<a class="nav-link" href="#">
-						  <span class="nav-link-text"><i class="fas fa-bell"></i> {{ trans('notification') }}</span>
+						  <span class="nav-link-text"><i class="fas fa-bell"></i> {{ trans('admin.notification') }}</span>
 						</a>
 					  </li>
 					</ul>
