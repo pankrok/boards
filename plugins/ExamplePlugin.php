@@ -1,9 +1,9 @@
 <?php
-  
+declare(strict_types=1);
 namespace Plugins;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use App\Controllers\Plugins\PluginEventController;
+use Application\Core\Modules\Plugins\PluginController;
 
 class ExamplePlugin implements EventSubscriberInterface
 {
@@ -15,9 +15,42 @@ class ExamplePlugin implements EventSubscriberInterface
 
     }
 
+	public static function info()
+	{
+		return [
+			'version' => '1.1',
+			'boards_v' => '1.1.20',
+			'author' => 'PanKrok',
+			'website' => 's89.eu',
+		];
+		
+	}
+	
+	public static function activation()
+	{
+		PluginController::addToTpl('home.twig', '<!-- plugin example -->', '{{ plugin_bar | raw }}');
+	}
+	
+	public static function deactivation()
+	{
+		PluginController::removeFromTpl('home.twig', '{{ plugin_bar | raw }}');
+		return 1;
+	}
+	
+	public static function install()
+	{
+		PluginController::createTable();	
+		return 1;
+	}
+	
+	public static function remove($data)
+	{
+		return 1;
+	}
+
     public function MyFooPlugin($data)
     {
-	   
+
 	   $content = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
 					 <strong>'.$data->translate()->trans('plugin.Holy guacamole!') .'</strong> '.$data->translate()->trans('plugin.This is a plugin example!') .'<br />
 					  

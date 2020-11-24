@@ -51,15 +51,29 @@ return function(App $app)
 	  return new Application\Modules\Statistic\StatisticController($container);  
 	});
 	
+	$container->set('SkinController', function ($container) {
+	  return new Application\Modules\Skins\SkinController($container);  
+	});
+	
+	$container->set('UserlistController', function($container)
+	{
+		return new Application\Modules\Board\UserlistController($container);
+	});
 	
 	$container->set('AdminHomeController', function($container)
 	{
 		return new Application\Modules\Admin\AdminHomeController($container);
 	});
 	
-		$container->set('AdminBoardController', function($container)
+	$container->set('AdminBoardController', function($container)
 	{
 		return new Application\Modules\Admin\Board\AdminBoardController($container);
 	});
+	
+	$container->set('AdminSkinsController', function($container)
+	{
+		return new Application\Modules\Admin\Skins\AdminSkinsController($container);
+	});
+	
 	
 };

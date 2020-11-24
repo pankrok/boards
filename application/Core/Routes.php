@@ -38,19 +38,34 @@ $app->get('/user[/{username}/{uid}]', 'UserPanelController:getProfile')->setName
 $app->post('/user[/{username}/{uid}]', 'UserPanelController:postProfilePicture')->setName('user.postPicture');
 $app->post('/changedata', 'UserPanelController:postChangeData')->setName('user.postChangeData');
 
+#userlist
+$app->get('/userlist[/{page}]', 'UserlistController:getList');
 
+#skin chang
+#userlist
+$app->get('/setskin/{skin}', 'SkinController:change');
 
 
 #################
 # ADMIN SECTION #
 #################
 
-$app->get('/' . $container->get('settings')['core']['admin'], 'AdminHomeController:index');
+$adm = $container->get('settings')['core']['admin'];
 
-$app->get('/' . $container->get('settings')['core']['admin'] . '/board', 'AdminBoardController:index')->setName('admin.boards');
-$app->get('/' . $container->get('settings')['core']['admin'] . '/board/edit[/{id}]', 'AdminBoardController:editBoard')->setName('admin.edit.board');
-$app->post('/' . $container->get('settings')['core']['admin'] . '/board/edit[/{id}]', 'AdminBoardController:editBoard');
+$app->get('/' .$adm , 'AdminHomeController:index');
 
-$app->post('/' . $container->get('settings')['core']['admin'] . '/board/order/post', 'AdminBoardController:orderPost')->setName('admin.board.order.post');
-$app->post('/' . $container->get('settings')['core']['admin'] . '/board/addCategory/post', 'AdminBoardController:addCategory')->setName('admin.add.category');
-$app->post('/' . $container->get('settings')['core']['admin'] . '/board/addBoard/post', 'AdminBoardController:addBoard')->setName('admin.add.board');
+$app->get('/' . $adm . '/board', 'AdminBoardController:index')->setName('admin.boards');
+$app->get('/' . $adm . '/board/edit[/{id}]', 'AdminBoardController:editBoard')->setName('admin.edit.board');
+$app->post('/' . $adm . '/board/edit[/{id}]', 'AdminBoardController:editBoard');
+
+$app->post('/' . $adm . '/board/order/post', 'AdminBoardController:orderPost')->setName('admin.board.order.post');
+$app->post('/' . $adm . '/board/addCategory/post', 'AdminBoardController:addCategory')->setName('admin.add.category');
+$app->post('/' . $adm . '/board/addBoard/post', 'AdminBoardController:addBoard')->setName('admin.add.board');
+
+$app->get('/' . $adm .'/active', 'AdminHomeController:plugin');
+
+$app->get('/' . $adm .'/skinslist[/[{page}]]', 'AdminSkinsController:skinsList')->setName('admin.skinlist');
+$app->get('/' . $adm .'/addskin', 'AdminSkinsController:addSkin')->setName('admin.add.skin');
+$app->post('/' . $adm .'/addskin', 'AdminSkinsController:addSkinPost')->setName('admin.add.skin.post');
+$app->post('/' . $adm .'/delete/skin', 'AdminSkinsController:removeSkin')->setName('admin.delete.skin.post');
+$app->post('/' . $adm .'/skin/reload/css/js', 'AdminSkinsController:reloadCssJs')->setName('admin.add.skin.reload');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 13, 2020 at 03:09 PM
+-- Generation Time: Nov 24, 2020 at 03:13 PM
 -- Server version: 10.1.47-MariaDB-0+deb9u1
 -- PHP Version: 7.4.12
 
@@ -42,6 +42,23 @@ CREATE TABLE `brd_boards` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brd_boxes`
+--
+
+CREATE TABLE `brd_boxes` (
+  `id` int(11) NOT NULL,
+  `box_order` int(11) NOT NULL DEFAULT '0',
+  `translate` tinyint(1) NOT NULL DEFAULT '0',
+  `name_prefix` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `html` blob NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -194,6 +211,30 @@ CREATE TABLE `brd_posts` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `brd_skins`
+--
+
+CREATE TABLE `brd_skins` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `dirname` varchar(255) NOT NULL,
+  `author` varchar(255) NOT NULL,
+  `version` varchar(255) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brd_skins`
+--
+
+INSERT INTO `brd_skins` (`id`, `name`, `dirname`, `author`, `version`, `updated_at`, `created_at`) VALUES
+(4, 'Modern', 'modern', 'Wiesiek', '1.1', '2020-11-24 11:46:53', '2020-11-24 11:46:53'),
+(6, 'simple', 'simple', 'PanKrok', '1.0', '2020-11-24 13:51:27', '2020-11-24 13:51:27');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `brd_userdata`
 --
 
@@ -264,6 +305,12 @@ ALTER TABLE `brd_boards`
   ADD KEY `brd_fgk` (`category_id`);
 
 --
+-- Indexes for table `brd_boxes`
+--
+ALTER TABLE `brd_boxes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `brd_categories`
 --
 ALTER TABLE `brd_categories`
@@ -320,6 +367,12 @@ ALTER TABLE `brd_posts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `brd_skins`
+--
+ALTER TABLE `brd_skins`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `brd_userdata`
 --
 ALTER TABLE `brd_userdata`
@@ -340,6 +393,12 @@ ALTER TABLE `brd_users`
 -- AUTO_INCREMENT for table `brd_boards`
 --
 ALTER TABLE `brd_boards`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `brd_boxes`
+--
+ALTER TABLE `brd_boxes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -395,6 +454,12 @@ ALTER TABLE `brd_plugins`
 --
 ALTER TABLE `brd_posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `brd_skins`
+--
+ALTER TABLE `brd_skins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `brd_userdata`

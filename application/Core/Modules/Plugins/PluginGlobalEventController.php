@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Application\Core\Modules\Plugins;
 
 use Symfony\Component\EventDispatcher\Event;
@@ -20,10 +20,12 @@ class PluginGlobalEventController extends Event
 	
 	
     protected $twig;
-	protected $database;
+	protected $db;
 	protected $auth;
 	protected $_cache;
 	protected $translator;
+	protected $tplDir;
+	
 	
 	/**
     * Constructor assign twig 
@@ -33,10 +35,12 @@ class PluginGlobalEventController extends Event
     public function __construct($container)
     {
         $this->twig = $container->get('view');
-		$this->database = $container->get('db');
+		$this->db = $container->get('db');
 		$this->auth = $container->get('auth');
 		$this->_cache = $container->get('cache');
 		$this->translator = $container->get('translator');
+		
+		$this->tplDir = $container->get('settings')['twig']['skin'];
     }
 	
 	/**
@@ -59,6 +63,11 @@ class PluginGlobalEventController extends Event
 	* @return void
 	**/
 	
+	public function db()
+	{
+		return $this->db;
+	}
+	
 	public function translate()
 	{
 		return $this->translator;
@@ -78,5 +87,11 @@ class PluginGlobalEventController extends Event
 	{
 		return $this->auth->user();
 	}
+	
+	public function getTplDir()
+	{
+		return $this->tplDir;
+	}
+	
 	
 }

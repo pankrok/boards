@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Application\Core\Modules\Plugins;
 
 use Application\Models\PluginsModel;
@@ -41,15 +41,11 @@ class PluginLoaderController
 			
 			foreach ($files as $k => $v)
 			{               
-				if(substr($v, -4 == '.php')){
+				if(substr($v, -4) == '.php'){
 					
-					$name = 'Plugins\\'. substr($v, 0, -4);
+					$name = substr($v, 0, -4);
 					$plugin = PluginsModel::firstOrCreate(['plugin_name' => $name]);
-					$plugin->active = true;
-					$plugin->install = true;
-					$plugin->save();
-					
-					$plugin = null;					
+				
 				}
 				
 			}  	  
@@ -82,12 +78,10 @@ class PluginLoaderController
 		if(is_array($files)){
 			foreach ($files as $k => $v)
 			{               
-				if(substr($v, -4 == '.php')){
+				if(substr($v, -4) == '.php'){
 					
 					$name = substr($v, 0, -4);
 					$plugin = PluginsModel::firstOrCreate(['plugin_name' => $name]); 
-					$plugin->active = true;
-					$plugin->install = true;
 					$plugin->save();
 					
 					$plugin = null;					
@@ -97,21 +91,46 @@ class PluginLoaderController
 		
 	}
 	
-	public function activePlugin($pluginName)
+	public function activePlugin(string $pluginName)
 	{
 		
-		$plugin = PluginsModel::where('plugin_name', $pluginName);
-		$plugin->active = true;
+		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
+		if($plugin->active) 
+			return false;
+		
+		$pluginName = "\\Plugins\\" . $pluginName;
+		$pluginName::activation();		
+		$plugin->active = true;		
+		$plugin->save();
+		return true;
+		
+	}
+	
+	public function deactivePlugin(string $pluginName)
+	{
+		
+		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
+		if($plugin->active) 
+			return false;
+		$pluginName = "\\Plugins\\" . $pluginName;
+		$pluginName::deactivation();		
+		$plugin->active = false;
+		$plugin->save();
+		return true;
 		
 	}
 	
 	public function installPlugin($pluginName)
 	{
 		
-		$plugin = PluginsModel::where('plugin_name', $pluginName);
+		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
+		$pluginName = "\\Plugins\\" . $pluginName;	
+		$pluginName::install();		
 		$plugin->install = true;
+		$plugin->save();
 		
 	}
+	
 	
     
 }

@@ -1,0 +1,117 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+<main class="container">
+	<div class="forums">
+
+	<!-- main register -->
+	<div class="col-lg-12 order-1">
+		{{ plugin_foo | raw }}
+		<div class="card border-light">
+			<div class="card-header">
+				<div class="float-left"><h1><i class="fas fa-user-plus"></i> {{ trans('Sign up') }}</h1></div>
+				
+			</div>
+				<div class="card-body px-0 py-1" id="board-1">
+				<form action="{{ path_for('auth.signup') }}" method="post">
+					<div class="row">
+						<div class="col-md-12 mx-auto">
+								<div class="card m-2">
+								  <div class="card-header">
+									{{ trans('Account details') }}
+								  </div>
+								  <div class="card-body">
+									<div class="row">
+									  <div class="col-md-12">
+										<div class="form-group">
+										<label for="username">{{ trans('Login') }}</label>
+										<input type="text" name="username" id="username"  class="form-control {{ errors.username ? 'is-invalid' : ''}}" value="{{ old.username }}">
+										<span class="invalid-feedback">{{ trans(errors.username | first) }}</span>
+										</div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="email">{{ trans('Email address') }}</label>
+										<input type="text" name="email" id="email"  class="form-control {{ errors.email ? 'is-invalid' : ''}}" value="{{ old.email }}">
+										<span class="invalid-feedback">{{ trans(errors.email | first) }}</span>
+									  </div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="vemail">{{ trans('Confirm Email address') }}</label>
+										<input type="text" name="vemail" id="vemail"  class="form-control {{ errors.vemail ? 'is-invalid' : ''}}" value="">
+										<span class="invalid-feedback">{{ trans(errors.vemail | first) }}</span>
+									  </div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="password">{{ trans('Password') }}</label>
+										<input type="password" name="password" id="password"  class="form-control {{ errors.password ? 'is-invalid' : ''}}" value="">
+										<span class="invalid-feedback">{{ trans(errors.password | first) }}</span>
+									  </div>
+									  </div>
+									  <div class="col-md-6">
+									  <div class="form-group">
+										<label for="vpassword">{{ trans('Confirm Password') }}</label>
+										<input type="password" name="vpassword" id="vpassword"  class="form-control {{ errors.vpassword ? 'is-invalid' : ''}}" value="">
+										<span class="invalid-feedback">{{ trans(errors.vpassword | first) }}</span>
+									  </div>
+									  </div>
+									
+									 <div class="col-md-6">
+									  <div class="form-group">
+										<label for="captchaCode">{{ trans('Captcha') }}</label>
+										<div class="row">
+										<div class="col-6 m-auto">{{ captcha.image | raw }}</div>
+										<div class="col-6 m-auto">{{ captcha.input | raw }}
+										<small class="form-text text-muted text-center">Refresh captcha</small>
+										</div>		
+										</div>
+									  </div>
+									</div>
+									<div class="col-md-6">
+									
+									  <div class="form-group">
+									  <label for="recommended">{{ trans('Referrer') }}</label>
+										<input id="autocomplete-dynamic-users" name="recommended" type="text" class="form-control" id="Polecający" aria-describedby="{{ trans('Referrer') }}" placeholder="{{ trans('Referrer') }}">
+										<small id="Polecający" class="form-text text-muted">Jeśli ktoś polecił Ci forum, wpisz tutaj jego login. Jeśli nie - pozostaw to pole puste.</small>
+									  </div>
+									</div>
+									</div>
+								  </div>
+								</div>
+		
+							</div>
+							<div class="col-md-6">
+							<!-- soon -->
+			
+							</div>
+						<div class="col-md-12 mx-auto text-center my-1">
+						<button type="submint" class="btn btn-dark">{{ trans('Sign up') }}</button>
+                      
+						</div>
+					</div>
+					</form>	
+				</div>	
+
+		</div>
+	</div>
+	<!-- /main register -->
+	
+	</div>
+</main>
+{% endblock %}
+
+
+{% block endcontent %}
+
+<script>
+
+var urlFor = "{{ path_for('auth.hint') }}";
+
+</script>
+
+<script type="text/javascript" src="{{ base_url() }}/public/scripts/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/public/scripts/userAutocomplete.js"></script>
+
+{% endblock %}

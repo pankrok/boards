@@ -1,0 +1,74 @@
+<header>
+	<div class="container">
+		<div class="topbar">
+			<div class="topbar_container">
+				<div class="logo">
+					<a href="{{ path_for('home') }}">
+						<i class="fas fa-home"></i> MyBoard
+					</a>
+				</div>
+				<ul class="userbar">
+				{% if auth.check %}
+					<li>
+						<a href="#">
+							<i class="far fa-bell"></i>
+							<span class="count">5</span>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="far fa-envelope"></i>
+							<span class="count">5</span>
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fas fa-exclamation-triangle"></i>
+						</a>
+					</li>
+					<li class="userbar_line"></li>
+					<li>
+						<a href="#" class="user_avatar">
+							<img src="{{ user.avatar }}">
+						</a>
+						<a href="#" id="menu--button">
+							<strong>{{ auth.user.username }}</strong> <i class="fas fa-caret-down"></i>
+						</a>
+						<ul id="menu--list">
+							<li class="title">Zawartość</li>
+							<li><a href="{{ base_url() }}/user/{{ setString.toUrl(auth.user.username) }}/{{ auth.user.id }}"><i class="fas fa-user"></i> Profil</a></li>
+							<li><a href="#"><i class="fas fa-link"></i> Moje załączniki</a></li>
+							<li class="title">Ustawienia</li>
+							<li><a href="#"><i class="fas fa-eye"></i> Obserwowana zawartość</a></li>
+							<li><a href="#"><i class="fas fa-cog"></i> Ustawienia konta</a></li>
+							<li class="line"></li>
+							<li><a href="{{ path_for('auth.signout') }}" class="logout"><i class="fas fa-power-off"></i> {{ trans('Log out') }}</a></li>
+						</ul>
+					</li>
+				{% else %}
+				<li>
+					
+					<a href="#" id="menu--button">
+						<strong>Menu</strong> <i class="fas fa-caret-down"></i>
+					</a>
+					<ul id="menu--list">
+						<li>
+						<a href="{{ path_for('auth.signin') }}">
+							<i class="fas fa-sign-in-alt"></i> {{ trans('Sign in') }}</a>
+						</a>
+						</li>
+						<li>
+							<a href="{{ path_for('auth.signup') }}">
+								<i class="fas fa-user-plus"></i> {{ trans('Sign up') }}</a>
+							</a>
+						</li>						
+					</ul>
+				</li>
+				
+						
+				{% endif %}{# if auth.check #}
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>

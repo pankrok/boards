@@ -1,0 +1,41 @@
+{
+    "core": {
+        "version": "djAuMS4w",
+        "show_version": "1",
+        "log_level": "3",
+        "debug": "1",
+        "ssl": "1",
+        "admin": "acp"
+    },
+    "board": {
+        "default_group": "1"
+    },
+    "admin": {
+        "skin": "default"
+    },
+    "translations": {
+        "path": "\/environment\/Translations",
+        "fallback": "pl_PL"
+    },
+    "images": {
+        "path": "\/public\/upload\/avatars\/"
+    },
+    "cache": {
+        "active": "0",
+        "cache_time": "90",
+        "cache_dir": "\/environment\/Cache\/objects\/",
+        "cache_ext": ".c"
+    },
+    "twig": {
+        "debug": "0",
+        "cache": "0",
+        "skin": "simple"
+    },
+    "pagination": {
+        "boards": "10",
+        "plots": "20"
+    },
+    "plugins": {
+        "active": "1"
+    }
+}

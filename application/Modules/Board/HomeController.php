@@ -48,7 +48,8 @@ class HomeController extends Controller
 			
 			$this->view->getEnvironment()->addGlobal('user', $user);
 		}
-		
+		$this->view->getEnvironment()->addGlobal('sidebar_active', true);
+		$this->view->getEnvironment()->addGlobal('sidebars', self::getBoxes());
 		$this->view->getEnvironment()->addGlobal('stats', $this->StatisticController->getStats());
 		$this->event->addGlobalEvent('home.loaded');	
 		return $this->view->render($response, 'home.twig');	;
@@ -79,15 +80,30 @@ class HomeController extends Controller
 			$lastpost = \Application\Models\PlotsModel::orderBy('updated_at', 'DESC')
 													->where('board_id', '=', $v['id'])
 													->leftJoin('users', 'users.id', 'plots.author_id')
-													->select('plots.*', 'users.username')
+													->leftJoin('images', 'images.id', 'users.avatar')
+													->select('plots.*', 'users.username', 'images._38')
 													->first();
+			if(isset($lastpost))
+			{				
+				$lastpost->toArray();									
+				if($lastpost['_38'])
+				{
+						$lastpost['_38'] =  self::base_url() . '/public/upload/avatars/' . $lastpost['_38'];
+				}
+				else
+				{
+					$lastpost['_38'] = self::base_url() . '/public/img/avatar.png';
+				}
+
+			}
 			$boards[$v['category_id']][$v['id']] = $v;			
 			$boards[$v['category_id']][$v['id']]['url'] = self::base_url() . '/board/' . $this->urlMaker->toUrl($v['board_name'])	. '/' . $v['id'];
 			if(isset($lastpost))
 			{
+				$boards[$v['category_id']][$v['id']]['last_post'] = true;
 				$boards[$v['category_id']][$v['id']]['last_post_url'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($lastpost['plot_name'])	. '/' . $lastpost['id'];
 				$boards[$v['category_id']][$v['id']]['last_post_author_url'] = self::base_url() . '/user/' . $this->urlMaker->toUrl($lastpost['username'])	. '/' . $lastpost['author_id'];
-				$boards[$v['category_id']][$v['id']]['last_post_data'] = $lastpost;
+				$boards[$v['category_id']][$v['id']]['last_post_avatar'] = $lastpost['_38'];
 			}	
 		
 		}
@@ -95,6 +111,20 @@ class HomeController extends Controller
 		$boards['groups_legend'] = \Application\Models\GroupsModel::select('grupe_name')->get()->toArray();
 		
 		return $boards;
+	}
+	
+	protected function getBoxes()
+	{
+		$boxes = \Application\Models\BoxModel::orderBy('box_order', 'desc')->get()->toArray();
+		foreach($boxes as $k => $v)
+		{
+			if($v['translate'])
+			{
+				$boxes[$k]['name'] = $this->translator->trans('lang.'.$v['name']);				
+			}
+		}	
+		 
+		return $boxes;
 	}
 	
 	public function session($request, $response)

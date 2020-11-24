@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="pl-PL" dir="ltr">
+{% include 'templates/partials/head.twig' %}
+{% block headblock %}{% endblock %}
+</head>
+	<body>	
+	{% include 'templates/partials/header.twig' %}
+	{% include 'templates/partials/navigation.twig' %}
+	{% include 'templates/partials/breadcrumb.twig' %}	
+	{% include 'templates/partials/flash.twig' %}
+	{% block content %}{% endblock %}
+	{% include 'templates/partials/footer.twig' %}	
+	{% include 'templates/partials/modals.twig' %}
+	{% include 'templates/partials/endjs.twig' %}
+	{% block endcontent %}{% endblock %}
+	{{ csrf.field | raw }}
+</body>
+</html>
+{{ css | raw }}

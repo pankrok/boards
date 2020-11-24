@@ -68,5 +68,9 @@ return [
 	'Invalid captcha code' => 'Nieprawidłowy kod captcha',
 	'Captcha' => 'Weryfikacja obrazkowa',
 	'Forget password' => 'Zapomniałem Hasła',
+	'by' => 'przez:',
+	'Last post' => 'Ostatni post',
+	'last reply' => 'Ostatnia odpowiedź',
+	'replys' => 'Odpowiedzi'
 	
 ];

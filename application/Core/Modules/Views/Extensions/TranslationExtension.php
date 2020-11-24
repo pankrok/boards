@@ -27,10 +27,11 @@ class TranslationExtension extends AbstractExtension
 	
 	public function trans($key)
 	{
-		$result = substr($key, 0, 5);	
+		$result = substr($key, 0, 5);
+	
 		if($result != 'lang.') 
-			return $this->translator->trans($key);
-		return $this->translator->trans('lang.'.$key);
+			return $this->translator->trans('lang.'.$key);		
+		return $this->translator->trans($key);
 	}
 	
 	public function locale()

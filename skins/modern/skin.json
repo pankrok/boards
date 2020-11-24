@@ -1,0 +1,13 @@
+{
+    "name": "Modern",
+    "author": "Wiesiek",
+    "version": "1.1",
+    "assets": {
+        "css": [
+            "main.css"
+        ],
+        "js": [
+            "main.js"
+        ]
+    }
+}

@@ -1,0 +1,40 @@
+{% if sidebar_active %}
+<div class="sidebar">
+	<ul class="list_reset">
+	{% for sidebar in sidebars %}
+	<li class="sidebar_block">
+		<h2 class="sidebar_title">
+			{{ sidebar.name_prefix | raw }} {{ sidebar.name | raw }}
+		</h2>
+		<div class="sidebar_content">
+			<ul class="list_reset">
+				<li class="sidebar_item">		
+						{{ sidebar.html | raw }}
+				</li>	
+			</ul>
+		</div>
+	</li>
+	{% endfor %}
+
+	{% if auth.check %}
+
+		<li class="sidebar_block">
+			<h2 class="sidebar_title">
+				<i class="fas fa-user-tag"></i> {{ trans('Your statistics') }}
+			</h2>
+			<div class="sidebar_content">
+				<ul class="list_reset">
+					<li class="sidebar_item">
+						<div class="item_main">				
+							<p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+						</div>
+					</li>	
+				</ul>
+			</div>
+		</li>
+	</ul>	
+	{% endif %}{# if auth.check #}
+	
+
+</div>
+{% endif %}{# if sidebar_active #}

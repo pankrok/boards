@@ -24,7 +24,8 @@ class Auth
     {  
 		if(isset($_SESSION['user']))
         {
-    		$a = UserModel::leftJoin('images', 'images.id', '=', 'users.avatar')->select('users.*', 'images._38', 'images._85', 'images._150')->find($_SESSION['user'])->makeHidden(['password'])->toArray();
+    		$a = UserModel::leftJoin('images', 'images.id', '=', 'users.avatar')->select('users.*', 'images._38', 'images._85', 'images._150')->find($_SESSION['user'])->makeHidden(['password']);
+			if($a) $a->toArray();
 		 	return $a;		
         }
     }

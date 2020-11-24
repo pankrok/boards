@@ -1,0 +1,39 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+
+<ul class="nav">
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Skin List</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ path_for('admin.add.skin') }}">Add skin</a>
+  </li>
+</ul>
+<div class="row">
+     {% for skin in skins %}
+	<div class="col-3">
+	<div class="card" style="width: 18rem;">
+	  <img class="card-img-top" src="{{ base_url() }}/skins/{{ skin.dirname }}/{{ skin.dirname }}.png" alt="{{ skin.name }}">
+	  <div class="card-body">
+		<h5 class="card-title">Template: {{ skin.name }}</h5>
+		<p class="card-text">version: <i>{{ skin.version }}</i>, author: <i>{{ skin.author }}</i></p>
+		<form action="{{ path_for('admin.add.skin.reload') }}" method="post"><input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}"><input type="submit" class="btn btn-primary" value="Reload assets"></form><br />
+		<form action="{{ path_for('admin.delete.skin.post') }}" method="post"><input type="hidden" id="skin_id" name="skin_id" value="{{ skin.id }}"><input type="submit" class="btn btn-danger" value="delete">
+		<div class="form-check">
+		  <input class="form-check-input" type="checkbox" value="1" id="confirm_delete" name="confirm_delete">
+		  <label class="form-check-label" for="defaultCheck1">
+			Confirm delete
+		  </label>
+		</div>
+		
+		</form>
+	  </div>
+	</div>
+	</div> 
+	{% endfor %}
+</div>
+
+  
+{% endblock %}

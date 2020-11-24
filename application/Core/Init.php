@@ -6,11 +6,16 @@ use DI\Container;
 use Slim\Factory\AppFactory;
 use Respect\Validation\Validator as v;
 use Middlewares\TrailingSlash;
+use MatthiasMullie\Minify;
 
+session_set_cookie_params(60*60*24, '/; samesite=Lax');
 session_start();
+
 require MAIN_DIR . '/libraries/autoload.php';
 
 $container = new Container();
+global $tplDir;
+
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->setBasePath((function () {
@@ -29,8 +34,9 @@ $app->setBasePath((function () {
 $container = $app->getContainer();
 
 $container->set('settings', function ($container) {
-    return parse_ini_file(MAIN_DIR . '/environment/Config/settings.ini', true);
+    return json_decode(file_get_contents(MAIN_DIR . '/environment/Config/settings.json'), true);
 });
+$tplDir = $container->get('settings')['twig']['skin'];
 
 $container->set('db_settings', function ($container) {
     return  require(MAIN_DIR . '/environment/Config/db_settings.php');
@@ -52,7 +58,7 @@ $container->set('images', function($container) {
 
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container->get('db_settings'));
-//$capsule->setAsGlobal();
+$capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 $container->set('db', function ($container) use ($capsule) {
@@ -79,10 +85,24 @@ $container->set('flash', function($container) {
 
 $container->set('view', function($container){
 	
-	$twigSettings = $container->get('settings')['twig'];
+	if(isset($_SERVER['HTTPS'])){
+		$protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+	}
+	else{
+		$protocol = 'http';
+	}
 
-    $view = new \Slim\Views\Twig(MAIN_DIR . '/skins/'. $twigSettings['skin'] . '/tpl',[
-        'cache' => (bool)$twigSettings['cache'] ? MAIN_DIR . '/skins/'. $twigSettings['skin'] . '/cache' : false,
+	$assets = $protocol . "://" . $_SERVER['HTTP_HOST'] . '/public';
+	
+	$twigSettings = $container->get('settings')['twig'];	
+	$skin = $_SESSION['skin'] ?? $twigSettings['skin'];	
+	
+	
+	
+	$skinAssets = $protocol . "://" . $_SERVER['HTTP_HOST'] . '/skins/'. $skin . '/assets';
+	
+    $view = new \Slim\Views\Twig(MAIN_DIR . '/skins/'. $skin . '/tpl',[
+        'cache' => (bool)$twigSettings['cache'] ? MAIN_DIR . '/skins/'. $skin . '/cache/twig' : false,
         'debug' => (bool)$twigSettings['debug'],
     ]);
     
@@ -90,13 +110,20 @@ $container->set('view', function($container){
 
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
-    //$view->addExtension(new App\Views\Extensions\UserExtension($container->get('cache'), $container->get('userdata')));
-	
+
+	if(file_exists(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'))
+	{
+		$skinAssets = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'), true);
+		
+		$view->getEnvironment()->addGlobal('css', $skinAssets['css']);
+		$view->getEnvironment()->addGlobal('js', $skinAssets['js']);
+	}
     $view->getEnvironment()->addGlobal('auth', [ 
        'check' => $container->get('auth')->check(),
-//		'admin' => $container->get('auth')->admin(),
         'user' => $container->get('auth')->user(),
     ]);
+	$view->getEnvironment()->addGlobal('assets', $assets);
+	$view->getEnvironment()->addGlobal('skin_assets', $skinAssets);
 	
     $view->getEnvironment()->addGlobal('flash', $container->get('flash'));
 	$view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
@@ -116,7 +143,6 @@ $container->set('adminView', function($container){
 
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
-    //$view->addExtension(new App\Views\Extensions\UserExtension($container->get('cache'), $container->get('userdata')));
 	
 	$view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);
     $view->getEnvironment()->addGlobal('auth', [ 
