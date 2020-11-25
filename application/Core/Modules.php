@@ -60,6 +60,8 @@ return function(App $app)
 		return new Application\Modules\Board\UserlistController($container);
 	});
 	
+	# Admin controllers section
+	
 	$container->set('AdminHomeController', function($container)
 	{
 		return new Application\Modules\Admin\AdminHomeController($container);
@@ -73,6 +75,11 @@ return function(App $app)
 	$container->set('AdminSkinsController', function($container)
 	{
 		return new Application\Modules\Admin\Skins\AdminSkinsController($container);
+	});
+	
+	$container->set('AdminSettingsController', function($container)
+	{
+		return new Application\Modules\Admin\Settings\AdminSettingsController($container);
 	});
 	
 	

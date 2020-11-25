@@ -1,0 +1,78 @@
+	<!-- board -->
+	<form action="{{ path_for('admin.board.order.post') }}" method="post" id="submitOrder">
+	<div class="row">
+	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right" >{{ trans('admin.submit') }}</button></div>
+	</div>
+			<div class="card border mb-3">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-sm-auto col-md-11">
+							Item Name
+						</div>
+						<div class="col-sm-auto col-md-1">
+							order
+						</div>
+					</div>
+				</div>
+			</div>
+			{% for category in categories %}
+			<div class="card border-light mb-3">
+				
+				<div class="card-header">
+				<div class="row">
+					<div class="col-sm-auto col-md-11">
+						<strong>{{ category.name|raw }}</strong> <a href="{{ base_url}}/{{ admin_url }}/category/edit/{{ category.id }}" class="btn btn-outline-success btn-sm fas fa-edit mx-2">edit</a>
+					</div>
+					<div class="col-sm-auto col-md-1 my-2">
+						<input type="text" value="{{ category.category_order }}" id="Category-{{ category.id }}" name="Category-{{ category.id }}" class="form-control float-right">
+					</div>
+				</div>
+				</div>
+					<div class="card-body px-0 py-1" id="board-{{ category.cat_id }}">
+						<ul class="list-group list-group-flush">
+		
+							{% for board in (boards[category.id]) %}
+							<!-- one board -->{% set myVal = 0 %}
+													
+							<li class="list-group-item {% if myVal is even %}bg-white{% else %}bg-light{% endif %}">
+								<div class="row">
+								<div class="col-sm-auto col-md-11">
+									<div class="row">
+										<div class="col-auto fs-15 my-2">
+											{{ board.board_name }} 
+										</div>
+										<div class="col-auto fs-15 my-2">	
+											<a href="{{ base_url}}/{{ admin_url }}/board/edit/{{ board.id }}" class="btn btn-outline-success btn-sm fas fa-edit">edit</a>
+										</div>
+										{% if board.board_description %}
+										<div class="col-auto fs-15 my-2">
+										 <a class="btn btn-outline-secondary btn-sm" data-toggle="collapse" href="#board{{ board.id }}" role="button" aria-expanded="false" aria-controls="board{{ board.id }}">
+											Show board desc
+										  </a>
+										</div>
+										<div class="col-12 fs-12 mt-3 collapse" id="board{{ board.id }}">
+										<div class="card card-body">
+											<p>Board desc:</p>
+											<p>{{ board.board_description | raw }}</p>
+										</div>
+										</div>
+										{% endif %}
+									</div>
+								</div>
+								<div class="col-sm-auto col-md-1 my-2">
+									 <input type="text" value="{{ board.board_order }}" id="Boards-{{ board.id }}" name="Boards-{{ board.id }}" class="form-control float-right">
+								</div>
+								</div>
+							</li>
+							{% set myVal = myVal + 1 %}
+							{% endfor %}
+							<!-- /one board -->								
+						</ul>
+					</div>
+			</div>
+			{% endfor %}
+			<!-- /board -->	 
+	<div class="row">
+	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right">{{ trans('admin.submit') }}</button></div>
+	</div>
+	</form>

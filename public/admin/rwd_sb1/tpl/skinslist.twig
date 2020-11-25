@@ -1,0 +1,31 @@
+
+
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+
+<!-- nav -->
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{{ trans('admin.skins list') }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="addskin-tab" data-toggle="tab" href="#addskin" role="tab" aria-controls="addskin" aria-selected="false">{{ trans('admin.add category') }}</a>
+  </li>
+
+</ul>
+<!-- /nav -->
+
+<div class="tab-content p-4" id="myTabContent">
+	<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+		{% include 'templates/partials/skins/list.twig' %}
+	</div> 
+	<div class="tab-pane fade" id="addskin" role="tabpanel" aria-labelledby="addCat-tab">
+		{% include 'templates/partials/skins/add.twig' %}
+	</div>
+</div>
+
+  
+{% endblock %}

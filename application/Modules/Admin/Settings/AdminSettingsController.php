@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Application\Modules\Admin\Board;
+namespace Application\Modules\Admin\Settings;
 use Application\Core\Controller as Controller;
 
 
 class AdminSettingsController extends Controller
 {
 	
-	public function index($request, $response,)
+	public function index($request, $response)
 	{
 
 		$this->adminView->getEnvironment()->addGlobal('settings', $this->settings);
@@ -28,3 +28,5 @@ class AdminSettingsController extends Controller
 		
 		
 	}
+	
+}

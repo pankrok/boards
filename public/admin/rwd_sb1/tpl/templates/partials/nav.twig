@@ -1,0 +1,44 @@
+<nav id="sidebar">
+		<div class="custom-menu">
+			<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	  <i class="fas fa-bars"></i>
+	  <span class="sr-only">Toggle Menu</span>
+	</button>
+</div>
+	<h1><a href="{{ path_for('admin.home') }}" class="logo">Boards ACP</a></h1>
+<ul class="list-unstyled components mb-5 accordion" id="BoardsMenuList">
+  <li>
+	  <a href="{{ path_for('admin.home') }}"><span class="fas fa-tachometer-alt mr-3"></span> Dashboard</a>
+  </li>
+    <li>
+	<a href="{{ path_for('admin.boards') }}"><span class="fas fa-list-alt mr-3"></span> {{ trans('admin.board') }}</a>
+  </li>
+  <li>
+	<a href="#" data-toggle="collapse" data-target="#collapseConfiguration" aria-expanded="true" aria-controls="collapseConfiguration"><span class="fas fa-cogs mr-3"></span> {{trans('admin.configuration') }}</a>
+	<ul id="collapseConfiguration" class="collapse" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
+		<a href="{{ path_for('admin.get.settings') }}"><span class="fas fa-cog mr-3"></span> {{trans('admin.settings') }}</a>
+	</ul>
+  </li>
+  <li>
+	<a href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers"><span class="fas fa-user-friends mr-3"></span> {{trans('admin.users and groups') }}</a>
+	<ul id="collapseUsers" class="collapse" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
+		<a href="#"><span class="fas fa-user mr-3"></span> {{ trans('admin.users') }}</a>
+		<a href="#"><span class="fas fa-users mr-3"></span> {{ trans('admin.groups') }}</a>
+	</ul>
+  </li>
+  <li>
+	<a href="{{ path_for('admin.skinlist') }}"><span class="fas fa-paint-brush mr-3"></span> {{ trans('admin.templates') }}</a>
+  </li>
+    <li>
+	<a href="#"><span class="fas fa-tools mr-3"></span> {{ trans('admin.tools') }}</a>
+  </li>
+  <li>
+	<a href="#"><span class="fas fa-plug mr-3"></span> {{ trans('admin.plugins') }}</a>
+  </li>
+  <br /><br />
+  <li>
+	<a href="#"><span class="fas fa-sign-out-alt mr-3"></span> <b>{{ trans('Log out') }}</b></a>
+  </li>
+</ul>
+
+</nav>

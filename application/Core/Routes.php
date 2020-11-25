@@ -39,7 +39,7 @@ $app->post('/user[/{username}/{uid}]', 'UserPanelController:postProfilePicture')
 $app->post('/changedata', 'UserPanelController:postChangeData')->setName('user.postChangeData');
 
 #userlist
-$app->get('/userlist[/{page}]', 'UserlistController:getList');
+$app->get('/userlist[/{page}]', 'UserlistController:getList')->setName('userlist');
 
 #skin chang
 #userlist
@@ -52,7 +52,7 @@ $app->get('/setskin/{skin}', 'SkinController:change');
 
 $adm = $container->get('settings')['core']['admin'];
 
-$app->get('/' .$adm , 'AdminHomeController:index');
+$app->get('/' .$adm , 'AdminHomeController:index')->setName('admin.home');
 
 $app->get('/' . $adm . '/board', 'AdminBoardController:index')->setName('admin.boards');
 $app->get('/' . $adm . '/board/edit[/{id}]', 'AdminBoardController:editBoard')->setName('admin.edit.board');
@@ -69,3 +69,4 @@ $app->get('/' . $adm .'/addskin', 'AdminSkinsController:addSkin')->setName('admi
 $app->post('/' . $adm .'/addskin', 'AdminSkinsController:addSkinPost')->setName('admin.add.skin.post');
 $app->post('/' . $adm .'/delete/skin', 'AdminSkinsController:removeSkin')->setName('admin.delete.skin.post');
 $app->post('/' . $adm .'/skin/reload/css/js', 'AdminSkinsController:reloadCssJs')->setName('admin.add.skin.reload');
+$app->get('/' . $adm .'/settings', 'AdminSettingsController:index')->setName('admin.get.settings');

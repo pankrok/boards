@@ -144,6 +144,11 @@ $container->set('adminView', function($container){
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
 	
+	$filter = new \Twig\TwigFilter('base64_decode', function ($string) {
+		return base64_decode($string);
+	});
+	
+	$view->getEnvironment()->addFilter($filter);	
 	$view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);
     $view->getEnvironment()->addGlobal('auth', [ 
        'check' => $container->get('auth')->check(),

@@ -1,0 +1,34 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+<!-- nav -->
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{{ trans('admin.board managment') }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="addCat-tab" data-toggle="tab" href="#addCat" role="tab" aria-controls="addCat" aria-selected="false">{{ trans('admin.add category') }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="addBoard-tab" data-toggle="tab" href="#addBoard" role="tab" aria-controls="addBoard" aria-selected="false">{{ trans('admin.add board') }}</a>
+  </li>
+</ul>
+
+
+<!-- /nav -->
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+		{% include 'templates/partials/board/manageBoard.twig' %}
+	</div> 
+	<div class="tab-pane fade" id="addCat" role="tabpanel" aria-labelledby="addCat-tab">
+		{% include 'templates/partials/board/addCategory.twig' %}
+	</div>
+	<div class="tab-pane fade" id="addBoard" role="tabpanel" aria-labelledby="contact-tab">
+		{% include 'templates/partials/board/addBoard.twig' %}
+	</div>
+</div>
+
+{% endblock %}
+

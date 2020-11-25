@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "djAuMS4w",
+        "version": "MC4xLjIw",
         "show_version": "1",
         "log_level": "3",
         "debug": "1",
@@ -11,7 +11,7 @@
         "default_group": "1"
     },
     "admin": {
-        "skin": "default"
+        "skin": "rwd_sb1"
     },
     "translations": {
         "path": "\/environment\/Translations",
