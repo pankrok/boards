@@ -19,7 +19,7 @@ class BoardsModel extends Model
 			'posts_number',
 			'last_post_date',
 			'last_post_author',
-			'visability'			
+			'active'			
         ];
 
 }

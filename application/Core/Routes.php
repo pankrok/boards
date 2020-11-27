@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 #home
 $app->get('[/]', 'HomeController:index')->setName('home');
-$app->get('/home[/]', 'HomeController:index')->setName('home');
 $app->get('/cron[/{key}]', 'CronController:main')->setName('cron');
-$app->get('/s', 'HomeController:session');
 
 #category
 $app->get('/category/{category}/{category_id}[/{page}]', 'CategoryController:getCategory')->setName('category.getCategory');
@@ -22,9 +20,9 @@ $app->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
 
 #sign
 $app->get('/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');
-$app->post('/auth/signin', 'AuthController:postSignIn');
+$app->post('/auth/signin', 'AuthController:postSignIn')->setName('auth.post.signin');
 $app->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
-$app->post('/auth/signup', 'AuthController:postSignUp');
+$app->post('/auth/signup', 'AuthController:postSignUp')->setName('auth.post.signup');
 $app->get('/auth/logout', 'AuthController:getSignOut')->setName('auth.signout');
 $app->post('/auth/hint', 'AuthController:postHintUsers')->setName('auth.hint');
 
@@ -43,7 +41,7 @@ $app->get('/userlist[/{page}]', 'UserlistController:getList')->setName('userlist
 
 #skin chang
 #userlist
-$app->get('/setskin/{skin}', 'SkinController:change');
+$app->get('/setskin/{skin}', 'SkinController:change')->setName('changeskin');
 
 
 #################

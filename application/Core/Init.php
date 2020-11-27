@@ -107,7 +107,7 @@ $container->set('view', function($container){
     ]);
     
     $router = $container->get('router');
-
+	if($twigSettings['debug']) $view->addExtension(new \Twig\Extension\DebugExtension());
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
 
@@ -120,7 +120,8 @@ $container->set('view', function($container){
 	}
     $view->getEnvironment()->addGlobal('auth', [ 
        'check' => $container->get('auth')->check(),
-        'user' => $container->get('auth')->user(),
+       'user' => $container->get('auth')->user(),
+	   'admin' => $container->get('auth')->checkAdmin()
     ]);
 	$view->getEnvironment()->addGlobal('assets', $assets);
 	$view->getEnvironment()->addGlobal('skin_assets', $skinAssets);
@@ -150,12 +151,8 @@ $container->set('adminView', function($container){
 	
 	$view->getEnvironment()->addFilter($filter);	
 	$view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);
-    $view->getEnvironment()->addGlobal('auth', [ 
-       'check' => $container->get('auth')->check(),
-//		'admin' => $container->get('auth')->admin(),
-        'user' => $container->get('auth')->user(),
-    ]);
-	
+    $view->getEnvironment()->addGlobal('admin', $container->get('auth')->checkAdmin());
+	$view->getEnvironment()->addGlobal('board_link', $_SERVER['HTTP_HOST']);
     $view->getEnvironment()->addGlobal('flash', $container->get('flash'));
 	$view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
 	

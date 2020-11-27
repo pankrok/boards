@@ -20,6 +20,8 @@ return function(App $app)
 
 	$app->add(new Application\Middleware\TrailingShashMiddleware(true));
 	$app->add(new Application\Middleware\CacheMiddleware($container));
+	$app->add(new Application\Middleware\EventMiddleware($container));
+	$app->add(new Application\Middleware\MessageMiddleware($container));
 	//$app->add(new Application\Middleware\Before($container)); THIS IS AN EXAMPLE, WILL BE REMOVE
 	//$app->add(new Application\Middleware\After($container)); THIS IS AN EXAMPLE, WILL BE REMOVE
 

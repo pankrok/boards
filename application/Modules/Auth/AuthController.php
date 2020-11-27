@@ -81,6 +81,11 @@ class AuthController extends Controller
 	if(!$auth)
 	{
 		$this->flash->addMessage('danger', 'Invalid email or password.');
+		
+		if(isset($request->getParsedBody()['admin']))
+		return $response
+		->withHeader('Location', $this->router->urlFor('admin.home'))
+		->withStatus(302);
 
 		return $response
 		->withHeader('Location', $this->router->urlFor('auth.signin'))
@@ -95,6 +100,13 @@ class AuthController extends Controller
 		->withHeader('Location', $this->router->urlFor('auth.signin'))
 		->withStatus(302);    
 	}
+		
+	if(isset($request->getParsedBody()['admin']))
+		return $response
+		->withHeader('Location', $this->router->urlFor('admin.home'))
+		->withStatus(302);
+	
+		
 		return $response
 		->withHeader('Location', $this->router->urlFor('home'))
 		->withStatus(302);

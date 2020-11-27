@@ -40,6 +40,10 @@ class Auth
         return isset($_SESSION['user']) ?  $_SESSION['user'] : false;
     }
   
+	public function checkAdmin()
+    {
+		return isset($_SESSION['user']) ? UserModel::select('admin_lvl')->find($_SESSION['user'])->toArray()['admin_lvl'] : false;
+    }
   
   /**
     * find is user username or email is in database and set in session user ID if exists
@@ -87,7 +91,6 @@ class Auth
   {
     $_SESSION['user'] = NULL;
     unset($_SESSION['user']);
-    if(isset(($_SESSION['admin']))) unset($_SESSION['admin']);
-    
+    if(isset(($_SESSION['admin']))) unset($_SESSION['admin']);   
   }
 }

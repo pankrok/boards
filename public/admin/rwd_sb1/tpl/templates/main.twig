@@ -1,10 +1,14 @@
 {% include 'templates/partials/head.twig' %}
 {% block headblock %}{% endblock %}
+{% if admin > 1 %}
 {% include 'templates/partials/nav.twig' %}	
 <div id="content" class="p-4 p-md-5 pt-5">
 {% include 'templates/partials/flash.twig' %}
 {% block content %}{% endblock %}
 </div>
+{% else %}
+{% include 'templates/partials/auth.twig' %}
+{% endif %}
 {% include 'templates/partials/modals.twig' %}
 {% include 'templates/partials/footer.twig' %}
 {% block endcontent %}{% endblock %}

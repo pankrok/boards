@@ -24,7 +24,7 @@ class BoardController extends Controller
 		{			
 			$data = $request->getAttribute('cache');
 
-			if(!$data)
+			if(!isset($data))
 			{
 				$routeName = \Slim\Routing\RouteContext::fromRequest($request)->getRoutingResults()->getUri();
 				$data = self::getBoardData($arg);

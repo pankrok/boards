@@ -201,13 +201,14 @@
         }
 
         .navigation ul > li {
-            background: 0 0;
-            height: 67px;
-            line-height: 67px;
-            position: relative;
-            transition: all .4s ease 0s;
-            z-index: 1;
-        }
+			background: 0 0;
+			height: 67px;
+			line-height: 67px;
+			position: relative;
+			transition: all .4s ease 0s;
+			z-index: 1;
+			display: inline-block;
+		}
 
         .navigation ul > li > a {
             background: 0 0;

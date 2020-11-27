@@ -23,25 +23,45 @@ class AdminBoardController extends Controller
 	
 	public function orderPost($request, $response)
 	{
-		
-		foreach($request->getParsedBody() as $k => $v)
+		$body = $request->getParsedBody();
+
+		foreach($body as $k => $v)
 		{
 			
-			$order = $h[1];
 			$h = explode('-', $k);
 			$id = $h[1];
-			if($h[0] == 'Category')
-			{
-				$data = CategoryModel::find($id);
-				$data->category_order = $v;
-				$data->save();
+
+			switch ($h[0]) {
+				
+				case 'Category':
+					$data = CategoryModel::find($id);
+					$data->category_order = $v;
+					$data->active = false;
+					$data->save();
+					
+				break;
+				
+				case 'CategoryChecbox':
+					$data = CategoryModel::find($id);
+					$data->active = true;
+					$data->save();
+					
+				break;
+				
+				case 'Boards':
+					$data = BoardsModel::find($id);
+					$data->board_order = $v;
+					$data->active = false;
+					$data->save();
+				break;
+				case 'BoardChecbox':
+					$data = BoardsModel::find($id);
+					$data->active = true;
+					$data->save();
+				break;
+				
 			}
-			else
-			{
-				$data = BoardsModel::find($id);
-				$data->board_order = $v;
-				$data->save();
-			}
+
 			
 		}
 
@@ -105,6 +125,7 @@ class AdminBoardController extends Controller
 		return $this->adminView->render($response, 'board_edit.twig');
 	}
 	
+	
 	protected function getCategories()
 	{
 		$categories = \Application\Models\CategoryModel::orderBy('category_order', 'DESC')->get(); 
@@ -121,6 +142,7 @@ class AdminBoardController extends Controller
 		}
 		return $boards;
 	}
+	
 	
 };
 

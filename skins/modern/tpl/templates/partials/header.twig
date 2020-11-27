@@ -41,6 +41,10 @@
 							<li class="title">Ustawienia</li>
 							<li><a href="#"><i class="fas fa-eye"></i> Obserwowana zawartość</a></li>
 							<li><a href="#"><i class="fas fa-cog"></i> Ustawienia konta</a></li>
+							{% if auth.admin > 0 %}
+							<li class="title">Admin</li>
+							<li><a href="{{ path_for('admin.home') }}"><i class="fas fa-user-cog"></i> ACP</a></li>
+							{% endif %}
 							<li class="line"></li>
 							<li><a href="{{ path_for('auth.signout') }}" class="logout"><i class="fas fa-power-off"></i> {{ trans('Log out') }}</a></li>
 						</ul>

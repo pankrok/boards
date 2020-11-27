@@ -16,8 +16,22 @@ class CategoryController extends Controller
 	{
 		if(is_numeric($arg['category_id']))
 		{
-			$data = BoardsModel::where('category_id', $arg['category_id'])->get()->toArray();
-			$category = CategoryModel::find($arg['category_id'])->get()->toArray()[0];
+			$cache = $request->getAttribute('cache');
+			if(!isset($cache))
+			{
+				$routeName = \Slim\Routing\RouteContext::fromRequest($request)->getRoutingResults()->getUri();
+				
+				$data = BoardsModel::where([['category_id', $arg['category_id']], ['active', '=', '1']])->get()->toArray();
+				$category = CategoryModel::find($arg['category_id'])->get()->toArray()[0];
+				$this->cache->store($routeName, ['data' => $data, 'category' => $category], $this->settings['cache']['cache_time']);
+			}
+			else
+			{
+				$data = $cache['data'];
+				$category =  $cache['category'];
+			}
+			
+			
 		
 			foreach($data as $k => $v)
 			{

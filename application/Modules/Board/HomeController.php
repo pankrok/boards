@@ -16,12 +16,14 @@ class HomeController extends Controller
 			$routeName = \Slim\Routing\RouteContext::fromRequest($request)->getRoutingResults()->getUri();
 			$categories = self::getCategories();
 			$boards = self::getBoards();
-			$this->cache->store($routeName, ['categories' => $categories, 'boards' => $boards], $this->settings['cache']['cache_time']);
+			$boxes =  self::getBoxes();
+			$this->cache->store($routeName, ['categories' => $categories, 'boards' => $boards, 'boxes' => $boxes], $this->settings['cache']['cache_time']);
 		}
 		else
 		{
 			$categories = $cache['categories'];
 			$boards 	= $cache['boards'];
+			$boxes		= $cache['boxes'];
 		}
 		
 		$this->ChatboxController->getChatMesasages();
@@ -49,7 +51,7 @@ class HomeController extends Controller
 			$this->view->getEnvironment()->addGlobal('user', $user);
 		}
 		$this->view->getEnvironment()->addGlobal('sidebar_active', true);
-		$this->view->getEnvironment()->addGlobal('sidebars', self::getBoxes());
+		$this->view->getEnvironment()->addGlobal('sidebars', $boxes);
 		$this->view->getEnvironment()->addGlobal('stats', $this->StatisticController->getStats());
 		$this->event->addGlobalEvent('home.loaded');	
 		return $this->view->render($response, 'home.twig');	;
@@ -59,7 +61,7 @@ class HomeController extends Controller
 	protected function getCategories()
 	{
 		
-		$categories = \Application\Models\CategoryModel::orderBy('category_order', 'DESC')->get()->toArray(); 
+		$categories = \Application\Models\CategoryModel::where('active', 1)->orderBy('category_order', 'DESC')->get()->toArray(); 
 		
 		foreach($categories as $k => $v)
 		{

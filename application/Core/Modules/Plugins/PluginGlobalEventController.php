@@ -63,14 +63,14 @@ class PluginGlobalEventController extends Event
 	* @return void
 	**/
 	
-	public function db()
-	{
-		return $this->db;
-	}
+	// public function db()
+	// {
+		// return $this->db;
+	// }
 	
-	public function translate()
+	public function translate($string)
 	{
-		return $this->translator;
+		return $this->translator->trans('plugin.'.$string);
 	}
 	
 	public function cache()

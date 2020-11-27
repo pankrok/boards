@@ -23,11 +23,8 @@ class CacheMiddleware extends Middleware
 		$cache = $this->container->get('cache');
 		
 		if(!$cacheData = $cache->receive($routeName))
-		{
-			$cacheObj = null;
-			$cache->store($routeName, $cacheObj, 320);	
-			$cacheData = $cacheObj;
-		}
+			$cacheData = null;
+		
 		$request = $request->withAttribute('cache', $cacheData);
 		
 		return $handler->handle($request);

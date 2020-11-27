@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "MC4xLjIw",
+        "version": "djAuMS4w",
         "show_version": "1",
         "log_level": "3",
         "debug": "1",
@@ -27,9 +27,9 @@
         "cache_ext": ".c"
     },
     "twig": {
-        "debug": "0",
+        "debug": "1",
         "cache": "0",
-        "skin": "simple"
+        "skin": "modern"
     },
     "pagination": {
         "boards": "10",

@@ -20,12 +20,17 @@
 				
 				<div class="card-header">
 				<div class="row">
-					<div class="col-sm-auto col-md-11">
-						<strong>{{ category.name|raw }}</strong> <a href="{{ base_url}}/{{ admin_url }}/category/edit/{{ category.id }}" class="btn btn-outline-success btn-sm fas fa-edit mx-2">edit</a>
-					</div>
-					<div class="col-sm-auto col-md-1 my-2">
+				<div class="col-sm-auto col-md-1 my-2 order-2">
 						<input type="text" value="{{ category.category_order }}" id="Category-{{ category.id }}" name="Category-{{ category.id }}" class="form-control float-right">
 					</div>
+					<div class="col-sm-auto col-md-11 order-1">
+						<strong>{{ category.name|raw }}</strong> <a href="{{ base_url}}/{{ admin_url }}/category/edit/{{ category.id }}" class="btn btn-outline-success btn-sm fas fa-edit mx-2">edit</a>
+						<span class="float-right px-3">
+						<input type="checkbox" class="form-check-input" id="CategoryChecbox-{{ category.id }}" name="CategoryChecbox-{{ category.id }}" {% if category.active %}checked{% endif %}>
+						<label class="form-check-label" for="CategoryChecbox-{{ category.id }}">{{ trans('active') }}</label>
+						</span>
+					</div>
+					
 				</div>
 				</div>
 					<div class="card-body px-0 py-1" id="board-{{ category.cat_id }}">
@@ -36,32 +41,43 @@
 													
 							<li class="list-group-item {% if myVal is even %}bg-white{% else %}bg-light{% endif %}">
 								<div class="row">
-								<div class="col-sm-auto col-md-11">
+								<div class="col-sm-auto col-md-1 my-2 order-2">
+									 <input type="text" value="{{ board.board_order }}" id="Boards-{{ board.id }}" name="Boards-{{ board.id }}" class="form-control float-right">
+								</div>
+								<div class="col-sm-auto col-md-11 order-1">
 									<div class="row">
 										<div class="col-auto fs-15 my-2">
-											{{ board.board_name }} 
+										{{ board.board_name }} 
 										</div>
 										<div class="col-auto fs-15 my-2">	
 											<a href="{{ base_url}}/{{ admin_url }}/board/edit/{{ board.id }}" class="btn btn-outline-success btn-sm fas fa-edit">edit</a>
+											
+										</div>
+										<div class="col-auto ml-auto order-2">
+												<span class=" float-right">
+												<input type="checkbox" class="form-check-input" id="BoardChecbox-{{ board.id }}" name="BoardChecbox-{{ board.id }}" {% if board.active %}checked{% endif %}>
+												<label class="form-check-label" for="BoardChecbox-{{ board.id }}">{{ trans('active') }}</label>
+												</span>
 										</div>
 										{% if board.board_description %}
-										<div class="col-auto fs-15 my-2">
+										<div class="col-auto fs-15 my-2 order-1">
 										 <a class="btn btn-outline-secondary btn-sm" data-toggle="collapse" href="#board{{ board.id }}" role="button" aria-expanded="false" aria-controls="board{{ board.id }}">
 											Show board desc
 										  </a>
 										</div>
-										<div class="col-12 fs-12 mt-3 collapse" id="board{{ board.id }}">
+										<div class="col-12 fs-12 mt-3 collapse order-3" id="board{{ board.id }}">
 										<div class="card card-body">
 											<p>Board desc:</p>
 											<p>{{ board.board_description | raw }}</p>
 										</div>
 										</div>
 										{% endif %}
+
+										
+
 									</div>
 								</div>
-								<div class="col-sm-auto col-md-1 my-2">
-									 <input type="text" value="{{ board.board_order }}" id="Boards-{{ board.id }}" name="Boards-{{ board.id }}" class="form-control float-right">
-								</div>
+								
 								</div>
 							</li>
 							{% set myVal = myVal + 1 %}

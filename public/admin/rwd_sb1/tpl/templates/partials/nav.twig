@@ -6,6 +6,7 @@
 	</button>
 </div>
 	<h1><a href="{{ path_for('admin.home') }}" class="logo">Boards ACP</a></h1>
+	<div class="m-4 text-center"><a href="{{ path_for('home') }}" target="_blank"><i class="fas fa-border-style"></i> {{ board_link }}</a></div>
 <ul class="list-unstyled components mb-5 accordion" id="BoardsMenuList">
   <li>
 	  <a href="{{ path_for('admin.home') }}"><span class="fas fa-tachometer-alt mr-3"></span> Dashboard</a>
@@ -37,7 +38,7 @@
   </li>
   <br /><br />
   <li>
-	<a href="#"><span class="fas fa-sign-out-alt mr-3"></span> <b>{{ trans('Log out') }}</b></a>
+	<a href="{{ path_for('auth.signout') }}"><span class="fas fa-sign-out-alt mr-3"></span> <b>{{ trans('Log out') }}</b></a>
   </li>
 </ul>
 

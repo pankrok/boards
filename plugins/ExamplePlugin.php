@@ -34,7 +34,6 @@ class ExamplePlugin implements EventSubscriberInterface
 	public static function deactivation()
 	{
 		PluginController::removeFromTpl('home.twig', '{{ plugin_bar | raw }}');
-		return 1;
 	}
 	
 	public static function install()
@@ -50,10 +49,8 @@ class ExamplePlugin implements EventSubscriberInterface
 
     public function MyFooPlugin($data)
     {
-
 	   $content = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-					 <strong>'.$data->translate()->trans('plugin.Holy guacamole!') .'</strong> '.$data->translate()->trans('plugin.This is a plugin example!') .'<br />
-					  
+					 <strong>'.$data->translate('Holy guacamole!') .'</strong> '.$data->translate('This is a plugin example!') .'<br />		  
 					  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					  </button>
@@ -83,11 +80,7 @@ class ExamplePlugin implements EventSubscriberInterface
 					'This is a plugin example!' => 'This is a plugin example!'
 				]
 			]
-		];		
-		
-		foreach($trans as $v){
-			$data->addTranslations($v);
-		}
+		];
 		
 	}
 }

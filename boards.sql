@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 24, 2020 at 03:13 PM
+-- Generation Time: Nov 27, 2020 at 03:00 PM
 -- Server version: 10.1.47-MariaDB-0+deb9u1
 -- PHP Version: 7.4.12
 
@@ -38,7 +38,7 @@ CREATE TABLE `brd_boards` (
   `posts_number` int(11) DEFAULT '0',
   `last_post_date` int(11) DEFAULT NULL,
   `last_post_author` varchar(255) DEFAULT NULL,
-  `visability` tinyint(1) DEFAULT '1',
+  `active` tinyint(1) DEFAULT '1',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -224,14 +224,6 @@ CREATE TABLE `brd_skins` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `brd_skins`
---
-
-INSERT INTO `brd_skins` (`id`, `name`, `dirname`, `author`, `version`, `updated_at`, `created_at`) VALUES
-(4, 'Modern', 'modern', 'Wiesiek', '1.1', '2020-11-24 11:46:53', '2020-11-24 11:46:53'),
-(6, 'simple', 'simple', 'PanKrok', '1.0', '2020-11-24 13:51:27', '2020-11-24 13:51:27');
-
 -- --------------------------------------------------------
 
 --
@@ -264,6 +256,7 @@ CREATE TABLE `brd_users` (
   `user_group` varchar(255) DEFAULT NULL,
   `additional_groups` varchar(255) DEFAULT NULL,
   `main_group` varchar(255) DEFAULT NULL,
+  `admin_lvl` int(2) NOT NULL,
   `posts` varchar(255) NOT NULL DEFAULT '0',
   `plots` varchar(255) NOT NULL DEFAULT '0',
   `avatar` varchar(255) DEFAULT NULL,
@@ -459,7 +452,7 @@ ALTER TABLE `brd_posts`
 -- AUTO_INCREMENT for table `brd_skins`
 --
 ALTER TABLE `brd_skins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `brd_userdata`
