@@ -30,12 +30,8 @@ $app->setBasePath((function () {
     return '';
 })());
 
-$container = $app->getContainer();
-$container->set('getBasePath', function() use($app)
-{
-	return $app->getBasePath();
-});
 
+$container = $app->getContainer();
 
 $container->set('settings', function ($container) {
     return json_decode(file_get_contents(MAIN_DIR . '/environment/Config/settings.json'), true);
@@ -72,7 +68,7 @@ $container->set('db', function ($container) use ($capsule) {
 $container->set('translator', function ($container) {
 	$fallback = $container->get('settings')['translations']['fallback'];
 	$loader = new \Illuminate\Translation\FileLoader(
-		new \Illuminate\Filesystem\Filesystem(), MAIN_DIR . '/environment/Translations'
+		new \Illuminate\Filesystem\Filesystem(), MAIN_DIR . $container->get('settings')['translations']['path']
 	);
 	$translator = new \Illuminate\Translation\Translator($loader, $_SESSION['lang'] ?? $fallback);
 	$translator->setFallback($fallback);
@@ -127,8 +123,6 @@ $container->set('view', function($container){
        'user' => $container->get('auth')->user(),
 	   'admin' => $container->get('auth')->checkAdmin()
     ]);
-	$view->getEnvironment()->addGlobal('main_title', $container->get('settings')['board']['main_page_name']);
-	
 	$view->getEnvironment()->addGlobal('assets', $assets);
 	$view->getEnvironment()->addGlobal('skin_assets', $skinAssets);
 	

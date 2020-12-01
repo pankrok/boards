@@ -10,18 +10,13 @@ class HomeController extends Controller
 	
 	public function index($request, $response, $arg)
 	{
-		
 		$cache = $request->getAttribute('cache');
 		if(!isset($cache))
 		{
-			$routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
-			$name = $routeContext->getRoute()->getName();
-			$routeName = $routeContext->getRoutingResults()->getUri();
-			$this->cache->setName($name);
-			
+			$routeName = \Slim\Routing\RouteContext::fromRequest($request)->getRoutingResults()->getUri();
 			$categories = self::getCategories();
 			$boards = self::getBoards();
-			$boxes =  self::getBoxes();			
+			$boxes =  self::getBoxes();
 			$this->cache->store($routeName, ['categories' => $categories, 'boards' => $boards, 'boxes' => $boxes], $this->settings['cache']['cache_time']);
 		}
 		else

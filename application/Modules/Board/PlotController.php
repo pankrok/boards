@@ -49,71 +49,42 @@ class PlotController extends Controller
 	
 	public function getPlot($request, $response, $arg)
 	{
-		$cache = $request->getAttribute('cache');
-		if(!isset($cache))
-		{
-			$routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
-			$name = $routeContext->getRoute()->getName();
-			$routeName = $routeContext->getRoutingResults()->getUri();
-			$this->cache->setName($name);
-			
-			if(isset($arg['page']) && $arg['page'] > 0)
-			{
-				$currentPage = $arg['page'];
-			}
-			else
-			{
-				$currentPage = 1;
-			}
-			
-			$totalItems = PostsModel::where('plot_id', $arg['plot_id'])->count();
-			$itemsPerPage = $this->settings['pagination']['plots'];
-			
-			$urlPattern = self::base_url().'/plot/'.$arg['plot'].'/'.$arg['plot_id'].'/(:num)';
-			$paginator = new \JasonGrimes\Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern);
+		if(isset($arg['page']) && $arg['page'] > 0)
+        {
+			$currentPage = $arg['page'];
+        }
+    	else
+        {
+        	$currentPage = 1;
+        }
+        
+		$totalItems = PostsModel::where('plot_id', $arg['plot_id'])->count();
+		$itemsPerPage = $this->settings['pagination']['plots'];
 		
-			
+		$urlPattern = self::base_url().'/plot/'.$arg['plot'].'/'.$arg['plot_id'].'/(:num)';
+		$paginator = new \JasonGrimes\Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern);
+	
+		$this->view->getEnvironment()->addGlobal('paginator', $paginator);
 
-			$data = PostsModel::where('posts.plot_id', $arg['plot_id'] )
-					->skip(($paginator->getCurrentPage()-1)*$paginator->getItemsPerPage())
-					->take($paginator->getItemsPerPage())
-					->join('users', 'users.id', '=', 'posts.user_id')
-					->leftJoin('images', 'users.avatar', '=', 'images.id')
-					->select('posts.*', 'users.avatar', 'users.username', 'users.reputation', 'users.main_group', 'users.posts', 'users.plots', 'images._85', 'images._38')
-					->get();	
-			
-			foreach($data as $k => $v)
-			{
-				$group = $this->group->getGroupDate($v->main_group, $v->username);
-				$data[$k]->user_url = self::base_url() .'/user/'. $v->username .'/'. $v->user_id ;
-				$data[$k]->avatar = $v->avatar ? self::base_url() . $this->settings['images']['path'] . $v->_85 : self::base_url() . '/public/img/avatar.png';
-				$data[$k]->username_html = $group['username'];
-				$data[$k]->group = $group['group'];
-			}
-			
-			$plot = PlotsModel::find($arg['plot_id']);
-			
-			$plot_data['plot_data'] = $data;	
-			$plot_data['locked'] = $plot->locked;	
-			$plot_data['title'] = $plot->plot_name;
-			
-			$cache = [
-				'paginator' => $paginator,
-				'data' => $data,
-				'locked' => $plot->locked,	
-				'plot_name' => $plot->plot_name
-			];
-			$this->cache->store($routeName, $cache, $this->settings['cache']['cache_time']);
-		}
-		else
+		$data = PostsModel::where('posts.plot_id', $arg['plot_id'] )
+				->skip(($paginator->getCurrentPage()-1)*$paginator->getItemsPerPage())
+				->take($paginator->getItemsPerPage())
+				->join('users', 'users.id', '=', 'posts.user_id')
+				->leftJoin('images', 'users.avatar', '=', 'images.id')
+				->select('posts.*', 'users.avatar', 'users.username', 'users.reputation', 'users.main_group', 'users.posts', 'users.plots', 'images._85', 'images._38')
+				->get();	
+		
+		foreach($data as $k => $v)
 		{
-			$paginator = $cache['paginator'];
-			$plot_data['plot_data'] = $cache['data'];	
-			$plot_data['locked'] = $cache['locked'];	
-			$plot_data['title'] = $cache['plot_name'];
-			$this->cache->deleteExpired();
-			
+			$group = $this->group->getGroupDate($v->main_group, $v->username);
+			$data[$k]->user_url = self::base_url() .'/user/'. $v->username .'/'. $v->user_id ;
+			$data[$k]->avatar = $v->avatar ? self::base_url() . $this->settings['images']['path'] . $v->_85 : self::base_url() . '/public/img/avatar.png';
+			$data[$k]->username_html = $group['username'];
+			$data[$k]->group = $group['group'];
 		}
+		
+		$plot = PlotsModel::find($arg['plot_id']);
+
 		
 		if(	$this->auth->check() 
 			&& $paginator->getCurrentPage() == ceil($paginator->getTotalItems()/$paginator->getItemsPerPage()) 
@@ -136,13 +107,13 @@ class PlotController extends Controller
 			$v->increment('views');
 			$v->save();
 		}	
-			
+		$plot_data['plot_data'] = $data;	
+		$plot_data['locked'] = $plot->locked;	
+		$plot_data['title'] = $plot->plot_name;
 		
-		
-		$this->view->getEnvironment()->addGlobal('paginator', $paginator);
 		$this->view->getEnvironment()->addGlobal('title', $plot_data['title']);
 		$this->view->getEnvironment()->addGlobal('locked', $plot_data['locked']);
-		if($plot_data) $this->view->getEnvironment()->addGlobal('plot', [
+		if($data) $this->view->getEnvironment()->addGlobal('plot', [
 															'posts' => $plot_data['plot_data'], 
 															'plot_id' => $arg['plot_id'],
 															]);
@@ -153,7 +124,7 @@ class PlotController extends Controller
 	public function replyPost($request, $response)
 	{
 	
-		$plot = PlotsModel::select('locked', 'board_id', 'plot_name', 'id')->find($request->getParsedBody()['plot_id']);
+		$plot = PlotsModel::select('locked', 'board_id')->find($request->getParsedBody()['plot_id']);
 		$locked = $plot->locked;
 		
 		$data['csrf'] = self::csftToken();
@@ -174,8 +145,7 @@ class PlotController extends Controller
 			$avatar = $user->avatar ? self::base_url() .'/public/upload/avatars/'.$avatar->_85 : self::base_url() .'/public/img/avatar.png';	
 			$uurl = self::base_url() .'/user/'. $this->urlMaker->toUrl($user->username) .'/'. $user->id;
 			
-			$skin = $_SESSION['skin'] ?? $this->settings['twig']['skin'];
-			$data['response'] = file_get_contents(MAIN_DIR.'/skins/'.$skin.'/tpl/ajax/newpost.twig');
+			$data['response'] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/ajax/newpost.twig');
 			$replace = [$uurl, $user->username, $avatar,  $user->user_grupe, $user->user_groupe, $user->posts, $user->plots, $user->created_at, $user->reputation, date("Y-m-d H:i:s"), ($request->getParsedBody()['content'])];
 			$find = ['{{uurl}}', '{{username}}', '{{avatar}}', '{{user_grupe}}', '{{posts}}', '{{plots}}', '{{join}}', '{{rep}}', '{{date}}', '{{created_at}}', '{{content}}'];
 			
@@ -197,19 +167,7 @@ class PlotController extends Controller
 				'plot_id' => $request->getParsedBody()['plot_id'],
 				'user_id' => $_SESSION['user'],
 				'timeline' => time()
-			]);		
-			
-			$totalItems = PostsModel::where('plot_id', $request->getParsedBody()['plot_id'])->count();
-			$itemsPerPage = $this->settings['pagination']['plots'];
-			$pages = ceil($totalItems / $itemsPerPage);
-			$this->cache->setName('board.getPlot');
-			$name = $this->getBasePath .'/plot/' .$plot->plot_name. '/'.$plot->id;
-			if($pages > 1)
-				$this->cache->delete($name);
-			$name .= '/'.$pages;
-			$this->cache->delete($name);
-			$this->BoardController->boardCleanCache($plot->board_id);
-			
+			]);			
 		}
 		else
 		{
@@ -237,7 +195,8 @@ class PlotController extends Controller
 					
 		if($request->getParsedBody()['board_id'])
 		{
-		
+			
+			
 			$board = BoardsModel::find($request->getParsedBody()['board_id']);
 			
 			if(!$board->locked && $request->getParsedBody()['content'] != '' &&  $request->getParsedBody()['topic'] != '') 
@@ -272,7 +231,7 @@ class PlotController extends Controller
 				$board->save();
 				
 				$data['redirect'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($newPlot->plot_name) . '/' . $newPlot->id;					
-				$this->BoardController->boardCleanCache($board->id);
+			
 			}
 			else
 			{
@@ -375,4 +334,6 @@ class PlotController extends Controller
 		return $response->withHeader('Content-Type', 'application/json')
 						->withStatus(201);	
 	}
+	
+	
 }

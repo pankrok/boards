@@ -70,7 +70,6 @@ class CategoryController extends Controller
 		
 		$this->view->getEnvironment()->addGlobal('boards', $data);
 		$this->view->getEnvironment()->addGlobal('category', $category);
-		$this->view->getEnvironment()->addGlobal('title', $category['name']);
 		
 		return $this->view->render($response, 'category.twig');
 	}

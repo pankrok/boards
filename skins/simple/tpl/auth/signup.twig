@@ -62,9 +62,9 @@
 									  <div class="form-group">
 										<label for="captchaCode">{{ trans('Captcha') }}</label>
 										<div class="row">
-										<div id="captcha" class="col-6 m-auto">{{ captcha.image | raw }}</div>
+										<div class="col-6 m-auto">{{ captcha.image | raw }}</div>
 										<div class="col-6 m-auto">{{ captcha.input | raw }}
-										<small id="captcha-ref-btn" class="form-text text-muted text-center">Refresh captcha</a></small>
+										<small class="form-text text-muted text-center">Refresh captcha</small>
 										</div>		
 										</div>
 									  </div>
@@ -107,7 +107,6 @@
 
 <script>
 
-var captchaRef= "{{ path_for('auth.ref.captcha') }}";
 var urlFor = "{{ path_for('auth.hint') }}";
 
 </script>

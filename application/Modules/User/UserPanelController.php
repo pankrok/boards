@@ -78,11 +78,11 @@ class UserPanelController extends Controller
 				$page = self::findPage($v['created_at'], $v['plot_id']);
 				$posts[$k]['url'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($v['plot_name']) . '/' . $v['plot_id'] . '/'. $page . '#post-'. $v['id'];		
 			}			
-			$title = $this->translator->trans('lang.user') . ': ' .$data->username;
+			
 			$this->view->getEnvironment()->addGlobal('posts', $posts);
 			$this->view->getEnvironment()->addGlobal('profile', $data);
 			$this->view->getEnvironment()->addGlobal('can_edit', $canEdit);
-			$this->view->getEnvironment()->addGlobal('title', $title);
+			$this->view->getEnvironment()->addGlobal('title', $data->username);
 			$this->view->getEnvironment()->addGlobal('id', $arg['uid']);
 			
 			$additionalData = self::getUserdata($arg['uid']);
@@ -90,6 +90,8 @@ class UserPanelController extends Controller
 			if(isset($additionalData))
 				$this->view->getEnvironment()->addGlobal('additional', $additionalData);
 
+
+			
 		}
 		return $this->view->render($response, 'user/profile.twig');
 	}

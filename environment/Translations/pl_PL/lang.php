@@ -71,8 +71,6 @@ return [
 	'by' => 'przez:',
 	'Last post' => 'Ostatni post',
 	'last reply' => 'Ostatnia odpowiedź',
-	'replys' => 'Odpowiedzi',
-	'userlist' => 'Użytkownicy',
-	'user' => 'Użytkownik'
+	'replys' => 'Odpowiedzi'
 	
 ];

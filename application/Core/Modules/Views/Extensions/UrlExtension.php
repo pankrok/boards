@@ -36,9 +36,9 @@ class UrlExtension extends AbstractExtension
 		return $this->base_url;
 	}
 	
-	public function path_for($path, $arg = [])
+	public function path_for($arg)
 	{
-		return $this->router->urlFor($path, $arg);
+		return $this->router->urlFor($arg);
 	}
 	
 	public function urlFor($arg)

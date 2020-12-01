@@ -8,9 +8,6 @@
         "admin": "acp"
     },
     "board": {
-        "main_page_name": "Boards forum script",
-        "main_mail": "admin@cs-zabijaka.pl",
-        "boards_off": "0",
         "default_group": "1"
     },
     "admin": {
@@ -24,7 +21,7 @@
         "path": "\/public\/upload\/avatars\/"
     },
     "cache": {
-        "active": "1",
+        "active": "0",
         "cache_time": "90",
         "cache_dir": "\/environment\/Cache\/objects\/",
         "cache_ext": ".c"
@@ -32,7 +29,7 @@
     "twig": {
         "debug": "1",
         "cache": "0",
-        "skin": "simple"
+        "skin": "modern"
     },
     "pagination": {
         "boards": "10",

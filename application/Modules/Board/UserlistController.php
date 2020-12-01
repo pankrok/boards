@@ -14,7 +14,6 @@ class UserlistController extends Controller
 		$users = UserModel::get()->makeHidden(['password'])->toArray();
 		
 		$this->view->getEnvironment()->addGlobal('users',$users);
-		$this->view->getEnvironment()->addGlobal('title', $this->translator->trans('lang.userlist'));
 		return $this->view->render($response, 'userlist.twig');	;
 	}
 	

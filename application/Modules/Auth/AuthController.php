@@ -197,44 +197,22 @@ class AuthController extends Controller
 
 	public function postHintUsers($request, $response){
 		
-		
-		$token = ($this->csrf->generateToken());
+		$recommended = $request->getParsedBody()['recommended'];
+		$token = ($this->container->get('csrf')->generateToken());
 		$data['csrf'] = [
 			'csrf_name' => $token['csrf_name'],
 			'csrf_value' => $token['csrf_value']
 		];
-		if(isset($request->getParsedBody()['recommended']))
-		{
-			$recommended = $request->getParsedBody()['recommended'];
-			$users = UserModel::select('users.username')->where('username', 'like', '%'.$recommended.'%')->get();
+		$users = UserModel::select('users.username')->where('username', 'like', '%'.$recommended.'%')->get();
 		
-			foreach($users as $k => $v){
+		foreach($users as $k => $v){
 
-				$data['username'][$k] = $v->username;
-			}
+			$data['username'][$k] = $v->username;
 		}
+
 		$response->getBody()->write(json_encode($data));
 		return $response->withHeader('Content-Type', 'application/json')
 						->withStatus(201);
 	}
 
-	public function refreshCaptcha($request, $response)
-	{
-		$token = ($this->csrf->generateToken());
-		$data['csrf'] = [
-			'csrf_name' => $token['csrf_name'],
-			'csrf_value' => $token['csrf_value']
-		];
-		
-		$this->captcha->code();
-		$this->captcha->image();
-		$_SESSION['captcha'] = md5($this->captcha->getCode());
-		$data['captcha'] = '<img class="img-fluid rounded mx-auto d-block" id="captchaImg" src="'.$this->captcha->getImage().'">';
-		
-		$response->getBody()->write(json_encode($data));
-		
-		
-		return $response;
 	}
-
-}

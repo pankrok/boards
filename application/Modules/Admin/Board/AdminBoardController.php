@@ -103,33 +103,6 @@ class AdminBoardController extends Controller
 		  ->withStatus(302);
 	}
 	
-	public function deleteBoard($request, $response, $arg)
-	{
-		
-		if(isset($request->getParsedBody()['confirm']) && $request->getParsedBody()['element'] === 'board')
-		{
-			BoardsModel::find($request->getParsedBody()['id'])->delete();
-			$this->cache->clearCache();
-			return $response
-			  ->withHeader('Location', $this->router->urlFor('admin.boards'))
-			  ->withStatus(302);
-			
-		}
-		
-		if(isset($request->getParsedBody()['confirm']) && $request->getParsedBody()['element'] === 'category')
-		{
-			CategoryModel::find($request->getParsedBody()['id'])->delete();
-			return $response
-			  ->withHeader('Location', $this->router->urlFor('admin.boards'))
-			  ->withStatus(302);
-			
-		}
-		
-		$this->adminView->getEnvironment()->addGlobal('id', $arg['id']);
-		$this->adminView->getEnvironment()->addGlobal('element', $arg['element']);
-		return $this->adminView->render($response, 'admin_delete.twig');
-	}
-	
 	public function editBoard($request, $response, $arg)
 	{
 		$body = $request->getParsedBody();

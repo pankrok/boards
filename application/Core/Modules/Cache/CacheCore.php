@@ -43,7 +43,7 @@ class CacheCore
 		return $this->dirName;
 	}	
 	
-	public function store($fname, $data, $exp = 0)
+	public function store($fname, $data, $exp = null)
 	{
 		if(!$this->cache) return null;
 		if(!isset($exp))
@@ -111,18 +111,11 @@ class CacheCore
 		{
 			foreach($list as $k => $v)
 			{
-				if($v != 0 && $v < time())
+				if($v < time())
 				{	
-					if(file_exists($k))
-					{
-						if(!unlink($k . $this->extension))
-							throw new \Exception('cannot delete cache file'.$k);
-						unset($list[$k]);
-					}
-					else
-					{
-						unset($list[$k]);
-					}
+					if(!unlink($k . $this->extension))
+						throw new \Exception('cannot delete cache file'.$k);
+					unset($list[$k]);
 				}
 			}
 				

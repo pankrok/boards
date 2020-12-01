@@ -97,21 +97,9 @@ class AdminSkinsController extends Controller
 	
 	public function editSkin($request, $response)
 	{
+		
+		
 		return $response;
-	}
-	
-	public function setSkinDefault($request, $response)
-	{
-		if(isset($request->getParsedBody()['skin_dir']))
-		{
-			$settings = $this->settings;
-			$settings['twig']['skin'] = $request->getParsedBody()['skin_dir'];
-			$settings = json_encode($settings, JSON_PRETTY_PRINT);
-			file_put_contents(MAIN_DIR . '/environment/Config/settings.json', $settings);
-		}
-		return $response
-		  ->withHeader('Location', $this->router->urlFor('admin.skinlist'))
-		  ->withStatus(302);
 	}
 	
 	public function reloadCssJs($request, $response)

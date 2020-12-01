@@ -6,7 +6,6 @@
 	  <div class="card-body">
 		<h5 class="card-title text-center">{{ skin.name }}</h5>
 		<p class="card-text">{{ trans('admin.version') }}: <i>{{ skin.version }}</i>, author: <i>{{ skin.author }}</i></p>
-		<form action="{{ path_for('admin.default.skin.post') }}" method="post"><input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}"><input type="submit" class="btn btn-primary" value="{{ trans('admin.set as default') }}"></form><br />
 		<form action="{{ path_for('admin.add.skin.reload') }}" method="post"><input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}"><input type="submit" class="btn btn-primary" value="{{ trans('admin.reload assets') }}"></form><br />
 		<form action="{{ path_for('admin.delete.skin.post') }}" method="post"><input type="hidden" id="skin_id" name="skin_id" value="{{ skin.id }}"><input type="submit" class="btn btn-danger" value="{{ trans('admin.delete') }}">
 		<div class="form-check">
