@@ -1,0 +1,15 @@
+{
+    "name": "Example Skin",
+    "author": "PanKrok",
+    "version": "1.1",
+    "assets": {
+        "css": [
+            "main.css",
+			"second.css"
+        ],
+        "js": [
+            "main.js",
+			"second"js
+        ]
+    }
+}

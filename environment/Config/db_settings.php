@@ -2,10 +2,10 @@
 
 return [
 	'driver' => 'mysql',
-	'host' => '',
-	'database' => '',
-	'username' => '',
-	'password' => '',
+	'host' => 'localhost',
+	'database' => 'bdev',
+	'username' => 'sql@bdev.s89.eu',
+	'password' => 'LDY5svRyPC',
 	'charset' => 'utf8',
 	'collation' => 'utf8_general_ci',
 	'prefix' => 'brd_'

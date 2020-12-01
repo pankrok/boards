@@ -18,7 +18,7 @@ class StatisticController extends Controller
 		$data['users_count'] 	= UserModel::count();
 		$data['plots_count'] 	= PlotsModel::count();
 		$data['posts_count'] 	= PostsModel::count();
-		$user 		= UserModel::orderBy('updated_at', 'DESC')
+		$user = UserModel::orderBy('created_at', 'DESC')
 											->first();
 											
 		$user->name_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];

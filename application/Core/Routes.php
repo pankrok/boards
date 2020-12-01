@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use Slim\Routing\RouteCollectorProxy;
+
 #home
 $app->get('[/]', 'HomeController:index')->setName('home');
 $app->get('/cron[/{key}]', 'CronController:main')->setName('cron');
@@ -12,30 +14,35 @@ $app->get('/category/{category}/{category_id}[/{page}]', 'CategoryController:get
 $app->get('/board/{board}/{board_id}[/{page}]', 'BoardController:getBoard')->setName('board.getBoard');
 
 #plot
-$app->get('/plot/{plot}/{plot_id}[/[{page}]]', 'PlotController:getPlot')->setName('board.getPlot');
-$app->get('/newplot/{board_id}', 'PlotController:newPlot')->setName('board.newPlot');
-$app->post('/newplot/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
-$app->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
-$app->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
-
+$app->group('/plot', function (RouteCollectorProxy $plot) {
+	$plot->get('/{plot}/{plot_id:[0-9]+}[/[{page:[0-9]+}]]', 'PlotController:getPlot')->setName('board.getPlot');
+	$plot->get('/new/create/{board_id}', 'PlotController:newPlot')->setName('board.newPlot');
+	$plot->post('/new/send/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
+	$plot->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
+	$plot->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
+});
 #sign
-$app->get('/auth/signin', 'AuthController:getSignIn')->setName('auth.signin');
-$app->post('/auth/signin', 'AuthController:postSignIn')->setName('auth.post.signin');
-$app->get('/auth/signup', 'AuthController:getSignUp')->setName('auth.signup');
-$app->post('/auth/signup', 'AuthController:postSignUp')->setName('auth.post.signup');
-$app->get('/auth/logout', 'AuthController:getSignOut')->setName('auth.signout');
-$app->post('/auth/hint', 'AuthController:postHintUsers')->setName('auth.hint');
-
+$app->group('/auth', function (RouteCollectorProxy $auth) {
+	$auth->get('/signin', 'AuthController:getSignIn')->setName('auth.signin');
+	$auth->post('/signin', 'AuthController:postSignIn')->setName('auth.post.signin');
+	$auth->get('/signup', 'AuthController:getSignUp')->setName('auth.signup');
+	$auth->post('/signup', 'AuthController:postSignUp')->setName('auth.post.signup');
+	$auth->get('/autlogout', 'AuthController:getSignOut')->setName('auth.signout');
+	$auth->post('/hint', 'AuthController:postHintUsers')->setName('auth.hint');
+	$auth->post('/ref/captcha', 'AuthController:refreshCaptcha')->setName('auth.ref.captcha');
+});
 #chatbox
-$app->post('/chatbox/postmessage', 'ChatboxController:postChatMessage')->setName('postChatbox');
-$app->post('/chatbox/loadmore', 'ChatboxController:loadMoreMessages')->setName('loadChatbox');
-$app->post('/chatbox/checknew', 'ChatboxController:checkNewMessage')->setName('checkNewMessage');
-
+$app->group('/chatbox', function (RouteCollectorProxy $chatbox) {
+	$chatbox->post('/postmessage', 'ChatboxController:postChatMessage')->setName('postChatbox');
+	$chatbox->post('/loadmore', 'ChatboxController:loadMoreMessages')->setName('loadChatbox');
+	$chatbox->post('/checknew', 'ChatboxController:checkNewMessage')->setName('checkNewMessage');
+});
 #user
-$app->get('/user[/{username}/{uid}]', 'UserPanelController:getProfile')->setName('user.profile');
-$app->post('/user[/{username}/{uid}]', 'UserPanelController:postProfilePicture')->setName('user.postPicture');
-$app->post('/changedata', 'UserPanelController:postChangeData')->setName('user.postChangeData');
-
+$app->group('/user', function (RouteCollectorProxy $user) {
+	$user->get('[/{username}/{uid}]', 'UserPanelController:getProfile')->setName('user.profile');
+	$user->post('[/{username}/{uid}]', 'UserPanelController:postProfilePicture')->setName('user.postPicture');
+	$user->post('/changedata', 'UserPanelController:postChangeData')->setName('user.postChangeData');
+});
 #userlist
 $app->get('/userlist[/{page}]', 'UserlistController:getList')->setName('userlist');
 
@@ -49,22 +56,26 @@ $app->get('/setskin/{skin}', 'SkinController:change')->setName('changeskin');
 #################
 
 $adm = $container->get('settings')['core']['admin'];
+$app->group('/' .$adm, function (RouteCollectorProxy $admin) {
+	$admin->get('', 'AdminHomeController:index')->setName('admin.home');
 
-$app->get('/' .$adm , 'AdminHomeController:index')->setName('admin.home');
+	$admin->get('/board', 'AdminBoardController:index')->setName('admin.boards');
+	$admin->get('/board/edit[/{id}]', 'AdminBoardController:editBoard')->setName('admin.edit.board');
+	$admin->post('/board/edit[/{id}]', 'AdminBoardController:editBoard');
+	$admin->get('/board/delete/{element}/{id}', 'AdminBoardController:deleteBoard')->setName('admin.delete.board');
 
-$app->get('/' . $adm . '/board', 'AdminBoardController:index')->setName('admin.boards');
-$app->get('/' . $adm . '/board/edit[/{id}]', 'AdminBoardController:editBoard')->setName('admin.edit.board');
-$app->post('/' . $adm . '/board/edit[/{id}]', 'AdminBoardController:editBoard');
+	$admin->post('/board/order/post', 'AdminBoardController:orderPost')->setName('admin.board.order.post');
+	$admin->post('/board/addCategory/post', 'AdminBoardController:addCategory')->setName('admin.add.category');
+	$admin->post('/board/addBoard/post', 'AdminBoardController:addBoard')->setName('admin.add.board');
+	$admin->post('/board/delete/confirm', 'AdminBoardController:deleteBoard')->setName('admin.delete.board.post');
 
-$app->post('/' . $adm . '/board/order/post', 'AdminBoardController:orderPost')->setName('admin.board.order.post');
-$app->post('/' . $adm . '/board/addCategory/post', 'AdminBoardController:addCategory')->setName('admin.add.category');
-$app->post('/' . $adm . '/board/addBoard/post', 'AdminBoardController:addBoard')->setName('admin.add.board');
+	$admin->get('/active', 'AdminHomeController:plugin');
 
-$app->get('/' . $adm .'/active', 'AdminHomeController:plugin');
-
-$app->get('/' . $adm .'/skinslist[/[{page}]]', 'AdminSkinsController:skinsList')->setName('admin.skinlist');
-$app->get('/' . $adm .'/addskin', 'AdminSkinsController:addSkin')->setName('admin.add.skin');
-$app->post('/' . $adm .'/addskin', 'AdminSkinsController:addSkinPost')->setName('admin.add.skin.post');
-$app->post('/' . $adm .'/delete/skin', 'AdminSkinsController:removeSkin')->setName('admin.delete.skin.post');
-$app->post('/' . $adm .'/skin/reload/css/js', 'AdminSkinsController:reloadCssJs')->setName('admin.add.skin.reload');
-$app->get('/' . $adm .'/settings', 'AdminSettingsController:index')->setName('admin.get.settings');
+	$admin->get('/skinslist[/[{page}]]', 'AdminSkinsController:skinsList')->setName('admin.skinlist');
+	$admin->get('/addskin', 'AdminSkinsController:addSkin')->setName('admin.add.skin');
+	$admin->post('/addskin', 'AdminSkinsController:addSkinPost')->setName('admin.add.skin.post');
+	$admin->post('/set/as/default', 'AdminSkinsController:setSkinDefault')->setName('admin.default.skin.post');
+	$admin->post('/delete/skin', 'AdminSkinsController:removeSkin')->setName('admin.delete.skin.post');
+	$admin->post('/skin/reload/css/js', 'AdminSkinsController:reloadCssJs')->setName('admin.add.skin.reload');
+	$admin->get('/settings', 'AdminSettingsController:index')->setName('admin.get.settings');
+});

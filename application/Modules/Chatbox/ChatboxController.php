@@ -27,7 +27,7 @@ class ChatboxController extends Controller
 	
 	public function getChatMesasages()
 	{
-		
+			$base_url = self::base_url();
 			$offset = ChatboxModel::all()->count()-10;
 			$data = ChatboxModel::skip($offset)
 								->take(10)
@@ -38,6 +38,8 @@ class ChatboxController extends Controller
 			foreach($data as $k => $v)
 			{
 				$group = $this->group->getGroupDate($v->main_group, $v->username);
+				$v->avatar ? $v->avatar = $base_url. $this->settings['images']['path'] .$v->_38 : $v->avatar = $base_url.'/public/img/avatar.png';
+				$v->uurl = $base_url.'/user/'.$this->urlMaker->toUrl($v->username).'/'.$v->user_id;
 				$data[$k]->username_html = $group['username'];
 			}
 						
@@ -65,10 +67,11 @@ class ChatboxController extends Controller
 			$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($user->username).'/'.$_SESSION['user'];
 			$avatar = $user->avatar ? $base_url. $this->settings['images']['path'] .$user->_38 : $base_url.'/public/img/avatar.png';
 			$shout = htmlspecialchars($request->getParsedBody()['shout']);
+			$username_html = $this->group->getGroupDate($user->main_group, $user->username);
 			
-			$data['shout'] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'//tpl/ajax/newshout.twig');
-			$replace = [$id->id, $uurl, $user->username, $user->username, $avatar,  date("Y-m-d H:i:s"), $shout];
-			$find = ['{@$id@}', '{@uurl@}', '{@username@}', '{@username_html@}', '{@avatar@}', '{@date@}', '{@shout@}'];
+			$data['shout'] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/templates/partials/boxes/oneShout.twig');
+			$replace = [$id->id, $uurl, $username_html['username'], $avatar,  date("Y-m-d H:i:s"), $shout];
+			$find = ['{{ shout.id }}', '{{ shout.uurl }}', '{{ shout.username_html | raw }}', '{{ shout.avatar }}', '{{ shout.updated_at}}', '{{ shout.content }}'];
 			
 			$data['shout'] = str_replace($find, $replace, $data['shout']);
 
@@ -101,7 +104,7 @@ class ChatboxController extends Controller
 			->orderBy('chatbox.id', 'asc')
 			->join('users', 'users.id', '=', 'chatbox.user_id')
 			->leftJoin('images', 'users.avatar', '=', 'images.id')
-			->select('chatbox.*', 'images._38', 'users.username', 'users.avatar', 'users.user_group')
+			->select('chatbox.*', 'images._38', 'users.username', 'users.avatar', 'users.main_group')
 			->get();
 			
 		$data['chatbox'][0] = '<span id="scrollHere"></span>';
@@ -110,12 +113,12 @@ class ChatboxController extends Controller
 			$avatar = $shout->avatar ? $base_url. $this->settings['images']['path'] .$shout->_38 : $base_url.'/public/img/avatar.png';
 			$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($shout->username).'/'.$shout->user_id;
 			
-			$data['chatbox'][$i] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/ajax/newshout.twig');
+			$data['chatbox'][$i] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/templates/partials/boxes/oneShout.twig');
 			
-			$username_html = $this->group->getGroupDate($shout->user_group, $shout->username);
+			$username_html = $this->group->getGroupDate($shout->main_group, $shout->username);
 			
-			$replace = [$shout->id, $uurl, $shout->username, $username_html['username'], $avatar, $shout->created_at, $shout->content];
-			$find = ['{@$id@}', '{@uurl@}', '{@username@}', '{@username_html@}', '{@avatar@}', '{@date@}', '{@shout@}'];
+			$replace = [$shout->id, $uurl, $username_html['username'], $avatar, $shout->created_at, $shout->content];
+			$find = ['{{ shout.id }}', '{{ shout.uurl }}', '{{ shout.username_html | raw }}', '{{ shout.avatar }}', '{{ shout.updated_at}}', '{{ shout.content }}'];
 			$data['chatbox'] = str_replace($find, $replace, $data['chatbox']);
 			
 			$i++;
@@ -144,16 +147,16 @@ class ChatboxController extends Controller
 		foreach($chatbox as $shout){
 			if($request->getParsedBody()['lastShout'] < $shout->id) 
 			{	
-				$user = UserModel::joinLeft('images', 'users.avatar', '=', 'images.id')
+				$user = UserModel::leftJoin('images', 'users.avatar', '=', 'images.id')
 					->select('users.*', 'images._38')
 					->find($shout->user_id);
 				$avatar = $user->avatar ? $base_url. $this->settings['images']['path'] .$user->_38 : $base_url.'/public/img/avatar.png';
 				$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($user->username).'/'.$shout->user_id;
+				$user->username = $this->group->getGroupDate($user->main_group, $user->username)['username'];
+				$data['chatbox'][$i] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/templates/partials/boxes/oneShout.twig');
 				
-				$data['chatbox'][$i] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/ajax/newshout.twig');
-				
-				$replace = [$shout->id, $uurl, $user->username, $user->username, $avatar, $shout->created_at, $shout->content];
-				$find = ['{@$id@}', '{@uurl@}', '{@username@}', '{@username_html@}', '{@avatar@}', '{@date@}', '{@shout@}'];
+				$replace = [$shout->id, $uurl, $user->username, $avatar, $shout->created_at, $shout->content];
+				$find = ['{{ shout.id }}', '{{ shout.uurl }}', '{{ shout.username_html | raw }}', '{{ shout.avatar }}', '{{ shout.updated_at}}', '{{ shout.content }}'];
 				$data['chatbox'] = str_replace($find, $replace, $data['chatbox']);
 				
 				$i++;
