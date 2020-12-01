@@ -1,0 +1,58 @@
+	<!-- board -->
+	<form action="{{ path_for('admin.board.order.post') }}" method="post" id="submitOrder">
+	<div class="row">
+	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right" >{{ trans('admin.submit') }}</button></div>
+	</div>
+			{% for category in categories %}
+			<div class="card border-light mb-3">
+				
+				<div class="card-header">
+				<div class="row"><div class="col-11"><strong>{{ category.name|raw }}</strong></div>
+					<div class="col-1"><input type="text" value="{{ category.category_order }}" id="Category-{{ category.id }}" name="Category-{{ category.id }}" class="form-control float-right"></div>
+				</div>
+				</div>
+					<div class="card-body px-0 py-1 collapse show" id="board-{{ category.cat_id }}">
+						<ul class="list-group list-group-flush">
+							<!-- board legend -->
+							<li class="list-group-item bg-white">
+							<div class="row w-100 fs-10b">
+							<div class="col-11 col-md-5">Forum</div>
+							<div class="col-1 text-center">Order</div>
+							</div>
+							</li>
+							
+							{% for board in (boards[category.id]) %}
+							<!-- one board -->{% set myVal = 0 %}
+													
+							<li class="list-group-item {% if myVal is even %}bg-white{% else %}bg-light{% endif %}">
+								<div class="row w-100">
+								<div class="col-11">
+									<div class="row">
+										<div class="col-12 fs-15">{{ board.board_name }} <a href="{{ base_url}}/{{ admin_url }}/board/edit/{{ board.id }}" class="float-right fas fa-edit">edit</a></div>
+										{% for  childboard in board.childboard%} 
+										<div class="col-6 fs-12">
+										<a href="{{ base_url()}}/board/{{ setString.toUrl(childboard.board_name) }}/{{ childboard.id }}">
+										<i class="fas fa-arrow-right"></i> 
+										</a>
+										</div>
+										{% endfor %}
+										<div class="col-12 fs-12">{{ board.board_description | raw }}</div>
+									</div>
+								</div>
+								<div class="col-1">
+									 <input type="text" value="{{ board.board_order }}" id="Boards-{{ board.id }}" name="Boards-{{ board.id }}" class="form-control float-right">
+								</div>
+								</div>
+							</li>
+							{% set myVal = myVal + 1 %}
+							{% endfor %}
+							<!-- /one board -->								
+						</ul>
+					</div>
+			</div>
+			{% endfor %}
+			<!-- /board -->	 
+	<div class="row">
+	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right">{{ trans('admin.submit') }}</button></div>
+	</div>
+	</form>

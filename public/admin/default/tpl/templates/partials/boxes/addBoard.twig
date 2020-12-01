@@ -1,0 +1,45 @@
+{% block headblock %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+{% endblock %}
+
+<div class="p-2">
+<form action="{{ path_for('admin.add.board') }}" method="post" id="addBoard">
+  <div class="row">
+		<div class="form-group col-4">
+		<label for="SelectCategory">{{ trans('admin.select category') }}:</label>
+		<select class="form-control" id="SelectCategory" name="cat_id">
+		  {% for category in categories %}
+		  <option value="{{ category.id }}">{{ category.name }}</option>	  
+		  {% endfor %}
+		</select>
+	  </div>
+	  <div class="form-group col-4">
+		<label for="boardName">{{ trans('admin.board name') }}</label>
+		<input type="text" class="form-control" id="boardName" name="name">
+	  </div>
+	  <div class="form-group col-4">
+		<label for="boardOrder">{{ trans('admin.board order') }}</label>
+		<input type="text" class="form-control" id="boardOrder" name="order">
+	  </div>
+  </div> 
+  <div class="form-group">
+    <label for="BoardDesc">{{ trans('admin.board description') }}</label>
+    <textarea class="form-control" id="BoardDesc" rows="3" name="desc"></textarea>
+  </div>
+  <div>
+      <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
+   </div>dasdas
+</form>
+</div>
+
+{% block endcontent %}
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script>
+var editor = new Jodit('#BoardDesc', {
+	langusage: 'pl',
+    autofocus: true,
+	height: "280"
+});
+</script>
+{% endblock %}
+
