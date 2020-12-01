@@ -1,0 +1,54 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+
+	<div id="posts" >
+		
+		<!-- paginator -->
+		{% include 'templates/partials/pagination.twig' %}	
+		<!-- /paginator -->
+		
+		<strong>{{ title }}</strong>
+		 	
+		{% for post in plot.posts %}
+		<!-- one posts -->
+			{% include 'templates/partials/boxes/onePost.twig' %}	
+		<!-- /one posts -->	
+		{% endfor %}
+	<!-- paginator -->
+	{% include 'templates/partials/pagination.twig' %}	
+	<!-- /paginator -->
+	</div>	
+
+
+	{% if auth.check and locked == 0 %}
+	<!-- Quick Reply -->
+	<div class="col-lg-12 order-3">
+
+	<h5> {{ trans('Quick reply') }} </h5>
+	<input type="hidden" id="plot" value="{{ plot.plot_id }}">
+	<textarea id="quickReply" name="editor"></textarea>
+	<button id="quickReply-btn" type="button">{{ trans('send post') }}</button>
+
+	</div>	
+	<!-- /Quick Reply -->	
+	{% endif %}
+	
+	<!-- /main row -->
+
+		
+	</div>
+
+{% endblock %}
+
+{% block endcontent %}
+<link rel="stylesheet" href="{{ assets }}/css/jodit.min.css">
+<script src="{{ assets }}/scripts/jodit.min.js"></script>
+<script src="{{ assets }}/scripts/plot.js"></script>
+<script>
+var urlForReply = "{{ path_for('board.replyPost') }}";
+var likePost = "{{ path_for('board.likeit') }}";
+</script>
+
+
+{% endblock %}

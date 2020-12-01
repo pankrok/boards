@@ -1,0 +1,230 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+{% if profile %}
+
+<div class="row my-2">
+<div class="col-lg-12 order-0">
+	<div class="profile-bg" style="background-image: url('https://placehold.it/1920x150');"></div>
+</div>
+        <div class="col-lg-9 py-2 order-2 bg-white rounded">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">Profile</a>
+                </li>
+                <!--<li class="nav-item">
+                    <a href="" data-target="#messages" data-toggle="tab" class="nav-link">Messages</a>
+                </li>-->
+				{% if can_edit %}
+				<li class="nav-item">
+                    <a href="" data-target="#edit" data-toggle="tab" class="nav-link">Edit</a>
+                </li>
+				{% endif %}
+            </ul>
+            <div class="tab-content py-4">
+                <div class="tab-pane active" id="profile">
+                    <h5 class="mb-3">User Profile </h5>
+                    <div class="row">        
+                        <div class="col-md-12">
+                            <h5 class="mt-2"><i class="fas fa-clock"></i> {{ trans('last 20 posts') }}</h5>
+                            {% for post in posts %}
+							<!-- one posts -->
+							<div id="post-{{ post.id }}" class="card mb-2">
+
+								
+								<div class="col-12">
+								  <div class="card-body">
+								  <a href="{{ post.url}}"><h5 class="card-title">{{ post.plot_name }}</h5></a>
+									<div class="d-none d-md-block card-title fs-10">Posted: {{ post.created_at }}</div>
+									<p class="card-text">{{ post.content|raw }}</p>						
+								  </div>
+								</div>
+
+							</div>
+							<!-- /one posts -->	
+							{% endfor %}
+                        </div>
+                    </div>
+                    <!--/row-->
+                </div>
+                <div class="tab-pane" id="messages">
+                    <div class="alert alert-danger alert-dismissable">
+                        <a class="panel-close close" data-dismiss="alert">×</a> <strong>not implemeted yet</strong>.
+                    </div>
+
+                </div>
+				{% if can_edit %}
+                <div class="tab-pane" id="edit">
+								
+                    <form id="userdata" role="form" action="{{ path_for('user.postChangeData') }}" method="post" >
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('First name') }}</label>
+                            <div class="col-lg-9">
+                                <input name="name" class="form-control" type="text" value="{{ additional.name }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('Last name') }}</label>
+                            <div class="col-lg-9">
+                                <input name="surname" class="form-control" type="text" value="{{ additional.surname }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('email') }}</label>
+                            <div class="col-lg-9">
+                                <input name="email" class="form-control" type="email" value="{{ profile.email }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('Website') }}</label>
+                            <div class="col-lg-9">
+                                <input name="website" class="form-control" type="text" value="{{ additional.website }}">
+                            </div>
+                        </div>
+						<div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('bday') }}</label>
+                            <div class="col-lg-9">
+                               <input name="bday" class="form-control" type="date" value="{{ additional.bday }}" id="example-date-input">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('from') }}</label>
+                            <div class="col-lg-9">
+                                <input name="location" class="form-control" type="text" value="{{ additional.location }}" placeholder="City">
+                            </div>
+                        </div>
+						<div class="form-group row">
+							<label class="col-lg-3 col-form-label form-control-label" for="sex">{{ trans('sex') }}</label>
+							<div class="col-lg-9">
+								<select name="sex" class="form-control" id="sex">
+								  <option {% if additional.sex == 'male' %}selected{% endif %} value="male">{{ trans('male') }}</option>
+								  <option {% if additional.sex == 'female' %}selected{% endif %} value="female">{{ trans('female') }}</option>
+								  <option {% if additional.sex == 'other' %}selected{% endif %} value="other">{{ trans('other') }}</option>
+								</select>
+							</div>
+						  </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('Password') }}</label>
+                            <div class="col-lg-9">
+                                <input name="password" class="form-control" type="password" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('Confirm Password') }}</label>
+                            <div class="col-lg-9">
+                                <input name="vpassword" class="form-control" type="password" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label form-control-label"></label>
+                            <div class="col-lg-9">
+								<button class="btn btn-primary" type="submit" form="userdata" value="Save Changes">Save Changes</button>                              
+                            </div>
+                        </div>
+                    </form>
+                </div>
+				{% endif %}
+            </div>
+        </div>
+        <div class="col-lg-3 order-1 text-center">
+		
+			
+			<div class="avatar-status {% if 1==1 %}online{% else %}offline{% endif %}"></div>	
+            <img src="{% if profile.avatar %}{{ base_url() }}/public/upload/avatars/{{profile._150}}{% else %}{{ base_url() }}/public/img/avatar.png{% endif %}" class="profile-av mx-auto fluid rounded-circle d-block bg-white" alt="avatar">
+			
+			{% if can_edit %}<a class="avatar-change" href="#" data-toggle="modal" data-target="#changeAvatar"></a>{% endif %}
+			
+			
+			<h2 class="fs-30b">{{ profile.name_html | raw }}</h2>
+			<h3 class="fs-15b">{{ profile.group_name | raw }}</h3>
+			
+			<!-- module -->
+			<div class="card border-light my-3">
+				  <div class="card-header">{{ trans('reputation') }}</div>
+				  <div class="card-body px-2">			
+					<span class="fs-15b">{{ profile.reputation }}</span>
+				  </div>
+			</div>
+			<!-- /module -->
+			<!-- module -->
+			<div class="card border-light my-3">
+				  <div class="card-header">{{ trans('about') }} <strong>{{ profile.username }}</strong></div>
+				  <div class="card-body px-2">			
+					<ul class="list-group list-group-flush">
+						 <li class="list-group-item py-1"><span class="float-left">{{ trans('rank') }}</span> <span class="float-right">{{ additional.rank }}</span></li>
+						 <li class="list-group-item py-1"><span class="float-left">{{ trans('bday') }}</span> <span class="float-right">{{ additional.bday }}</span></li>
+						 <li class="list-group-item py-1"><span class="float-left">{{ trans('Website') }}</span> <span class="float-right"><a href="http://{{ additional.website }}" rel="nofollow">{{ additional.website }}</a></span></li>
+					</ul>
+				  </div>
+			</div>
+			<!-- /module -->
+			<!-- module -->
+			<div class="card border-light my-3">
+				  <div class="card-header">{{ trans('information') }}</div>
+				  <div class="card-body px-2">			
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item py-1"><span class="float-left">{{ trans('name') }}</span> <span class="float-right">{{ additional.name }}</span></li>
+						<li class="list-group-item py-1"><span class="float-left">{{ trans('surname') }}</span> <span class="float-right">{{ additional.surname }}</span></li>
+						<li class="list-group-item py-1"><span class="float-left">{{ trans('from') }}</span> <span class="float-right">{{ additional.location }}</span></li>
+						<li class="list-group-item py-1"><span class="float-left">{{ trans('sex') }}</span> <span class="float-right">{{ trans(additional.sex) }}</span></li>
+						<li class="list-group-item py-1"><span class="float-left">{{ trans('email') }}</span> <span class="float-right">{{ profile.email }}</span></li>
+						
+					</ul>
+				  </div>
+			</div>
+			<!-- /module -->
+        </div>
+    </div>
+	
+    
+	{% else %}
+	<div class="row">
+        <div class="col">   	
+			<div class="card border-warning mb-3" style="max-width: 18rem;">
+			  <div class="card-header">{{ trans('Not found') }}</div>
+			  <div class="card-body text-warning">
+				<h5 class="card-title">{{ trans('User not found') }}</h5>
+				<p class="card-text">{{ trans('We cant get userdata sorry') }}</p>
+			  </div>
+			</div>
+        </div>
+     </div>
+	{% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block endcontent %}
+{% if can_edit %}
+	<!-- Modal change avatar -->
+	<div class="modal fade" id="changeAvatar" tabindex="-1" role="dialog" aria-labelledby="changeAvatar" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content text-center ">
+		  <div class="modal-header bg-light">
+			<h5 class="modal-title " id="changeAvatar">Change Avatar</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<form id="myDropzone" action="{{ path_for('user.postPicture')~'/'~profile.username~'/'~profile.id }}"  class="dropzone" >
+							{{ csrf.field | raw }}
+							</form>
+		  </div>
+		  <div class="modal-footer bg-light">
+		
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<!-- Modal change avatar -->
+{% endif %}
+
+	<link href="{{ assets }}/css/dropzone.css" rel="stylesheet">
+	<link href="{{ assets }}/css/croppie.min.css" rel="stylesheet">
+	<script src="{{ assets }}/scripts/dropzone.js"></script>
+	<script src="{{ assets }}/scripts/croppie.min.js"></script>
+	<script src="{{ assets }}/skins/simple/js/profile.js"></script>
+
+{% endblock %}

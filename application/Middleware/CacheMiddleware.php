@@ -19,9 +19,25 @@ class CacheMiddleware extends Middleware
 	
 	public function __invoke (Request $request, RequestHandler $handler) {
 			
-		$routeName = \Slim\Routing\RouteContext::fromRequest($request)->getRoutingResults()->getUri();
+		
+		
+		$routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
+		$route = $routeContext->getRoute();
+		$name = $route->getName();		
+		
+		if(explode('.', $name)[0] === 'admin' && $request->getMethod() == 'POST')
+		{
+			$this->container->get('cache')->clearCache();
+			return $handler->handle($request);
+		}
+		
+		if($request->getMethod() !== 'GET')
+			return $handler->handle($request);
+		
+		$routeName = $routeContext->getRoutingResults()->getUri();
 		$cache = $this->container->get('cache');
 		
+		$cache->setName($name);
 		if(!$cacheData = $cache->receive($routeName))
 			$cacheData = null;
 		

@@ -8,32 +8,9 @@
 		  
 				<ul id="shouts" class="list-group list-group-flush">	
 				 {% for shout in chatbox %}
-				 <!-- one chat message -->
-				  <li value="{{ shout.id }}" class="list-group-item chatbox-li">
-				  <div class="row">
-					  <div class="col-2 col-sm-1">
-						<img src="{% if shout.avatar %}
-						{{ base_url() }}/public/upload/avatars/{{ shout._38 }}
-						{% else %}
-						{{ base_url() }}/public/img/avatar.png
-						{% endif %}
-						" class="rounded-circle chat-av" alt="" >
-					  </div>
-					  <div class="col-10 col-sm-11 fs-12">
-					  <div class="row">
-						  <div class="col-12">
-							<span><b class="float-left"><a href="{{ base_url() }}/user/{{ setString.toUrl(shout.username) }}/{{ shout.user_id }}"">{{ shout.username_html | raw }}</a></b><i class="float-right fc-g">{{ shout.updated_at}}</i>
-						  </div>
-						  <div class="col-12">
-							{{ shout.content }}
-						  </div>
-					  </div>	  
-					</div>
-				  </div>		
-				  </li>
-				  <!-- /one chat message -->
-				  {% endfor %}  
-				  <span id="chatend"></span>
+					{% include 'templates/partials/boxes/oneShout.twig' %}
+				 {% endfor %}  
+				<span id="chatend"></span>
 			</ul>
 		  
 		  <div class="input-group mb-3">

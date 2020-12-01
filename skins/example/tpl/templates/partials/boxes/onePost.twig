@@ -1,0 +1,25 @@
+<div>
+	<a href="{{ post.user_url }}">{{ post.username_html | raw }}</a>
+	<img src="{{ post.avatar }}" alt="{{ post.username }}">
+	<p>{{ post.group | raw }}</p>
+	<p>{{ trans('Posts') }}:{{ post.posts }}</p><br />
+	<p >{{ trans('Plots') }}: <span class="float-right">{{ post.plots }}</p><br />
+	<p >{{ trans('Join') }}: <span class="float-right"> {{ post.created_at }}</p><br />
+	<p >{{ trans('Reputatnion') }}: <span class="float-right">{{ post.reputation }}</p><br />		
+</div>
+<div>
+	 Posted: {{ post.created_at }}<a <a id="report-{{ post.id }}" href="#" class="float-right raport"><i class="fas fa-exclamation-circle"></i> {{ trans('Report post') }}</a>
+</div>
+<div id="content-{{ post.id }}" class="card-text">
+	{{ post.content|raw }}
+</div>
+
+<div>
+		{% if auth.admin or post.user_id == auth.check %}
+		<a id="post-edit-{{ post.id }}" class="post-edit fas fa-edit point"  title="{{ trans('edit') }}"></a>
+		{% endif %}
+		{{ post.post_reputation }} <i class="far fa-thumbs-up"></i>
+		{% if auth.check %}<a id="like-{{ post.id }}" class="far fa-thumbs-up fa-2x likeit"></a>
+		{% endif %}
+
+</div>

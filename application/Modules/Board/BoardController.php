@@ -35,6 +35,7 @@ class BoardController extends Controller
 	
 		$this->view->getEnvironment()->addGlobal('paginator', $data[1]);
 		$this->view->getEnvironment()->addGlobal('board_name', $data[2]);
+		$this->view->getEnvironment()->addGlobal('title', $data[2]);
 		$this->view->getEnvironment()->addGlobal('new_plot', $data[3]);
 		$this->view->getEnvironment()->addGlobal('board', [
 															'plots' => $data[0], 
@@ -43,7 +44,7 @@ class BoardController extends Controller
 															]);
 			
 			
-				
+		$this->cache->deleteExpired();		
 		return $this->view->render($response, 'board.twig');
 	}
 	
@@ -63,6 +64,7 @@ class BoardController extends Controller
 					['board_id', '=', $arg['board_id']]])
 				->join('users', 'users.id', '=', 'plots.author_id')
 				->select('plots.*', 'users.username', 'users.main_group')
+				->orderBy('updated_at', 'DESC')
 				->skip(($paginator->getCurrentPage() - 1)*$paginator->getItemsPerPage())
 				->take($paginator->getItemsPerPage())
 				->get()->toArray();
@@ -87,8 +89,28 @@ class BoardController extends Controller
 			$data[$k]['last_post_autor'] = $this->group->getGroupDate($lastPostData['main_group'], $lastPostData['username'])['username'];
 			$data[$k]['last_post_autor_url'] =  self::base_url().'/user/'.  $this->urlMaker->toUrl($lastPostData['username']) .'/'. $lastPostData['user_id'];
 		}
-		$newPlot = self::base_url() . '/newplot/' . $arg['board_id'];
+		$newPlot = self::base_url() . '/plot/new/create/' . $arg['board_id'];
 		
 		return [$data, $paginator, $boardName, $newPlot];
+	}
+	
+	public function boardCleanCache($id, $name = null)
+	{
+		$this->cache->setName('board.getBoard');
+		$pages = ceil(PlotsModel::where('board_id', $id)->count() / $this->settings['pagination']['boards']);
+		if(!isset($name))
+		{
+			$name = $this->urlMaker->toUrl(BoardsModel::select('board_name')->find($id)->toArray()['board_name']);
+		}
+		
+		for($i = 1; $i <= $pages; $i++)
+		{			
+			$this->cache->delete('/board/'.$name.'/'.$id.'/'.$i);
+		}
+		$this->cache->delete('/board/'.$name.'/'.$id);
+		
+		$this->cache->setName('home');
+		$this->cache->delete($this->router->urlFor('home'));
+		
 	}
 }

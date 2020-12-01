@@ -1,0 +1,59 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+	<!-- main board -->
+	<div >	
+	<!-- new plot button -->
+		<div>
+			<a  href="{{ new_plot }}" role="button">{{ trans('Start new plot') }}</a>
+		</div>
+	<!-- new plot button -->
+			
+	<!-- Category Board -->
+		<div>		
+			<div>
+				<h1><i class="fas fa-clipboard-list"></i> {{ board_name }}</h1> /// <a href="#">Mark as read</a> | <a href="#">Subscribe this Board</a>
+			</div>
+			<ul>
+				<!-- board legend -->
+				<li class="list-group-item bg-white">
+					{{ trans('Topic') }} / {{ trans('Author') }} || || {{ trans('Replies') }} / {{ trans('Views') }} || {{ trans('Rating') }} || {{ trans('Last post') }}
+				</li>
+				
+				{% for plot in board.plots %}
+				<!-- one plot -->
+				<li>
+				<h2><a href="{{ plot.url }}">{{ plot.plot_name }}</a></h2>
+							{{ trans('by') }} <a href="{{ plot.user_url }}">{{ plot.username_html | raw }}</a>
+							{{ plot.all_posts }} / {{ plot.views }}
+					<div>
+					{% for i in 1..5 %}
+						{% set starClass = (plot.stars >= i ? "fas fa-star" : "far fa-star")  %}
+						<i class="{{ starClass }}"></i>
+					{% endfor %}
+					</div>
+					<a href="{{ plot.last_post_autor_url }}">{{ plot.last_post_autor | raw }}</a>
+					<i class="far fa-clock"></i>{{  plot.last_post_date }}
+
+
+				</li>
+				<!-- /one plot -->	
+				{% endfor %}
+				
+			</ul>	
+		<!-- paginator -->
+		{% include 'templates/partials/pagination.twig' %}	
+		<!-- /paginator -->	
+		<!-- /Category Board -->	
+		</div>
+	<!-- /main board -->
+	</div>
+
+{% endblock %}
+
+{% block endcontent %}
+<script>
+var urlFor = " urlFor('auth.hint') ";
+</script>
+
+{% endblock %}
