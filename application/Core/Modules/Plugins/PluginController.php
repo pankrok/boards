@@ -55,9 +55,9 @@ class PluginController
 		if(is_array($this->pluginLoader->getPluginsList())){
 			foreach ($this->pluginLoader->getPluginsList() as $val)
 			{	
-				if($val['active'] && class_exists('Plugins\\'.$val['plugin_name']))
+				if($val['active'] && class_exists('Plugins\\'.$val['plugin_name'].'\\'.$val['plugin_name']))
 				{
-					$pluginName = 'Plugins\\'. (string)$val['plugin_name'];
+					$pluginName = 'Plugins\\'. (string)$val['plugin_name'] .'\\'.(string)$val['plugin_name'];
 					$this->dispacher->addSubscriber(new $pluginName()); 
 				}					 
 			}
@@ -93,7 +93,7 @@ class PluginController
 	
 	public static function  removeFromTpl($template, $find)
 	{
-		$tpl = MAIN_DIR . '/skins/' . $this->tplDir . '/tpl/' . $template;
+		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template;
 		$filecontent = file_get_contents($tpl);
 		$pattern = '/'. $find .'(.*?)/s';
 		$result = preg_replace($pattern,  '', $filecontent);

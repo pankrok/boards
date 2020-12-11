@@ -1,22 +1,7 @@
-<!doctype html>
-<html lang="pl">
-<head>
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-78100256-3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-78100256-3');
-</script>
-
-
 {% include 'templates/partials/head.twig' %}
 {% block headblock %}{% endblock %}
-</head>
-	<body>
+
+	
 		
 	{% include 'templates/partials/navigation.twig' %}
 		
@@ -45,5 +30,5 @@
       })
 </script>
 {{ csrf.field | raw }}
-  </body>
-</html>
+  
+

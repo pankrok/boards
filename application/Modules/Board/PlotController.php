@@ -165,7 +165,7 @@ class PlotController extends Controller
 			PostsModel::create([
 				'user_id' => $user->id,
 				'plot_id' => $request->getParsedBody()['plot_id'],
-				'content' => $request->getParsedBody()['content'],				
+				'content' => $this->purifier->purify($request->getParsedBody()['content']),				
 			]);
 			
 			if($user->avatar)			
@@ -176,7 +176,7 @@ class PlotController extends Controller
 			
 			$skin = $_SESSION['skin'] ?? $this->settings['twig']['skin'];
 			$data['response'] = file_get_contents(MAIN_DIR.'/skins/'.$skin.'/tpl/ajax/newpost.twig');
-			$replace = [$uurl, $user->username, $avatar,  $user->user_grupe, $user->user_groupe, $user->posts, $user->plots, $user->created_at, $user->reputation, date("Y-m-d H:i:s"), ($request->getParsedBody()['content'])];
+			$replace = [$uurl, $user->username, $avatar,  $user->user_grupe, $user->user_groupe, $user->posts, $user->plots, $user->created_at, $user->reputation, date("Y-m-d H:i:s"), $this->purifier->purify($request->getParsedBody()['content'])];
 			$find = ['{{uurl}}', '{{username}}', '{{avatar}}', '{{user_grupe}}', '{{posts}}', '{{plots}}', '{{join}}', '{{rep}}', '{{date}}', '{{created_at}}', '{{content}}'];
 			
 			$data['response'] = str_replace($find, $replace, $data['response']);
@@ -254,7 +254,7 @@ class PlotController extends Controller
 				$newPost = PostsModel::create([
 					'user_id' => $_SESSION['user'],
 					'plot_id' => $newPlot->id,
-					'content' => $request->getParsedBody()['content'],
+					'content' => $this->purifier->purify($request->getParsedBody()['content']),
 					'hidden' => 0
 				]);
 				
@@ -374,5 +374,46 @@ class PlotController extends Controller
 		$response->getBody()->write(json_encode($data));		
 		return $response->withHeader('Content-Type', 'application/json')
 						->withStatus(201);	
+	}
+	
+	public function editPost($request, $response)
+	{		
+		$body = $request->getParsedBody();
+		$data['token'] = self::csftToken();
+		$post = PostsModel::find($body['post_id']);
+				
+		if($this->auth->check() == $post->user_id || $this->auth->checkAdmin() > 1)
+		{	
+		
+			$body['content'] = $this->purifier->purify($body['content']);
+			
+			$post->content = $body['content'];
+			$post->save() ? $data['response'] = 'success' : $data['response']  = 'danger';
+			
+			if ($request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest') {
+					
+				$response->getBody()->write(json_encode($data));
+				return $response->withHeader('Content-Type', 'application/json')
+							->withStatus(201);	
+			}
+			
+			$page = $this->UserPanelController->findPage($post->created_at, $post->plot_id);
+			$plot = $this->urlMaker->toUrl(PlotsModel::find($post->plot_id)->name);
+			
+			$route = $this->router->urlFor('board.getPlot', [
+														'plot' => $plot,
+														'plot_id' => $post->plot_id,
+														'page' => $page
+														]) . '#post-'.$body['post_id'];
+			
+			$this->flash->addMessage($data['response'] , 'Post edition:' . $data['response'] );
+			return $response
+				->withHeader('Location', $route)
+				->withStatus(302);
+		}
+		else
+		{
+			return $response->withStatus(403);
+		}
 	}
 }

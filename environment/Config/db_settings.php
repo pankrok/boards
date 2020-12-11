@@ -3,9 +3,9 @@
 return [
 	'driver' => 'mysql',
 	'host' => 'localhost',
-	'database' => 'bdev',
-	'username' => 'sql@bdev.s89.eu',
-	'password' => 'LDY5svRyPC',
+	'database' => '',
+	'username' => '',
+	'password' => '',
 	'charset' => 'utf8',
 	'collation' => 'utf8_general_ci',
 	'prefix' => 'brd_'

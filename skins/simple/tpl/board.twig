@@ -3,17 +3,17 @@
 {% block content %}
 
 	<div class="row">
-
+	{% include 'templates/partials/modules.twig' %}
 	<!-- main board -->
 	<!-- new plot button -->
 	<div class="col-lg-12 order-0 my-2">
 		<a class="btn btn-secondary float-right" href="{{ new_plot }}" role="button">{{ trans('Start new plot') }}</a>
 	</div>
-	<div class="col-lg-12 order-2 my-2">
+	<div class="col-lg-12 order-5 my-2">
 		<a class="btn btn-secondary float-right" href="{{ new_plot }}" role="button">{{ trans('Start new plot') }}</a>
 	</div>
 	<!-- new plot button -->
-	<div class="col-lg-12 order-1">		
+	<div class="col-lg order-1">		
 		<!-- Category Board -->
 				
 		<div class="card border-light">

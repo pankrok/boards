@@ -38,7 +38,7 @@ class UserPanelController extends Controller
 		
 	}
 	
-	private function findPage($created, $plotId)
+	public function findPage($created, $plotId)
 	{
 		$count = ceil(PostsModel::where([
 									['created_at', '<=' ,$created],
@@ -145,8 +145,8 @@ class UserPanelController extends Controller
 		
 			if(!$user) $user = UserDataModel::create(['user_id' => $_SESSION['user']]);
 				
-			if($request->getParsedBody()['name']) $user->name = $request->getParsedBody()['name'];
-			if($request->getParsedBody()['surname']) $user->surname = $request->getParsedBody()['surname'];
+			if($request->getParsedBody()['name']) $user->name = $this->purifier->purify($request->getParsedBody()['name']);
+			if($request->getParsedBody()['surname']) $user->surname = $this->purifier->purify($request->getParsedBody()['surname']);
 			if($request->getParsedBody()['sex']) $user->sex = $request->getParsedBody()['sex'];
 			if($request->getParsedBody()['website'])
 			{
@@ -161,8 +161,8 @@ class UserPanelController extends Controller
 					  }
 				   }			
 			}
-			if($request->getParsedBody()['bday']) $user->bday = $request->getParsedBody()['bday'];
-			if($request->getParsedBody()['location']) $user->location = $request->getParsedBody()['location'];
+			if($request->getParsedBody()['bday']) $user->bday = $this->purifier->purify($request->getParsedBody()['bday']);
+			if($request->getParsedBody()['location']) $user->location = $this->purifier->purify($request->getParsedBody()['location']);
 			
 			$validation = $this->validator->validate($request, [
 				'password'      => v::noWhitespace()->notEmpty(),

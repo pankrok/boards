@@ -1,0 +1,19 @@
+<nav class="nav">
+  <a class="nav-link active" href="{{ path_for('admin.skinlist') }}">Back</a>
+</nav>
+
+<ul class="nav justify-content-end">
+  <li class="nav-item">
+    <a class="nav-link active" href="{{ path_for('admin.skin.twig.edit', {'skin_id': skin_id}) }}">TWIG</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ path_for('admin.skin.css.edit', {'skin_id': skin_id}) }}">CSS</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ path_for('admin.skin.js.edit', {'skin_id': skin_id}) }}">JS</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ path_for('admin.skin.addfile', {'skin_id': skin_id}) }}">Add file</a>
+  </li>
+
+</ul>

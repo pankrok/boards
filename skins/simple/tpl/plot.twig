@@ -1,16 +1,16 @@
 {% extends 'templates/main.twig' %}
 
 {% block headblock %}
-<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+
 {% endblock %}
 
 {% block content %}
 
 	<div class="row">
-
+	{% include 'templates/partials/modules.twig' %}
 	<!-- main row -->
 	
-	<div id="posts" class="col-lg-12 order-1">
+	<div id="posts" class="col-lg order-1">
 		
 		<!-- Main Plot -->
 		<!-- paginator -->
@@ -65,7 +65,7 @@
 		  </div>
 		</div>
 		<div class="card-footer py-3 text-muted">
-				{% if auth.admin or post.user_id == auth.check %}
+				{% if auth.admin or (post.user_id == auth.check and post.created_at|date("dmY") == "now"| date('dmY') ) %}
 				<small class="float-left my-auto">
 				<a id="post-edit-{{ post.id }}" class="post-edit fas fa-edit point"  title="{{ trans('edit') }}"></a>
 				</small>
@@ -118,53 +118,13 @@
 {% endblock %}
 
 {% block endcontent %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
 <script src="{{base_url() }}/public/scripts/plot.js"></script>
 <script>
 var urlForReply = "{{ path_for('board.replyPost') }}";
+var urlEditPost = "{{ path_for('board.edit') }}";
 var likePost = "{{ path_for('board.likeit') }}";
-{% if auth.admin == 'bafbfadbfda' %}
-$(function() {
-		var aedit = new Jodit('#editPostJodit', {
-					autofocus: true,
-					height: "280",
-					toolbarAdaptive: false,
-					allowResizeX: false,
-					allowResizeY: false,
-				});
-		
-		function editPost(id, len){
-		
-			var csrfName = $('#csrf_name').val();
-			var csrfValue = $('#csrf_value').val();
-			
-			$.ajax({
-
-				  type: "POST",
-				  url: "{{ path_for('admin.editpost') }}",
-				  data: { 
-				  'content': 	$('#editPostJodit').val(),
-				  'post_id': 	(id).substring(10,len),
-				  "csrf_name" : csrfName,
-				  "csrf_value" : csrfValue
-				  },
-				  dataType: 'json',
-				  error: function(query){
-					console.log(query);
-				  },
-				  success: function(mydata){					
-					
-					$('#csrf_name').val(mydata['token']['csrf_name']);
-					$('#csrf_value').val(mydata['token']['csrf_value']);
-					$('#content'+(id).substring(9,len)).html($('#editPostJodit').val());
-					$('#editPost').modal('hide');
-				  }
-				});	
-			
-		}
-});
-{% endif %}
 </script>
-
 
 {% endblock %}

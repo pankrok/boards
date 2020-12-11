@@ -77,10 +77,21 @@ return function(App $app)
 		return new Application\Modules\Admin\Skins\AdminSkinsController($container);
 	});
 	
+	$container->set('AdminSkinsBoxesController', function($container)
+	{
+		return new Application\Modules\Admin\Skins\AdminSkinsBoxesController($container);
+	});
+	
+	$container->set('AdminSkinEditorController', function($container)
+	{
+		return new Application\Modules\Admin\Skins\AdminSkinEditorController($container);
+	});
+	
 	$container->set('AdminSettingsController', function($container)
 	{
 		return new Application\Modules\Admin\Settings\AdminSettingsController($container);
 	});
 	
+
 	
 };

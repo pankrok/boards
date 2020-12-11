@@ -29,7 +29,7 @@
 					<a href="{{ path_for('admin.delete.board', {'element': 'category', 'id': category.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('admin.delete') }}</a>
 					<span class="float-right px-3">
 					<input type="checkbox" class="form-check-input" id="CategoryChecbox-{{ category.id }}" name="CategoryChecbox-{{ category.id }}" {% if category.active %}checked{% endif %}>
-					<label class="form-check-label" for="CategoryChecbox-{{ category.id }}">{{ trans('active') }}</label>
+					<label class="form-check-label" for="CategoryChecbox-{{ category.id }}">{{ trans('admin.active') }}</label>
 					</span>
 				</div>
 					
@@ -59,7 +59,7 @@
 										<div class="col-auto ml-auto order-3">
 												<span class=" float-right">
 												<input type="checkbox" class="form-check-input" id="BoardChecbox-{{ board.id }}" name="BoardChecbox-{{ board.id }}" {% if board.active %}checked{% endif %}>
-												<label class="form-check-label" for="BoardChecbox-{{ board.id }}">{{ trans('active') }}</label>
+												<label class="form-check-label" for="BoardChecbox-{{ board.id }}">{{ trans('admin.active') }}</label>
 												</span>
 										</div>
 										{% if board.board_description %}

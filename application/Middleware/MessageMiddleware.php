@@ -19,16 +19,9 @@ class MessageMiddleware extends Middleware
 	
 	public function __invoke (Request $request, RequestHandler $handler) {
 		
-		if(isset($_SESSION['message']))
-		{
-			$this->container->get('view')->getEnvironment()->addGlobal('message', $_SESSION['message']);
-			$_SESSION['message'] = NULL;
-		}
-		if(isset($_SESSION['adminMessage']))
-		{
-			$this->container->get('adminView')->getEnvironment()->addGlobal('message', $_SESSION['adminMessage']);
-			$_SESSION['adminMessage'] = NULL;
-		}
+		if(isset($_SESSION['errors'])) $this->container->get('view')->getEnvironment()->addGlobal('errors', $_SESSION['errors']);
+        unset($_SESSION['errors']);
+		
 		return $handler->handle($request);
 	}
 }

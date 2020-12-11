@@ -16,6 +16,7 @@ $app->get('/board/{board}/{board_id}[/{page}]', 'BoardController:getBoard')->set
 #plot
 $app->group('/plot', function (RouteCollectorProxy $plot) {
 	$plot->get('/{plot}/{plot_id:[0-9]+}[/[{page:[0-9]+}]]', 'PlotController:getPlot')->setName('board.getPlot');
+	$plot->post('/editpost', 'PlotController:editPost')->setName('board.edit');
 	$plot->get('/new/create/{board_id}', 'PlotController:newPlot')->setName('board.newPlot');
 	$plot->post('/new/send/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
 	$plot->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
@@ -57,25 +58,52 @@ $app->get('/setskin/{skin}', 'SkinController:change')->setName('changeskin');
 
 $adm = $container->get('settings')['core']['admin'];
 $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
-	$admin->get('', 'AdminHomeController:index')->setName('admin.home');
+	$admin->get('[/]', 'AdminHomeController:index')->setName('admin.home');
 
-	$admin->get('/board', 'AdminBoardController:index')->setName('admin.boards');
-	$admin->get('/board/edit[/{id}]', 'AdminBoardController:editBoard')->setName('admin.edit.board');
-	$admin->post('/board/edit[/{id}]', 'AdminBoardController:editBoard');
-	$admin->get('/board/delete/{element}/{id}', 'AdminBoardController:deleteBoard')->setName('admin.delete.board');
-
-	$admin->post('/board/order/post', 'AdminBoardController:orderPost')->setName('admin.board.order.post');
-	$admin->post('/board/addCategory/post', 'AdminBoardController:addCategory')->setName('admin.add.category');
-	$admin->post('/board/addBoard/post', 'AdminBoardController:addBoard')->setName('admin.add.board');
-	$admin->post('/board/delete/confirm', 'AdminBoardController:deleteBoard')->setName('admin.delete.board.post');
-
+	$admin->get('/reload/plugins', 'AdminHomeController:pluginReload')->setName('admin.reload.plugins'); // reload plugins
 	$admin->get('/active', 'AdminHomeController:plugin');
+	
+	$admin->group('/board', function (RouteCollectorProxy $adminBoard) {
+		$adminBoard->get('', 'AdminBoardController:index')->setName('admin.boards');
+		$adminBoard->get('/edit[/{id}]', 'AdminBoardController:editBoard')->setName('admin.edit.board');
+		$adminBoard->post('/edit[/{id}]', 'AdminBoardController:editBoard');
+		$adminBoard->get('/delete/{element}/{id}', 'AdminBoardController:deleteBoard')->setName('admin.delete.board');
 
-	$admin->get('/skinslist[/[{page}]]', 'AdminSkinsController:skinsList')->setName('admin.skinlist');
-	$admin->get('/addskin', 'AdminSkinsController:addSkin')->setName('admin.add.skin');
-	$admin->post('/addskin', 'AdminSkinsController:addSkinPost')->setName('admin.add.skin.post');
-	$admin->post('/set/as/default', 'AdminSkinsController:setSkinDefault')->setName('admin.default.skin.post');
-	$admin->post('/delete/skin', 'AdminSkinsController:removeSkin')->setName('admin.delete.skin.post');
-	$admin->post('/skin/reload/css/js', 'AdminSkinsController:reloadCssJs')->setName('admin.add.skin.reload');
+		$adminBoard->post('/order/post', 'AdminBoardController:orderPost')->setName('admin.board.order.post');
+		$adminBoard->post('/addCategory/post', 'AdminBoardController:addCategory')->setName('admin.add.category');
+		$adminBoard->post('/addBoard/post', 'AdminBoardController:addBoard')->setName('admin.add.board');
+		$adminBoard->post('/delete/confirm', 'AdminBoardController:deleteBoard')->setName('admin.delete.board.post');
+	});
+
+	$admin->group('/skin', function (RouteCollectorProxy $adminSkin) {
+		$adminSkin->get('/skinslist[/[{page}]]', 	'AdminSkinsController:skinsList')		->setName('admin.skinlist');
+		$adminSkin->get('/addskin', 				'AdminSkinsController:addSkin')			->setName('admin.add.skin');
+		$adminSkin->post('/addskin', 				'AdminSkinsController:addSkinPost')		->setName('admin.add.skin.post');
+		$adminSkin->post('/set/as/default',			'AdminSkinsController:setSkinDefault')	->setName('admin.default.skin.post');
+		$adminSkin->post('/delete/skin', 			'AdminSkinsController:removeSkin')		->setName('admin.delete.skin.post');
+		$adminSkin->post('/reload/css/js', 			'AdminSkinsController:reloadCssJs')		->setName('admin.add.skin.reload');
+		$adminSkin->post('/rename', 				'AdminSkinsController:renameSkin')		->setName('admin.skin.rename');
+		$adminSkin->post('/copy', 					'AdminSkinEditorController:copyTemplate')->setName('admin.skin.copy');
+		$adminSkin->get('/add/file/{skin_id}', 		'AdminSkinEditorController:addFile')	->setName('admin.skin.addfile');
+		$adminSkin->post('/add/file/post', 			'AdminSkinEditorController:addFilePost')->setName('admin.skin.addfile.post');
+		
+		$adminSkin->group('/module', function (RouteCollectorProxy $adminSkinModule) {
+			$adminSkinModule->get('/list/{route}/{id}', 'AdminSkinsBoxesController:index')->setName('admin.modules.skin.get');
+			$adminSkinModule->get('/edit/{skin_id}/{id}', 'AdminSkinsBoxesController:editModule')->setName('admin.modules.skin.edit');
+			$adminSkinModule->post('/remove', 'AdminSkinsBoxesController:fastRemove')->setName('admin.modules.skin.fastRemove');
+			$adminSkinModule->post('/delete', 'AdminSkinsBoxesController:deleteModule')->setName('admin.modules.skin.delete');
+			$adminSkinModule->get('/new/{skin_id}', 'AdminSkinsBoxesController:editModule')->setName('admin.modules.skin.new');
+			$adminSkinModule->post('/save', 'AdminSkinsBoxesController:saveModule')->setName('admin.modules.skin.save');
+		});
+			
+		$adminSkin->get('/edit/twig/{skin_id}[/{id}]', 'AdminSkinEditorController:twigEditor')->setName('admin.skin.twig.edit');
+		$adminSkin->post('/twig/save', 'AdminSkinEditorController:twigSave')->setName('admin.skin.twig.save');
+		
+		$adminSkin->get('/edit/css/{skin_id}[/{id}]', 'AdminSkinEditorController:cssEditor')->setName('admin.skin.css.edit');
+		$adminSkin->get('/edit/js/{skin_id}[/{id}]', 'AdminSkinEditorController:jsEditor')->setName('admin.skin.js.edit');
+		
+		
+	});
 	$admin->get('/settings', 'AdminSettingsController:index')->setName('admin.get.settings');
+	$admin->post('/settings/save', 'AdminSettingsController:saveSettings')->setName('admin.post.settings');
 });

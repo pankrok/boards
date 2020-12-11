@@ -61,12 +61,12 @@ class ChatboxController extends Controller
 	
 			$id = ChatboxModel::create([
 				'user_id' => $_SESSION['user'],
-				'content' => htmlspecialchars($request->getParsedBody()['shout'])
+				'content' => $this->purifier->purify($request->getParsedBody()['shout'])
 			]);
 			
 			$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($user->username).'/'.$_SESSION['user'];
 			$avatar = $user->avatar ? $base_url. $this->settings['images']['path'] .$user->_38 : $base_url.'/public/img/avatar.png';
-			$shout = htmlspecialchars($request->getParsedBody()['shout']);
+			$shout = $this->purifier->purify($request->getParsedBody()['shout']);
 			$username_html = $this->group->getGroupDate($user->main_group, $user->username);
 			
 			$data['shout'] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/templates/partials/boxes/oneShout.twig');

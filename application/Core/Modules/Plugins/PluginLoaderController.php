@@ -98,7 +98,7 @@ class PluginLoaderController
 		if($plugin->active) 
 			return false;
 		
-		$pluginName = "\\Plugins\\" . $pluginName;
+		$pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
 		$pluginName::activation();		
 		$plugin->active = true;		
 		$plugin->save();
@@ -112,7 +112,7 @@ class PluginLoaderController
 		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
 		if($plugin->active) 
 			return false;
-		$pluginName = "\\Plugins\\" . $pluginName;
+		$pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
 		$pluginName::deactivation();		
 		$plugin->active = false;
 		$plugin->save();
@@ -124,7 +124,7 @@ class PluginLoaderController
 	{
 		
 		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
-		$pluginName = "\\Plugins\\" . $pluginName;	
+		$pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
 		$pluginName::install();		
 		$plugin->install = true;
 		$plugin->save();

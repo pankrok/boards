@@ -1,6 +1,3 @@
-{% block headblock %}
-<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
-{% endblock %}
 
 <div class="p-2">
 <form action="{{ path_for('admin.add.board') }}" method="post" id="addBoard">
@@ -33,6 +30,7 @@
 </div>
 
 {% block endcontent %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
 <script>
 var editor = new Jodit('#BoardDesc', {

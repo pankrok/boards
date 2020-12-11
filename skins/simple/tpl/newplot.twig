@@ -1,14 +1,16 @@
 {% extends 'templates/main.twig' %}
 
 {% block headblock %}
-<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+
 {% endblock %}
 
 {% block content %}
 <!-- main row -->
 {% if auth.check %}
 <div class="row">
-	<div id="newPlot" class="col-lg-12 order-1">
+{% include 'templates/partials/modules.twig' %}
+
+	<div id="newPlot" class="col-lg order-1">
 			<div class="card border-light">
 			<div class="card-header">
 				<div class="float-left"><h1><i class="fas fa-pencil-alt"></i> {{ trans('Starting new plot') }}</h1></div>
@@ -36,6 +38,7 @@
 {% endblock %}
 
 {% block endcontent %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
 <script>
 var ajaxUrl = "{{ path_for('board.newPlotPost') }}";

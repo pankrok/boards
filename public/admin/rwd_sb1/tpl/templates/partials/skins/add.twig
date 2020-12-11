@@ -1,7 +1,9 @@
-{% for skin in skins_install %}
-		<p><form action="{{ path_for('admin.add.skin.post') }}" method="post"><input type="hidden" id="skin_name" name="skin_name" value="{{ skin }}">{{ skin }}<input type="submit" value="Submit"></form></p>
-	{% endfor %}
-{% if not skins_install %}
+{% for skin in skins %}
+		<p><form action="{{ path_for('admin.add.skin.post') }}" method="post"><input type="hidden" id="skin_name" name="skin_name" value="{{ skin }}"><b>{{ skin }}</b>
+		<button class="btn btn-success" type="submint">Install</button>
+		</form></p>
+{% endfor %}
+{% if not skins %}
 
 <div class="alert alert-warning" role="alert">
   <strong>{{ trans('admin.All skins are installed in your board') }}.</strong>

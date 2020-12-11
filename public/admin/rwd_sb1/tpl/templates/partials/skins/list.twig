@@ -1,24 +1,99 @@
 <div class="row">
      {% for skin in skins %}
 	<div class="col-auto p-2">
-	<div class="card" style="width: 18rem;">
+	<div class="card {% if skin.active %}border border-success{% endif %}" style="width: 18rem;">
+	{% if skin.active %}<span class="badge badge-pill badge-success m-2 position-absolute">{{ trans('admin.is active') }}</span>{% endif %}
 	  <img class="card-img-top" style="max-height: 150px;" src="{{ base_url() }}/skins/{{ skin.dirname }}/{{ skin.dirname }}.png" alt="{{ skin.name }}">
 	  <div class="card-body">
-		<h5 class="card-title text-center">{{ skin.name }}</h5>
-		<p class="card-text">{{ trans('admin.version') }}: <i>{{ skin.version }}</i>, author: <i>{{ skin.author }}</i></p>
-		<form action="{{ path_for('admin.default.skin.post') }}" method="post"><input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}"><input type="submit" class="btn btn-primary" value="{{ trans('admin.set as default') }}"></form><br />
-		<form action="{{ path_for('admin.add.skin.reload') }}" method="post"><input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}"><input type="submit" class="btn btn-primary" value="{{ trans('admin.reload assets') }}"></form><br />
-		<form action="{{ path_for('admin.delete.skin.post') }}" method="post"><input type="hidden" id="skin_id" name="skin_id" value="{{ skin.id }}"><input type="submit" class="btn btn-danger" value="{{ trans('admin.delete') }}">
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" value="1" id="confirm_delete" name="confirm_delete">
-		  <label class="form-check-label" for="defaultCheck1">
-			{{ trans('admin.confirm delete') }}
-		  </label>
+			<h5 class="card-title ml-3">{{ skin.name }} <button type="button" class="btn btn-outline-dark float-right" data-toggle="modal" data-target="#renameSkin{{ skin.id }}">
+				<i class="fas fa-edit"></i>
+			</button></h5> 
+			
+		<p class="card-text text-center">{{ trans('admin.version') }}: <i>{{ skin.version }}</i>, author: <i>{{ skin.author }}</i></p>
+		<form action="{{ path_for('admin.default.skin.post') }}" method="post">
+		<div class="row p-2">
+			<div class="col-4 text-center">
+				<input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}">
+				<button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" 
+				{% if skin.active %}title="{{ trans('admin.is active')}}" disabled
+				{% else %}
+				title="{{ trans('admin.set as default')}}" 
+				{% endif %}>
+					<i class="far fa-check-circle"></i>
+				</button>
+				</form>			
+			</div>
+			
+			<div class="col-4 text-center">
+				<a class="btn btn-primary" href="{{ path_for('admin.modules.skin.get', {'id': skin.id, 'route': 'home'}) }}"  data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.edit modules')}}"><i class="fas fa-columns"></i></a>
+			</div>
+			<div class="col-4 text-center">
+				<form action="{{ path_for('admin.add.skin.reload') }}" method="post"><input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}">
+				<button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.reload assets') }}">
+					<i class="fas fa-sync"></i>
+				</button>
+				</form>
+			</div>	
+			</div>
+			<div class="row p-2">
+			<div class="col-4 text-center">
+			<form action="{{ path_for('admin.skin.copy') }}" method="post">
+			<input type="hidden" name="skin_id" value="{{ skin.id }}">
+			<button type="submit" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.make copy') }}">
+					<i class="fas fa-clone"></i>
+				</button>
+			</div>
+			</form>
+			<div class="col-4 text-center"> 
+
+			<a href="{{ path_for('admin.skin.twig.edit', {'skin_id': skin.id}) }}" class="btn btn-dark" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.edit template') }}">
+					<i class="fas fa-code"></i>
+				</a>
+			</div>
+			<div class="col-4 text-center">
+				<form action="{{ path_for('admin.delete.skin.post') }}" method="post"><input type="hidden" id="skin_id" name="skin_id" value="{{ skin.id }}">
+				<button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.delete') }}">
+					<i class="fas fa-trash"></i>
+				</button>
+			</div>
+			<div class="col-12 pt-2 text-center">
+			<div class="form-check">
+				  <input class="form-check-input" type="checkbox" value="1" id="confirm_delete" name="confirm_delete">
+				  <label class="form-check-label" for="confirm_delete">
+					{{ trans('admin.confirm delete') }}
+				  </label>
+				</div>
+			</div>
 		</div>
-		
 		</form>
 	  </div>
 	</div>
 	</div> 
+	
+	<!-- Modal -->
+	<div class="modal fade" id="renameSkin{{ skin.id }}" tabindex="-1" role="dialog" aria-labelledby="renameSkinLabel{{ skin.id }}" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="renameSkinLabel{{ skin.id }}">Rename skin</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<form action="{{ path_for('admin.skin.rename') }}" method="post">
+			  <div class="form-group">
+				<input type="hidden" name="skin_id" value="{{ skin.id }}">
+				<input type="text" class="form-control" name="skin_name" value="{{ skin.name }}">
+			  </div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="submit" class="btn btn-success">Save changes</button>
+		  </div></form>
+		</div>
+	  </div>
+	</div>
+	
 	{% endfor %}
 </div>
+

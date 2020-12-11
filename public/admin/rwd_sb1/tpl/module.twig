@@ -1,0 +1,111 @@
+
+
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+	<div class="row p-2 m-auto">
+	<div class="col-sm col-md-auto">
+		<div class="dropdown">
+		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			{{ trans('admin.modules') }}
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			{% for box in modules %}
+					<a class="dropdown-item" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': box.id }) }}">{% if box.name %}{{box.name}}{% else %}{{ trans('admin.'~box.engine) }}{% endif %}</a>
+			{% endfor %}			
+		  </div>
+		</div>
+	</div>
+	<div class="col-sm col-md-auto">
+		<a class="btn btn-secondary" href="{{ path_for('admin.modules.skin.new', {'skin_id': id}) }}"">{{ trans('admin.add new module') }}</a>
+	</div>
+	</div>
+<div class="row p-2">
+	<div class="col-12 p-4">
+	
+	<ul class="nav nav-pills">
+	  {% for page in pages %}
+	  
+		{{ page|raw }}
+	  
+	  {% endfor %}
+	</ul>
+	
+	
+	</div>
+
+
+	<div class="col-12 border">
+		{% for module in skin_modules.top %}
+		  <span class="badge badge-info w-100">
+		  <form action="{{ path_for('admin.modules.skin.fastRemove') }}" method="post">
+		  <input type="hidden" name="id" value="{{ module.id }}">
+		  <input type="hidden" name="skin_id" value="{{ id }}">
+		  <input type="hidden" name="route" value="{{ route }}">
+		  <button type="submit" class="close"  aria-label="Close">
+			<span aria-hidden="true">×</span>
+		  </button>
+		  </form>
+		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
+			{% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+		  </a>
+		  </span>
+		{% endfor %}
+	</div>
+	<div class="col-3 border">
+		{% for module in skin_modules.left %}
+		  <span class="badge badge-info w-100">
+		  <form action="{{ path_for('admin.modules.skin.fastRemove') }}" method="post">
+		  <input type="hidden" name="id" value="{{ module.id }}">
+		  <input type="hidden" name="skin_id" value="{{ id }}">
+		  <input type="hidden" name="route" value="{{ route }}">
+		  <button type="submit" class="close" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		  </button>
+		  </form>
+		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
+		  {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+		  </a>
+		  </span>
+		{% endfor %}
+	</div>
+	<div class="col-6 border bg-dark text-center"><div class="m-4">CONTENT</div></div>
+	<div class="col-3 border">
+		{% for module in skin_modules.right %}
+		  <span class="badge badge-info w-100">
+		  <form action="{{ path_for('admin.modules.skin.fastRemove') }}" method="post">
+		  <input type="hidden" name="id" value="{{ module.id }}">
+		  <input type="hidden" name="skin_id" value="{{ id }}">
+		  <input type="hidden" name="route" value="{{ route }}">
+		  <button type="submit" class="close" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		  </button>
+		  </form>
+		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
+		  {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+		  </a>
+		  </span>
+		{% endfor %}
+	</div>
+	<div class="col-12 border">
+		{% for module in skin_modules.bottom %}
+		  <span class="badge badge-info w-100">
+		  <form action="{{ path_for('admin.modules.skin.fastRemove') }}" method="post">
+		  <input type="hidden" name="id" value="{{ module.id }}">
+		  <input type="hidden" name="skin_id" value="{{ id }}">
+		  <input type="hidden" name="route" value="{{ route }}">
+		  <button type="submit" class="close" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		  </button>
+		  </form>
+		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
+		  {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+		  
+		  </a>	
+		  </span>
+		{% endfor %}
+	</div>
+</div>
+  
+{% endblock %}

@@ -12,7 +12,6 @@ class AdminSkinsController extends Controller
 
 	public function skinsList($request, $response, $arg)
 	{
-		file_put_contents(MAIN_DIR . '/cfg.json', json_encode( $this->settings, JSON_PRETTY_PRINT));
 		if(isset($arg['page']) && $arg['page'] > 0)
         {
 			$currentPage = $arg['page'];
@@ -48,11 +47,13 @@ class AdminSkinsController extends Controller
 			$diff[$k] = $v['dirname'];
 		}
 		
+		
+		
 		$files  = array_diff($files, $diff);
 		$files  = array_diff($files, ['.', '..']);
 
 		$this->adminView->getEnvironment()->addGlobal('skins', $files);
-		return $this->adminView->render($response, 'addSkin.twig');
+		return $this->adminView->render($response, 'add_skin.twig');
 	}
 	
 	public function addSkinPost($request, $response)
@@ -60,7 +61,7 @@ class AdminSkinsController extends Controller
 		$skinDir = $request->getParsedBody()['skin_name'];
 		if(file_exists(MAIN_DIR . '/skins/' . $skinDir . '/skin.json'))
 		{
-		
+			$paths = [];
 			$skinData = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skinDir . '/skin.json'), true);
 
 			$skin =	SkinsModel::Create([
@@ -70,26 +71,29 @@ class AdminSkinsController extends Controller
 				'version' => $skinData['version']			
 				]);
 			
-			$minifier = new Minify\CSS();
 			foreach($skinData['assets']['css'] as $v)
 			{
+				$minifier = new Minify\CSS();
 				$minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/css/'.$v);
+				$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css');
+				$vname = explode('.', $v)[0];
+				$paths['css'][$vname] =  '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
 			}
-			$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($skinData['name']).'.min.css');
-			
-			$minifier = new Minify\JS();
+				
 			foreach($skinData['assets']['js'] as $v)
 			{
+				$minifier = new Minify\JS();
 				$minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
+				$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
+				$vname = explode('.', $v)[0];
+				$paths['js'][$vname] = '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
 			}
-			$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($skinData['name']).'.min.js');
+			if(!isset($paths['css'])) $paths['css'] = null;
+			if(!isset($paths['js'])) $paths['js'] = null;
 			
-			$paths = [
-				'css' => '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($skinData['name']).'.min.css">',			
-				'js' => '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($skinData['name']).'.min.js"></script>'
-			];
 			
 			file_put_contents(MAIN_DIR . '/skins/' . $skinDir . '/cache_assets.json', json_encode($paths));
+			$this->flash->addMessage('success', 'skin added');
 		}
 		
 		return $response;
@@ -105,9 +109,28 @@ class AdminSkinsController extends Controller
 		if(isset($request->getParsedBody()['skin_dir']))
 		{
 			$settings = $this->settings;
+			
+			$skin = SkinsModel::where('dirname', $settings['twig']['skin'])->first();
+			$skin->active = 0;
+			$skin->save();
+			unset($skin);
+			
 			$settings['twig']['skin'] = $request->getParsedBody()['skin_dir'];
-			$settings = json_encode($settings, JSON_PRETTY_PRINT);
+			
+			$skin = SkinsModel::where('dirname', $settings['twig']['skin'])->first();
+			$skin->active = 1;
+			$skin->save();
+			unset($skin);
+			
+			$settings = json_encode($settings, JSON_PRETTY_PRINT);			
+			
+			$oldCacheName = $this->cache->getName();
+			$this->cache->setName('box-controller');
+			$this->cache->delete('boxes');
+			$this->cache->setName($oldCacheName);
+			
 			file_put_contents(MAIN_DIR . '/environment/Config/settings.json', $settings);
+			$this->flash->addMessage('success', 'skin set as default');
 		}
 		return $response
 		  ->withHeader('Location', $this->router->urlFor('admin.skinlist'))
@@ -119,45 +142,109 @@ class AdminSkinsController extends Controller
 		$skinDir = $request->getParsedBody()['skin_dir'];
 		if(file_exists(MAIN_DIR . '/skins/' . $skinDir . '/skin.json'))
 		{
-		
+			$paths = [];
 			$skinData = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skinDir . '/skin.json'), true);		
-			$minifier = new Minify\CSS();
-			foreach($skinData['assets']['css'] as $v)
-			{
-				$minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/css/'.$v);
-			}
-			$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($skinData['name']).'.min.css');
 			
-			$minifier = new Minify\JS();
+						foreach($skinData['assets']['css'] as $v)
+			{
+				$minifier = new Minify\CSS();
+				$minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/css/'.$v);
+				$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css');
+				$vname = explode('.', $v)[0];
+				$paths['css'][$vname] =  '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
+			}
+				
 			foreach($skinData['assets']['js'] as $v)
 			{
+				$minifier = new Minify\JS();
 				$minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
+				$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
+				$vname = explode('.', $v)[0];
+				$paths['js'][$vname] = '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
 			}
-			$minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($skinData['name']).'.min.js');
 			
-			$paths = [
-				'css' => '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($skinData['name']).'.min.css">',			
-				'js' => '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($skinData['name']).'.min.js"></script>'
-			];
+			if(!isset($paths['css'])) $paths['css'] = null;
+			if(!isset($paths['js'])) $paths['js'] = null;
+			
 			
 			file_put_contents(MAIN_DIR . '/skins/' . $skinDir . '/cache_assets.json', json_encode($paths));
+			$this->flash->addMessage('success', 'assets reloaded');
 		}
 		
-		return $response;
+		return $response 
+				->withHeader('Location', $this->router->urlFor('admin.skinlist'))
+				->withStatus(302);
 	}
 	
 	public function removeSkin($request, $response)
 	{
-		if($request->getParsedBody()['confirm_delete'])
+		if(isset($request->getParsedBody()['confirm_delete']))
 		{
 			$skinId = $request->getParsedBody()['skin_id']; 
 			$skin = SkinsModel::find($skinId);
-			var_dump($skin->delete());
-			return $response;
+			if($skin->active)
+			{
+				$this->flash->addMessage('danger', 'you cannot delete active skin');	
+			}
+			else
+			{
+				
+				$dirPath = MAIN_DIR.'/skins/'.$skin->dirname;
+				//self::deleteDir($dirPath);
+				
+				$skin->delete();
+				echo 'removed';
+			}
+			
+			$this->flash->addMessage('success', 'skin deleted');
 		}
-		return $response;
+		else
+		{
+			$this->flash->addMessage('warning', 'select checbox to delete skin');
+		}
+		return $response 
+				->withHeader('Location', $this->router->urlFor('admin.skinlist'))
+				->withStatus(302);;
 	}
 	
-
+	public function renameSkin($request, $response)
+	{
+		$body = $request->getParsedBody();
+		if(isset($body['skin_id']) && isset($body['skin_name']))
+		{
+			$skin = SkinsModel::find($body['skin_id']);
+			$skin->name = $body['skin_name'];
+			$skin->save();
+			
+			$this->flash->addMessage('success', 'skin name changed');
+		}
+		else
+		{
+			$this->flash->addMessage('danger', 'skin name cannot be empty');
+		}
+		return $response 
+				->withHeader('Location', $this->router->urlFor('admin.skinlist'))
+				->withStatus(302);
+		
+	}
 	
+	protected function deleteDir($dirPath)
+	{
+				if (! is_dir($dirPath)) {
+					throw new InvalidArgumentException("$dirPath must be a directory");
+				}
+				if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+					$dirPath .= '/';
+				}
+				$files = glob($dirPath . '*', GLOB_MARK);
+				foreach ($files as $file) {
+					if (is_dir($file)) {
+						self::deleteDir($file);
+					} else {
+						unlink($file);
+					}
+				}
+				rmdir($dirPath);
+
+	}
 }

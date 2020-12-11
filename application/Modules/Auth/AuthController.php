@@ -145,14 +145,10 @@ class AuthController extends Controller
 
 	public function postSignUp($request, $response)
 	{
+
 		$data = $_SESSION["captcha"];
 		$_SESSION["captcha"] = NULL;
-		if(md5($request->getParsedBody()['board_captcha']) !== $data) {
-			$this->flash->addMessage('danger', 'Invalid captcha code');
-			return $response
-				->withHeader('Location', $this->router->urlFor('auth.signup'))
-				->withStatus(302);
-		}
+		$captcha = (md5($request->getParsedBody()['board_captcha']) !== $data);
 		
 		
 		$validation = $this->validator->validate($request, [
@@ -163,15 +159,17 @@ class AuthController extends Controller
 			'vpassword'      => v::notEmpty()->equals($request->getParsedBody()['password'])
 		]);
 
-		if ($validation->faild())
+		if ($validation->faild() || $captcha)
 		{
+			if($captcha)
+				$this->flash->addMessage('danger', 'Invalid captcha code');
 			return $response
 			->withHeader('Location', $this->router->urlFor('auth.signup'))
 			->withStatus(302);
 		}
 		UserModel::create([
-			'email' => $request->getParsedBody()['email'],
-			'username' => $request->getParsedBody()['username'],
+			'email' => $this->purifier->purify($request->getParsedBody()['email']),
+			'username' => $this->purifier->purify($request->getParsedBody()['username']),
 			'password' => password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT),
 			'recommended_by' => $request->getParsedBody()['recommended'],
 			'main_group' => $this->settings['board']['default_group']

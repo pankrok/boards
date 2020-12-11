@@ -15,7 +15,8 @@ class SkinsModel extends Model
             'name',
 			'dirname',
             'author',
-			'version'
+			'version',
+			'active'
         ];
     
 }

@@ -47,6 +47,37 @@ return [
 	'cache' => 'Pamieć cache', 
 	'twig' => 'Szablony Twig',
 	'pagination' => 'Paginacja',
+	'modules' => 'Moduly',
 	
+	'Module name prefix' => 'Prefix nazwy modułu',
+	'Module name' => 'Nazwa modułu',
+	'Module HTML' => 'Treść HTML modułu',
+	
+	'userdata' => 'Dane użytkownika',
+	'statistics' => 'Statystyki',
+	
+	'home' => 'Strona Główna',
+	'board.getBoard' => 'Tablica',
+	'category.getCategory' => 'Kategoria',
+	'board.getPlot' => 'Temat',
+	'board.newPlot' => 'Nowy tesmat',
+	'auth.signin' => 'Logowanie',
+	'auth.signup' => 'Rejestracja',
+	'user.profile' => 'Profil użytkownika',
+	'userlist' => 'Lista użytkowników',
+	
+	'set as default' => 'Ustaw jako domyślną',
+	'edit modules' => 'Edytuj moduły',
+	
+	'yes' => 'Tak',
+	'no' => 'Nie',
+	
+	'top' => 'Pod nagłówkiem',
+	'bottom' => 'Przed stopką',
+	'left' => 'Lewa kolumna',
+	'right' => 'Prawa kolumna',
+	'back' => 'Powrót',
+	
+	'is active' => 'aktywna',
 	
 ];

@@ -18,12 +18,13 @@ class StatisticController extends Controller
 		$data['users_count'] 	= UserModel::count();
 		$data['plots_count'] 	= PlotsModel::count();
 		$data['posts_count'] 	= PostsModel::count();
-		$user = UserModel::orderBy('created_at', 'DESC')
-											->first();
+		$user = UserModel::orderBy('created_at', 'DESC')->first() ?? null;
 											
-		$user->name_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];
-		$user = '<a href="' . self::base_url() . '/user/' . $this->urlMaker->toUrl($user->username) . '/' . $user->id .'">' . $user->name_html . '</a>';
-		
+		if(isset($user))
+		{
+			$user->name_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];
+			$user = '<a href="' . self::base_url() . '/user/' . $this->urlMaker->toUrl($user->username) . '/' . $user->id .'">' . $user->name_html . '</a>';
+		}
 		$data['last_user'] = $user;
 		
 		return $data;

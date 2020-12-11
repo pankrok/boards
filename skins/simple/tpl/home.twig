@@ -3,64 +3,10 @@
 {% block content %}
 <div class="row">
 
-
-	<!-- right module -->
-	
-	<div class="col-lg-3 order-2 d-none d-sm-block">
-	
-	<!-- module -->
-	<div class="card border-light mb-3">
-		  <div class="card-header"><i class="fa fa-bullhorn"></i> {{ trans('Announcements') }} </div>
-		  <div class="card-body">
-			<h5 class="card-title">Light card title</h5>
-			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-		  </div>
-	</div>
-	<!-- /module -->
-	
-	<!-- module -->
-	<div class="card border-light mb-3">
-		  <div class="card-header"><i class="fa fa-chart-bar"></i> {{ trans('Statistics') }}</div>
-		  <div class="card-body px-2">
-			<p class="card-text">
-			<ul class="list-group list-group-flush">
-				 <li class="list-group-item py-1">{{ trans('Members') }}: <span class="float-right">{{ stats.users_count }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right">{{ stats.posts_count }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Threads') }}: <span class="float-right">{{ stats.plots_count }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Newest Member') }}: <span class="float-right"><b>{{ stats.last_user | raw }}</b></span></li>
-			</ul>
-			</p>
-		  </div>
-	</div>
-	<!-- /module -->
-	
-	{% if auth.check %}
-	<!-- module -->
-	<div class="card border-light mb-3">
-		  <div class="card-header"><i class="fas fa-user-tag"></i> {{ trans('Your statistics') }}</div>
-		  <div class="card-body px-2">			
-			<img src="{{ user.avatar }}" class="rounded-circle mx-auto d-block stat-av" alt="{{ auth.user.username }}">
-			<p class="text-center"><b>{{ user.username | raw}}</b></p>
-			<ul class="list-group list-group-flush">
-				 <li class="list-group-item py-1">{{ trans('Group') }}: <span class="float-right">{{ user.group | raw}}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Reputatnion') }}: <span class="float-right">{{ user.reputation }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('Posts') }}: <span class="float-right">{{ user.posts }}</span></li>
-				 <li class="list-group-item py-1">{{ trans('My IP') }}: <span class="float-right"><b>Hidden</b></span></li>
-				 <li class="list-group-item py-1">{{ trans('Last visit') }}: <span class="float-right">{{ auth.user.updated_at }}</span></li>
-			</ul>
-		  </div>
-	</div>
-	<!-- /module -->
-	{% endif %}
-	<!-- plugin example -->{{ plugin_bar | raw }}
-	<!-- /plugin example -->
-	
-	</div>
-	
-	<!-- /right module -->
+	{% include 'templates/partials/modules.twig' %}
 	<!-- main board -->
 	
-	<div class="col-lg-9 order-1">
+	<div class="col-lg order-sm-2 order-1">
 	{% include 'templates/partials/chatbox.twig' %}
 				
 		<!-- board -->

@@ -9,7 +9,7 @@
     },
     "board": {
         "main_page_name": "Boards forum script",
-        "main_mail": "admin@cs-zabijaka.pl",
+        "main_mail": "admin@s89.eu",
         "boards_off": "0",
         "default_group": "1"
     },
@@ -24,7 +24,7 @@
         "path": "\/public\/upload\/avatars\/"
     },
     "cache": {
-        "active": "1",
+        "active": "0",
         "cache_time": "90",
         "cache_dir": "\/environment\/Cache\/objects\/",
         "cache_ext": ".c"
@@ -36,9 +36,10 @@
     },
     "pagination": {
         "boards": "10",
-        "plots": "20"
+        "plots": "20",
+        "users": "50"
     },
     "plugins": {
-        "active": "1"
+        "active": 1
     }
 }

@@ -1,0 +1,73 @@
+{% extends 'templates/main.twig' %}
+{% block content %}
+
+{% include 'templates/partials/skins/editor_menu.twig' %}
+
+<h1>Edycja pliku: {{ attribute(list, id) }}</h1>
+<div class="row">
+	<div class="col-sm col-md-3">
+		<div class="list-group vh-100 overflow-auto">
+		{% for key, val in list %}
+		  <a href="{{ path_for('admin.skin.twig.edit', {'skin_id': skin_id, 'id': key}) }}" class="list-group-item list-group-item-action" {% if key == id %}active{% endif %}>{{ val }}</a>
+		  {% endfor %} 
+		</div>
+	</div>
+	<div class="col">
+		<form action="{{ path_for('admin.skin.twig.save') }}" method="post">
+		<input type="hidden" name="twig_id" value="{{ id }}">
+		<input type="hidden" name="skin_id" value="{{ skin_id }}">
+		<textarea name="code" id="editor"></textarea>
+		<span class="p-2 float-right">
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#saveTpl">
+			  {{ trans('admin.save') }}
+			</button>
+		</span>
+		
+		<!-- Modal -->
+			<div class="modal fade" id="saveTpl" tabindex="-1" role="dialog" aria-labelledby="saveTplModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="saveTplModalLabel">Save template</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					Are you sure wanna save changes in {{ attribute(list, id) }}?
+				  </div>
+				  <div class="modal-footer">
+					<button type="submint" class="btn btn-success">{{ trans('admin.save') }}</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		
+		
+		</form>
+	</div>
+</div>
+{% endblock %}
+
+
+
+{% block endcontent %}
+<span id="rawcode" style="display: none;">{{ code|raw }}</span>
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script>
+
+var editor = new Jodit('#editor', {
+	langusage: 'pl',
+    autofocus: true,
+	height: "auto",
+	"defaultMode": "2",
+	"buttons": "|,,|,|,|,|,|,undo,redo,|",
+	toolbarAdaptive: true,
+	allowResizeX: false,
+    allowResizeY: true
+});
+editor.value = $('#rawcode').html();
+
+</script>
+{% endblock %}

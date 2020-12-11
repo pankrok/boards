@@ -1,0 +1,11 @@
+[
+	"home",
+	"category.getCategory",
+	"board.getBoard",
+	"board.getPlot",
+	"board.newPlot",
+	"auth.signin",
+	"auth.signup",
+	"user.profile",
+	"userlist"
+]

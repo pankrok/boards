@@ -8,7 +8,7 @@
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="{{ path_for('home') }}"><i class="fas fa-home"></i> Home<span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
@@ -17,8 +17,16 @@
 		  <li class="nav-item">
             <a class="nav-link" href="#"><i class="fas fa-gavel"></i> {{ trans('Regulations') }}</a>
           </li>
+
+			
         </ul>
 		<ul class="navbar-nav">
+			<li class="nav-item" >
+				<a href="#" class="nav-link pl-4">
+				 <span class="onoff"><input  type="checkbox" value="0" id="darkSwitch"><label for="darkSwitch"></label></span>
+				 <span class="m-auto"><i class="fas fa-moon"></i></span>
+				</a>
+			</li>
 		  {% if auth.check %}
 		  <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle dropdown" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ auth.user.username }} </a>

@@ -72,7 +72,7 @@
 	<!-- Modal report post -->
 	
 	
-	{% if auth.admin %}
+	{% if auth.check %}
 	
 		<!-- Modal report post -->
 		<div class="modal fade" id="editPost" tabindex="-1" role="dialog" aria-labelledby="editPost" aria-hidden="true">
@@ -86,13 +86,16 @@
 			  </div>
 			  <div class="modal-body">
 				<form id="editPostForm" action="#" method="post">
+
 					<div class="input-group text-left" style="height: 380px">
 						<input type="hidden" id="editPlotID" value="">
 						<textarea id="editPostJodit" name="editor"></textarea>
-					  <div class="input-group-append m-auto">
+						</div>
+					  <div class="input-group-append">
 						<button id="post-edit-btn" type="button" class="btn btn-light">{{ trans('submint edit') }}</button>
 					  </div>
-					</div>
+					 
+
 				</form>
 			  </div>
 

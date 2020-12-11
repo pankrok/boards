@@ -51,6 +51,10 @@ $container->set('router', function($container) use ($routeParser) {
 	return $routeParser;
 });
 
+$container->set('purifier', function() {
+	return  new HTMLPurifier();
+});
+
 $container->set('cache', function($container) {
 	$cacheSettings = $container->get('settings')['cache'];
 	return new Application\Core\Modules\Cache\CacheCore($cacheSettings);
@@ -100,10 +104,7 @@ $container->set('view', function($container){
 	
 	$twigSettings = $container->get('settings')['twig'];	
 	$skin = $_SESSION['skin'] ?? $twigSettings['skin'];	
-	
-	
-	
-	$skinAssets = $protocol . "://" . $_SERVER['HTTP_HOST'] . '/skins/'. $skin . '/assets';
+		
 	
     $view = new \Slim\Views\Twig(MAIN_DIR . '/skins/'. $skin . '/tpl',[
         'cache' => (bool)$twigSettings['cache'] ? MAIN_DIR . '/skins/'. $skin . '/cache/twig' : false,
@@ -143,10 +144,12 @@ $container->set('adminView', function($container){
 	$twigSettings = $container->get('settings')['admin'];
     $view = new \Slim\Views\Twig(MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',[
         'cache' => false,
-        'debug' => false,
+        'debug' => true, // remove debug!
     ]);
-    
+    $view->addExtension(new \Twig\Extension\DebugExtension()); // remove debug!
+	
     $router = $container->get('router');
+	
 
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));

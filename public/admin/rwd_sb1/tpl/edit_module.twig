@@ -1,0 +1,176 @@
+{% extends 'templates/main.twig' %}
+{% block content %}
+<div class="row">
+			
+			<div class="col">
+			<a class="btn btn-secondary float-left" href="{{ path_for('admin.modules.skin.get', {'route': 'home', 'id': skin_id}) }}">{{ trans('admin.back') }}</a>
+			</div>
+			{% if module.box.costum and module.costum_box.id %}
+			<div class="col">
+				<button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#deleteModal">
+				  {{ trans('admin.delete') }}
+				</button>
+			</div>
+			{% endif %}
+			
+	</div>
+	{% if module.box.costum %}
+		<h1>Box id: {{ module.costum_box.id }}</h1>
+		
+		<form action="{{ path_for('admin.modules.skin.save') }}" method="post">
+		<input type="hidden" name="costum_box_id" value="{{ module.costum_box.id }}">
+		<input type="hidden" name="skins_boxes_id" value="{{ module.skin_boxes.id }}">
+		<input type="hidden" name="box_id" value="{{ module.box.id }}">
+		<input type="hidden" name="skin_id" value="{{ skin_id }}">
+		<div class="row">
+		<div class="col-sm col-md-7">
+			<div class="row">
+			  <div class="form-group col-sm col-md-6">
+				<label for="module_name_prefix">{{ trans('admin.Module name prefix') }}</label>
+				<input type="text" class="form-control" id="module_name_prefix" name="module_name_prefix" value="{{ module.costum_box.name_prefix }}">
+			  </div>
+			  <div class="form-group col-sm col-md-6">
+				<label for="module_name">{{ trans('admin.Module name') }} *</label>
+				<input type="text" class="form-control" id="module_name" name="module_name" value="{{ module.costum_box.name | raw }}">
+			  </div>
+			  <div class="form-group col-sm col-md-12">
+				<label for="position">{{ trans('admin.Module Position') }}</label>
+				<select class="form-control" id="position" name="position">
+				  <option value="top" {% if module.skin_boxes.side == "top" %}selected{% endif %}>{{ trans('admin.top') }}</option>
+				  <option value="bottom" {% if module.skin_boxes.side == "bottom" %}selected{% endif %}>{{ trans('admin.bottom') }}</option>
+				  <option value="left" {% if module.skin_boxes.side == "left" %}selected{% endif %}>{{ trans('admin.left') }}</option>
+				  <option value="right" {% if module.skin_boxes.side == "right" %}selected{% endif %}>{{ trans('admin.right') }}</option>
+				</select>
+			  </div>
+			  <div class="form-group col-sm col-md-12">
+				<label for="htmlcode">{{ trans('admin.Module HTML') }}</label>
+				<textarea class="form-control" id="module_html" name="module_html"></textarea>
+				<span id="module_html_data" style="display: none;">{{ module.costum_box.html | raw }}</span>
+			  </div>
+			</div>
+		</div>
+		<div class="col-sm col-md-5">
+			<div class="row">
+			{% for key, val in module.skin_boxes.active %}
+			<div class="col-sm col-md-6">
+				<div class="form-group">
+				<label for="{{ key }}">{{ trans('admin.active') }}: {{ trans('admin.'~key) }}</label>
+				<select class="form-control" id="{{ key }}" name="{{ key }}">
+				  <option {% if val %}selected{% endif %} value="1">{{ trans('admin.yes') }}</option>
+				  <option {% if not val %}selected{% endif %} value="0">{{ trans('admin.no') }}</option>
+				</select>
+				</div>
+			</div>
+			{% endfor %}
+			<div class="col-sm col-md-6 m-auto">
+				 <div class="form-group">
+						<label for="box_order">{{ trans('admin.order') }}</label>
+						<input type="text" class="form-control" id="box_order" name="box_order" value="{{ module.skin_boxes.box_order }}">
+					  </div>
+			</div>
+			<div class="col-sm col-md-12 m-auto">
+				<button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+			</div>
+			</div>
+		</div>
+		</div>
+		</form>
+		
+		
+	{% else %}
+		<h1> {{trans('admin.'~module.box.engine) }} </h1>
+		
+		<form action="{{ path_for('admin.modules.skin.save') }}" method="post">
+		<input type="hidden" name="costum_box_id" value="system">
+		<input type="hidden" name="skins_boxes_id" value="{{ module.skin_boxes.id }}">
+		<input type="hidden" name="box_id" value="{{ module.box.id }}">
+		<input type="hidden" name="skin_id" value="{{ skin_id }}">
+		<div class="row">
+		<div class="col-sm col-md-7">
+			<div class="row">
+			  <div class="form-group col-sm col-md-12">
+				<label for="position">{{ trans('admin.Module Position') }}</label>
+				<select class="form-control" id="position" name="position">
+				  <option value="top" {% if module.skin_boxes.side == "top" %}selected{% endif %}>{{ trans('admin.top') }}</option>
+				  <option value="bottom" {% if module.skin_boxes.side == "bottom" %}selected{% endif %}>{{ trans('admin.bottom') }}</option>
+				  <option value="left" {% if module.skin_boxes.side == "left" %}selected{% endif %}>{{ trans('admin.left') }}</option>
+				  <option value="right" {% if module.skin_boxes.side == "right" %}selected{% endif %}>{{ trans('admin.right') }}</option>
+				</select>
+			  </div>
+			</div>
+		</div>
+		<div class="col-sm col-md-5">
+			<div class="row">
+			{% for key, val in module.skin_boxes.active %}
+			<div class="col-sm col-md-6">
+				<div class="form-group">
+				<label for="{{ key }}">{{ trans('admin.active') }}: {{ trans('admin.'~key) }}</label>
+				<select class="form-control" id="{{ key }}" name="{{ key }}">
+				  <option {% if val %}selected{% endif %} value="1">{{ trans('admin.yes') }}</option>
+				  <option {% if not val %}selected{% endif %} value="0">{{ trans('admin.no') }}</option>
+				</select>
+				</div>
+			</div>
+			{% endfor %}
+			<div class="col-sm col-md-6 m-auto">
+				 <div class="form-group">
+						<label for="box_order">{{ trans('admin.order') }}</label>
+						<input type="text" class="form-control" id="box_order" name="box_order" value="{{ module.skin_boxes.box_order }}">
+					  </div>
+			</div>
+			<div class="col-sm col-md-12 m-auto">
+				<button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+			</div>
+			</div>
+		</div>
+		</div>
+		</form>
+	{% endif %}	
+ 
+  
+{% endblock %}
+
+{% block endcontent %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script>
+var editor = new Jodit('#module_html', {
+	langusage: 'pl',
+    autofocus: true,
+	height: "280",
+	toolbarAdaptive: true,
+	allowResizeX: false,
+    allowResizeY: false
+});
+
+editor.setEditorValue($("#module_html_data").html());
+</script>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">{{ trans('admin.delete box?') }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+	  <div class="modal-body">
+        <p>Usunięcie modułu spowoduje jego skasowanie z wszystkisch skórek!</p>
+      </div>
+      <div class="modal-footer">
+	  <form action="{{ path_for('admin.modules.skin.delete') }}" method="post">
+	  <input type="hidden" name="costum_box_id" value="{{ module.costum_box.id }}">
+	  <input type="hidden" name="box_id" value="{{ module.box.id }}">
+	  <input type="hidden" name="skin_id" value="{{ skin_id }}">
+			<button type="submit" class="btn btn-warning float-right">Delete</button>	
+		</form>
+		  </div>
+	  </div>
+    </div>
+  </div>
+</div>
+<!-- /Modal -->
+
+{% endblock %}

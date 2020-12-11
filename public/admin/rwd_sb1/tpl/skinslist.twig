@@ -7,12 +7,12 @@
 
 <!-- nav -->
 
-<ul class="nav nav-tabs" id="myTab" role="tablist">
+<ul class="nav nav-tabs" id="myTab">
   <li class="nav-item">
-    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{{ trans('admin.skins list') }}</a>
+    <a class="nav-link active" id="home-tab" href="{{ path_for('admin.skinlist') }}">{{ trans('admin.skins list') }}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="addskin-tab" data-toggle="tab" href="#addskin" role="tab" aria-controls="addskin" aria-selected="false">{{ trans('admin.add skin') }}</a>
+    <a class="nav-link" id="addskin-tab"  href="{{ path_for('admin.add.skin') }}">{{ trans('admin.add skin') }}</a>
   </li>
 
 </ul>

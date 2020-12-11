@@ -20,15 +20,13 @@ class HomeController extends Controller
 			$this->cache->setName($name);
 			
 			$categories = self::getCategories();
-			$boards = self::getBoards();
-			$boxes =  self::getBoxes();			
-			$this->cache->store($routeName, ['categories' => $categories, 'boards' => $boards, 'boxes' => $boxes], $this->settings['cache']['cache_time']);
+			$boards = self::getBoards();		
+			$this->cache->store($routeName, ['categories' => $categories, 'boards' => $boards], $this->settings['cache']['cache_time']);
 		}
 		else
 		{
 			$categories = $cache['categories'];
-			$boards 	= $cache['boards'];
-			$boxes		= $cache['boxes'];
+			$boards 	= $cache['boards'];  
 		}
 		
 		$this->ChatboxController->getChatMesasages();
@@ -56,7 +54,6 @@ class HomeController extends Controller
 			$this->view->getEnvironment()->addGlobal('user', $user);
 		}
 		$this->view->getEnvironment()->addGlobal('sidebar_active', true);
-		$this->view->getEnvironment()->addGlobal('sidebars', $boxes);
 		$this->view->getEnvironment()->addGlobal('stats', $this->StatisticController->getStats());
 		$this->event->addGlobalEvent('home.loaded');	
 		return $this->view->render($response, 'home.twig');	;
@@ -118,20 +115,6 @@ class HomeController extends Controller
 		$boards['groups_legend'] = \Application\Models\GroupsModel::select('grupe_name')->get()->toArray();
 		
 		return $boards;
-	}
-	
-	protected function getBoxes()
-	{
-		$boxes = \Application\Models\BoxModel::orderBy('box_order', 'desc')->get()->toArray();
-		foreach($boxes as $k => $v)
-		{
-			if($v['translate'])
-			{
-				$boxes[$k]['name'] = $this->translator->trans('lang.'.$v['name']);				
-			}
-		}	
-		 
-		return $boxes;
 	}
 	
 	public function session($request, $response)

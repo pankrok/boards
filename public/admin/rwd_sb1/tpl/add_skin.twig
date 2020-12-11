@@ -1,0 +1,31 @@
+
+
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+
+<!-- nav -->
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" id="home-tab" href="{{ path_for('admin.skinlist') }}" >{{ trans('admin.skins list') }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" id="addskin-tab"  href="{{ path_for('admin.add.skin') }}" role="tab" >{{ trans('admin.add skin') }}</a>
+  </li>
+
+</ul>
+<!-- /nav -->
+
+<div class="tab-content p-4" id="myTabContent">
+	<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+		{% include 'templates/partials/skins/list.twig' %}
+	</div> 
+	<div class="tab-pane fade  show active" id="addskin" role="tabpanel" aria-labelledby="addCat-tab">
+		{% include 'templates/partials/skins/add.twig' %}
+	</div>
+</div>
+
+  
+{% endblock %}
