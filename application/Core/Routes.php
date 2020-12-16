@@ -31,6 +31,10 @@ $app->group('/auth', function (RouteCollectorProxy $auth) {
 	$auth->get('/autlogout', 'AuthController:getSignOut')->setName('auth.signout');
 	$auth->post('/hint', 'AuthController:postHintUsers')->setName('auth.hint');
 	$auth->post('/ref/captcha', 'AuthController:refreshCaptcha')->setName('auth.ref.captcha');
+	
+	$auth->get('/forgetpassword', 'ForgetPasswordController:index')->setName('auth.forget.pass');
+	$auth->post('/forgetpassword/post', 'ForgetPasswordController:sendMail')->setName('auth.forget.pass.post');
+	$auth->get('/forgetpassword/change/{id}/{hash}', 'ForgetPasswordController:chengePassword')->setName('auth.change.pass');
 });
 #chatbox
 $app->group('/chatbox', function (RouteCollectorProxy $chatbox) {
@@ -104,6 +108,24 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
 		
 		
 	});
+	
+	$admin->group('/plugins', function (RouteCollectorProxy $adminPlug) {
+		$adminPlug->get('[/]', 'AdminPluginController:pluginList')->setName('admin.plugins.get');
+		
+		$adminPlug->post('/install', 'AdminPluginController:pluginInstall')->setName('admin.plugins.install');
+		$adminPlug->post('/uninstall', 'AdminPluginController:pluginUninstall')->setName('admin.plugins.uninstall');
+		$adminPlug->post('/active', 'AdminPluginController:pluginActive')->setName('admin.plugins.active');
+		$adminPlug->post('/deactive', 'AdminPluginController:pluginDective')->setName('admin.plugins.deactive');
+		
+	});
+	
 	$admin->get('/settings', 'AdminSettingsController:index')->setName('admin.get.settings');
 	$admin->post('/settings/save', 'AdminSettingsController:saveSettings')->setName('admin.post.settings');
+	$admin->map(['GET', 'POST'], '/mail/settings', 'AdminSettingsController:mailer')->setName('admin.mail.settings');
+	
+	$admin->group('/users', function (RouteCollectorProxy $adminUser) {
+		$adminUser->get('/list[/{page}]', 'AdminUserController:index')->setName('admin.users');
+		$adminUser->get('/edit/{id}', 'AdminUserController:editUser')->setName('admin.user.edit');
+	});
+	
 });

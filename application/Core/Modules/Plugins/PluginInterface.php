@@ -11,6 +11,6 @@ interface PluginInterface extends EventSubscriberInterface
 	public static function activation() : bool;
 	public static function deactivation() : bool;
 	public static function install() : bool;
-	public static function remove() : bool;
+	public static function uninstall() : bool;
 	
 }

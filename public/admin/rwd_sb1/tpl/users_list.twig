@@ -1,0 +1,14 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+
+        <ul class="list-group">
+			{% for user in users %}
+		  <li class="list-group-item">
+			<a href="{{ path_for('admin.user.edit', {'id':user.id}) }}">{{ user.username }}</a>
+		  </li>
+			{% endfor %}
+		</ul>
+		{% include 'templates/partials/paginator.twig' %}	
+{% endblock %}

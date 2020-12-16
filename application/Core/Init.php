@@ -55,6 +55,10 @@ $container->set('purifier', function() {
 	return  new HTMLPurifier();
 });
 
+$container->set('mailer', function() {
+	return  new Application\Core\Modules\Mailer\MailCore();
+});
+
 $container->set('cache', function($container) {
 	$cacheSettings = $container->get('settings')['cache'];
 	return new Application\Core\Modules\Cache\CacheCore($cacheSettings);

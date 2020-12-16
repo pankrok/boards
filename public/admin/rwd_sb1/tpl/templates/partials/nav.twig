@@ -18,23 +18,25 @@
 	<a href="#" data-toggle="collapse" data-target="#collapseConfiguration" aria-expanded="true" aria-controls="collapseConfiguration"><span class="fas fa-cogs mr-3"></span> {{trans('admin.configuration') }}</a>
 	<ul id="collapseConfiguration" class="collapse" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
 		<a href="{{ path_for('admin.get.settings') }}"><span class="fas fa-cog mr-3"></span> {{trans('admin.settings') }}</a>
+		<a href="{{ path_for('admin.mail.settings') }}"><span class="fas fa-envelope mr-3"></span> {{trans('admin.mail config') }}</a>
 	</ul>
+	
   </li>
   <li>
 	<a href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers"><span class="fas fa-user-friends mr-3"></span> {{trans('admin.users and groups') }}</a>
 	<ul id="collapseUsers" class="collapse" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
-		<a href="#"><span class="fas fa-user mr-3"></span> {{ trans('admin.users') }}</a>
+		<a href="{{ path_for('admin.users') }}"><span class="fas fa-user mr-3"></span> {{ trans('admin.users') }}</a>
 		<a href="#"><span class="fas fa-users mr-3"></span> {{ trans('admin.groups') }}</a>
 	</ul>
   </li>
   <li>
 	<a href="{{ path_for('admin.skinlist') }}"><span class="fas fa-paint-brush mr-3"></span> {{ trans('admin.templates') }}</a>
   </li>
-    <li>
-	<a href="#"><span class="fas fa-tools mr-3"></span> {{ trans('admin.tools') }}</a>
-  </li>
+    <!-- <li> -->
+	<!-- <a href="#"><span class="fas fa-tools mr-3"></span> {{ trans('admin.tools') }}</a> -->
+  <!-- </li> -->
   <li>
-	<a href="#"><span class="fas fa-plug mr-3"></span> {{ trans('admin.plugins') }}</a>
+	<a href="{{ path_for('admin.plugins.get') }}"><span class="fas fa-plug mr-3"></span> {{ trans('admin.plugins') }}</a>
   </li>
   <br /><br />
   <li>

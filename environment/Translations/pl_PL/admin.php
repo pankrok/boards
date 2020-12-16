@@ -79,5 +79,6 @@ return [
 	'back' => 'Powrót',
 	
 	'is active' => 'aktywna',
+	'mail config' => 'Wysyłka maili'
 	
 ];

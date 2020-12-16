@@ -110,7 +110,7 @@ class PluginLoaderController
 	{
 		
 		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
-		if($plugin->active) 
+		if(!$plugin->active) 
 			return false;
 		$pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
 		$pluginName::deactivation();		
@@ -124,13 +124,26 @@ class PluginLoaderController
 	{
 		
 		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
+		if($plugin->install) 
+			return false;
 		$pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
 		$pluginName::install();		
 		$plugin->install = true;
 		$plugin->save();
-		
+		var_dump($plugin); die();
 	}
 	
-	
+	public function uninstallPlugin($pluginName)
+	{
+		
+		$plugin = PluginsModel::where('plugin_name', $pluginName)->first();
+		if(!$plugin->install) 
+			return false;
+		$pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
+		$pluginName::uninstall();		
+		$plugin->install = false;
+		$plugin->save();
+		
+	}
     
 }

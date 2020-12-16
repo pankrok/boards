@@ -32,4 +32,20 @@ class AdminSettingsController extends Controller
 		
 	}
 	
+	public function mailer($request, $response)
+	{
+		$dir = MAIN_DIR . '/environment/Config/mail.json';
+		$method = $request->getMethod();
+		
+		if($method === "POST")
+		{
+			$body = $request->getParsedBody();
+			file_put_contents($dir, json_encode($body, JSON_PRETTY_PRINT));
+		}
+		
+		$mailCfg = json_decode(file_get_contents($dir),true);
+		$this->adminView->getEnvironment()->addGlobal('mail_cfg', $mailCfg);
+		return $this->adminView->render($response, 'mail_settings.twig');
+	}
+	
 }

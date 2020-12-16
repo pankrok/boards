@@ -11,7 +11,8 @@
         "main_page_name": "Boards forum script",
         "main_mail": "admin@s89.eu",
         "boards_off": "0",
-        "default_group": "1"
+        "default_group": "1",
+        "confirm_reg": "0"
     },
     "admin": {
         "skin": "rwd_sb1"

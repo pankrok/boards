@@ -35,6 +35,7 @@ class AdminSkinEditorController extends Controller
 	public function twigSave($request, $response)
 	{
 		$body = $request->getParsedBody();
+		$skinDir = SkinsModel::where('id', $body['skin_id'])->first()->dirname;
 
 		$files = self::getDirContents(MAIN_DIR . '/skins/'.$skinDir.'/tpl');
 			
@@ -139,8 +140,33 @@ class AdminSkinEditorController extends Controller
 		$newfile = MAIN_DIR . $body['dir'] . '/'. $body['file'] . $body['extension'];
 		if($body['extension'] === '.twig' || $body['extension'] === '.css' || $body['extension'] === '.js')
 		{
+			if(file_exists($newfile))
+			{
+				$this->flash->addMessage('danger', "file already exist!");	
+				return $response 
+					  ->withHeader('Location', $this->router->urlFor('admin.skin.addfile', ['skin_id' => $body['skin_id']]))
+					  ->withStatus(302);
+			}
+			
 			$fh = fopen($newfile, 'w') or ($message = "ERR Can't create file");
 			fclose($fh);
+			if($body['extension'] === '.css' || $body['extension'] === '.js')
+			{
+				$skinDir = SkinsModel::where('id', $body['skin_id'])->first()->dirname;
+				$handler = json_decode(file_get_contents(MAIN_DIR . '/skins/'. $skinDir . '/skin.json'), true);
+				if($body['extension'] === '.css')
+				{
+					array_push($handler['assets']['css'], $body['file'] . $body['extension']);	
+					file_put_contents(MAIN_DIR . '/skins/'. $skinDir . '/skin.json', json_encode($handler, JSON_PRETTY_PRINT));
+				}
+				if($body['extension'] === '.js')
+				{
+					array_push($handler['assets']['css'], $body['file'] . $body['extension']);
+					file_put_contents(MAIN_DIR . '/skins/'. $skinDir . '/skin.json', json_encode($handler, JSON_PRETTY_PRINT));
+				}
+				
+			}
+			
 			
 			$this->flash->addMessage('info', "file created");
 		}

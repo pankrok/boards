@@ -84,9 +84,11 @@ class PluginController
 	public static function addToTpl($template, $find, $html)
 	{
 		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template;
+		
 		$filecontent = file_get_contents($tpl);
-		$pattern = '/'. $find .'(.*?)/s';
+		$pattern = '/('. $find .')(.*?)/s';
 		$result = preg_replace($pattern,  $find.$html, $filecontent);
+
 		return file_put_contents($tpl, $result);			
 		
 	}
@@ -95,8 +97,8 @@ class PluginController
 	{
 		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template;
 		$filecontent = file_get_contents($tpl);
-		$pattern = '/'. $find .'(.*?)/s';
-		$result = preg_replace($pattern,  '', $filecontent);
+		$pattern = '/('. $find .')(.*?)/s';
+		$result = str_replace($find,  '', $filecontent);
 		return file_put_contents($tpl, $result);			
 		
 	}

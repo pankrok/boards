@@ -60,6 +60,11 @@ return function(App $app)
 		return new Application\Modules\Board\UserlistController($container);
 	});
 	
+	$container->set('ForgetPasswordController', function($container)
+	{
+		return new Application\Modules\Auth\ForgetPasswordController($container);
+	});
+	
 	# Admin controllers section
 	
 	$container->set('AdminHomeController', function($container)
@@ -92,6 +97,14 @@ return function(App $app)
 		return new Application\Modules\Admin\Settings\AdminSettingsController($container);
 	});
 	
-
+	$container->set('AdminPluginController', function($container)
+	{
+		return new Application\Modules\Admin\Plugins\AdminPluginController($container);
+	});
+	
+	$container->set('AdminUserController', function($container)
+	{
+		return new Application\Modules\Admin\Users\AdminUserController($container);
+	});
 	
 };

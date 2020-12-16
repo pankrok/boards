@@ -27,7 +27,7 @@ class ExamplePlugin implements PluginInterface
 	
 	public static function activation() : bool
 	{
-		PluginController::addToTpl('home.twig', '<!-- plugin example -->', '{{ plugin_bar | raw }}');
+		PluginController::addToTpl('home.twig', '<!-- boardstats -->', '{{ plugin_bar | raw }}');
 		return true;
 	}
 	
@@ -39,13 +39,12 @@ class ExamplePlugin implements PluginInterface
 	
 	public static function install() : bool
 	{
-		PluginController::createTable();	
-		return 1;
+		return true;
 	}
 	
-	public static function remove() : bool
+	public static function uninstall() : bool
 	{
-		return 1;
+		return true;
 	}
 
     public function MyFooPlugin($data)

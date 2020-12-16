@@ -1,12 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 5.0.4
--- https://www.phpmyadmin.net/
---
--- Host: localhost
--- Generation Time: Dec 11, 2020 at 03:30 PM
--- Server version: 10.1.47-MariaDB-0+deb9u1
--- PHP Version: 7.4.12
-
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -219,6 +211,13 @@ CREATE TABLE `brd_plugins` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `brd_plugins`
+--
+
+INSERT INTO `brd_plugins` (`id`, `plugin_name`, `active`, `install`, `version`, `updated_at`, `created_at`) VALUES
+(1, 'ExamplePlugin', 1, 1, '1.0', '2020-12-15 11:24:02', '2020-12-09 14:18:53');
+
 -- --------------------------------------------------------
 
 --
@@ -252,6 +251,13 @@ CREATE TABLE `brd_skins` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `brd_skins`
+--
+
+INSERT INTO `brd_skins` (`id`, `name`, `dirname`, `author`, `version`, `active`, `updated_at`, `created_at`) VALUES
+(2, 'simple', 'simple', 'PanKrok', '1.0', 1, '2020-12-16 13:53:38', '2020-11-24 13:51:27');
 
 -- --------------------------------------------------------
 
@@ -520,7 +526,7 @@ ALTER TABLE `brd_plots`
 -- AUTO_INCREMENT for table `brd_plugins`
 --
 ALTER TABLE `brd_plugins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `brd_posts`
@@ -532,7 +538,7 @@ ALTER TABLE `brd_posts`
 -- AUTO_INCREMENT for table `brd_skins`
 --
 ALTER TABLE `brd_skins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `brd_skins_boxes`
@@ -608,6 +614,7 @@ ALTER TABLE `brd_userdata`
 ALTER TABLE `brd_users`
   ADD CONSTRAINT `brd_users_ibfk_1` FOREIGN KEY (`main_group`) REFERENCES `brd_groups` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `brd_users_ibfk_2` FOREIGN KEY (`avatar`) REFERENCES `brd_images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -26,7 +26,6 @@
 	{% for sidebar in modules.right %}
 		{% include 'templates/partials/boxes/'~sidebar.engine~'.twig' %}
 	{% endfor %}
-	{{ plugin_bar | raw }}
 </div>
 {% endif %}
 

@@ -15,18 +15,5 @@ class AdminHomeController extends Controller
 	
 	}
 	
-	
-	public function plugin($request, $response, $arg)
-	{
-		$this->event->getPluginLoader()->installPlugin('ExamplePlugin');
-		return $response;
-	}
-	
-	public function pluginReload($request, $response)
-	{
-		$this->event->getPluginLoader()->reloadPluginsList();
-		return $response;
-	}
-	
 };
 
