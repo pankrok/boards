@@ -48,6 +48,7 @@ class ChatboxController extends Controller
 	
 	public function postChatMessage($request, $response)
 	{
+		$this->auth->checkBan();
 		$base_url = self::base_url();
 		$user = UserModel::leftJoin('images', 'users.avatar', '=', 'images.id')
 						->find($_SESSION['user']);		

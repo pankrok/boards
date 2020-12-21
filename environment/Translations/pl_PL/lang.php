@@ -73,6 +73,9 @@ return [
 	'last reply' => 'Ostatnia odpowiedź',
 	'replys' => 'Odpowiedzi',
 	'userlist' => 'Użytkownicy',
-	'user' => 'Użytkownik'
+	'user' => 'Użytkownik',
+	'Plots' => 'Tematów',
+	'Join' => 'Dołączył',
+	'submint edit' => 'Zmodyfikuj',
 	
 ];

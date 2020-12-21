@@ -45,6 +45,20 @@ class Auth
 		return isset($_SESSION['user']) ? UserModel::select('admin_lvl')->find($_SESSION['user'])->toArray()['admin_lvl'] : false;
     }
   
+	public function checkBan()
+	{
+		$ban = UserModel::select('banned')->find($_SESSION['user']);
+		if($ban->banned)
+		{
+			$_SESSION['user'] = NULL;
+			unset($_SESSION['user']);
+			if(isset(($_SESSION['admin']))) unset($_SESSION['admin']);
+			die('YOU ARE BANNED!');
+		}
+		
+		return null;
+	}
+  
   /**
     * find is user username or email is in database and set in session user ID if exists
   *
@@ -58,7 +72,7 @@ class Auth
     if($login[0] == 'email')
     {
       $user = UserModel::where('email', $login[1])->first();
-        }
+    }
         if($login[0] == 'username')
     {
       $user = UserModel::where('username', $login[1])->first();

@@ -8,19 +8,19 @@
 		  {% if plugin.active %}
 			<form action="{{ path_for('admin.plugins.deactive') }}" method="post">
 			<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-			<button type="submit" class="btn btn-success float-right mx-2">Deactive</button>
+			<button type="submit" class="btn btn-warning float-right mx-2">Deactive</button>
 			</form>
 		  {% else %}
 			<form action="{{ path_for('admin.plugins.active') }}" method="post">
 			<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-			<button type="submit" class="btn btn-danger float-right mx-2">Active</button>
+			<button type="submit" class="btn btn-success float-right mx-2" {% if not plugin.install %}disabled{% endif %}>Active</button>
 			</form>
 		  {% endif %}
 			
-		  {% if plugin.instll %}
+		  {% if plugin.install %}
 			<form action="{{ path_for('admin.plugins.uninstall') }}" method="post">
 			<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-			<button type="submit" class="btn btn-danger float-right mx-2">Uninstall</button>
+			<button type="submit" class="btn btn-danger float-right mx-2" {% if plugin.active %}disabled{% endif %}>Uninstall</button>
 			</form>
 		  {% else %}
 			<form action="{{ path_for('admin.plugins.install') }}" method="post">

@@ -132,6 +132,10 @@ $container->set('view', function($container){
        'user' => $container->get('auth')->user(),
 	   'admin' => $container->get('auth')->checkAdmin()
     ]);
+	
+	$view->getEnvironment()->addGlobal('menus', Application\Modules\Board\MenuController::getMenu());	
+	
+	$view->getEnvironment()->addGlobal('boards_off', $container->get('settings')['board']['boards_off']);
 	$view->getEnvironment()->addGlobal('main_title', $container->get('settings')['board']['main_page_name']);
 	
 	$view->getEnvironment()->addGlobal('assets', $assets);

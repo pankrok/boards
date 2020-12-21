@@ -28,7 +28,7 @@ function likeit(o) {
     $.ajax({
         type: "POST",
         url: likePost,
-        data: { post_id: o, csrf_name: t, csrf_value: a },
+        data: { post_id: o, csrf_name: t, csrf_value: a , url: window.location.pathname},
         dataType: "json",
         error: function (o) {
             console.log(o);

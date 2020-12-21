@@ -4,6 +4,13 @@
 {% block content %}
 
 <form action="{{ path_for('admin.post.settings') }}"  method="post">
+<div class="form-group">
+   <label for="boards_off">Turn off boards</label>
+    <select class="form-control" id="boards_off" name="boards_off">
+		<option {% if  settings.board.boards_off %}selected{% endif %} value="1">Yes</option>
+		<option {% if not settings.board.boards_off %}selected{% endif %} value="0">No</option>
+    </select>
+  </div>
   <div class="form-group">
     <label for="BoardName">Board name</label>
     <input type="text" class="form-control" id="BoardName" name="main_page_name" value="{{ settings.board.main_page_name }}">

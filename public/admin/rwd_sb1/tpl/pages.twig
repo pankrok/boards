@@ -1,0 +1,52 @@
+{% extends 'templates/main.twig' %}
+
+
+
+
+{% block content %}
+<h1>{{ trans('admin.pages') }}</h1>
+	<ul class="nav justify-content-end">
+	  <li class="nav-item">
+		<a class="nav-link btn btn-success active" href="{{ path_for('admin.page.edit') }}">{{ trans('admin.add page') }}</a>
+	  </li>
+	</ul>
+<hr />
+        <ul class="list-group">
+			{% for page in pages %}
+		  <li class="list-group-item">
+			<a href="{{ path_for('admin.page.edit', {'id': page.id}) }}">{{ page.name|raw }}</a>
+			<!-- Button trigger modal -->
+				<button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#page-{{ page.id }}">
+				  Delete
+				</button>
+
+				<!-- Modal -->
+				<div class="modal fade" id="page-{{ page.id }}" tabindex="-1" role="dialog" aria-labelledby="modal-page-{{ page.id }}" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+					<div class="modal-content">
+					  <div class="modal-header">
+						<h5 class="modal-title" id="modal-page-{{ page.id }}">Delete page: {{ page.name|raw }}?</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+					  </div>
+					  <div class="modal-footer">
+						<form action="{{ path_for('admin.page.delete') }}" method="post">
+							<input type="hidden" name="id" value="{{ page.id }}">
+							<button type="submit" class="btn btn-danger">Delete</button>
+						</form>
+					  </div>
+					</div>
+				  </div>
+				</div>
+			
+			
+		  </li>
+			{% endfor %}
+		</ul>
+		{% include 'templates/partials/paginator.twig' %}	
+{% endblock %}
+
+
+
+

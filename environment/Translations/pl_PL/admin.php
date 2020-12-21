@@ -79,6 +79,10 @@ return [
 	'back' => 'Powrót',
 	
 	'is active' => 'aktywna',
-	'mail config' => 'Wysyłka maili'
+	'mail config' => 'Wysyłka maili',
+	'menu' => 'Linki w nagłówku',
+	'pages' => 'Strony informacyjne',
+	'add page' => 'Dodaj stronę',
+	
 	
 ];

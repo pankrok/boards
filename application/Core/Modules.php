@@ -18,6 +18,11 @@ return function(App $app)
 		return new Application\Modules\Board\HomeController($container);
 	});	
 	
+	$container->set('PageController', function($container)
+	{
+		return new Application\Modules\Board\PageController($container);
+	});	
+	
 	$container->set('CategoryController', function($container)
 	{
 		return new Application\Modules\Board\CategoryController($container);
@@ -72,6 +77,11 @@ return function(App $app)
 		return new Application\Modules\Admin\AdminHomeController($container);
 	});
 	
+	$container->set('AdminPagesController', function($container)
+	{
+		return new Application\Modules\Admin\Board\AdminPagesController($container);
+	});
+	
 	$container->set('AdminBoardController', function($container)
 	{
 		return new Application\Modules\Admin\Board\AdminBoardController($container);
@@ -97,6 +107,11 @@ return function(App $app)
 		return new Application\Modules\Admin\Settings\AdminSettingsController($container);
 	});
 	
+	$container->set('AdminMenuController', function($container)
+	{
+		return new Application\Modules\Admin\Settings\AdminMenuController($container);
+	});
+	
 	$container->set('AdminPluginController', function($container)
 	{
 		return new Application\Modules\Admin\Plugins\AdminPluginController($container);
@@ -105,6 +120,11 @@ return function(App $app)
 	$container->set('AdminUserController', function($container)
 	{
 		return new Application\Modules\Admin\Users\AdminUserController($container);
+	});
+	
+	$container->set('AdminGroupController', function($container)
+	{
+		return new Application\Modules\Admin\Users\AdminGroupController($container);
 	});
 	
 };

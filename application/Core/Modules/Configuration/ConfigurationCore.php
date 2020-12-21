@@ -20,8 +20,9 @@ class ConfigurationCore
 			!empty($cfg['fallback']) 								?	$configuration['translations']['fallback'] = $cfg['fallback'] : null;
 			!empty($cfg['boards'])									? 	$configuration['pagination']['boards'] = $cfg['boards'] : null;
 			!empty($cfg['plots'])		? 	$configuration['pagination']['plots'] = $cfg['plots'] : null;
-			!empty($cfg['plots'])		? 	$configuration['pagination']['users'] = $cfg['users'] : null;
+			!empty($cfg['users'])		? 	$configuration['pagination']['users'] = $cfg['users'] : null;
 			$cfg['plugins'] == '1'	? 	$configuration['plugins']['active'] = 1 : $configuration['plugins']['active'] = 0;
+			$cfg['boards_off'] == '1'	? 	$configuration['board']['boards_off'] = 1 : $configuration['board']['boards_off'] = 0;
 				
 			return file_put_contents(MAIN_DIR . '/environment/Config/settings.json', json_encode($configuration, JSON_PRETTY_PRINT));
 		}

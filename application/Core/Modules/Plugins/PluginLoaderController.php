@@ -130,7 +130,7 @@ class PluginLoaderController
 		$pluginName::install();		
 		$plugin->install = true;
 		$plugin->save();
-		var_dump($plugin); die();
+
 	}
 	
 	public function uninstallPlugin($pluginName)

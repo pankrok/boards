@@ -1,0 +1,27 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+	<h1>Menu link: {{ menu.name|raw }}</h1>
+	
+	<form action="{{ path_for('admin.menu.manage') }}" method="post">
+	{% if not menu %}
+	   <div class="form-group">
+			<label for="exampleFormControlSelect1">Page</label>
+			<select class="form-control" name="name">
+			{% for link in links %}
+			  <option value="{{ link.url }};{{ link.name }}">{{ link.name|raw }}</option>
+			{% endfor %}
+			</select>
+		  </div>
+	{% else %}
+	<input type="hidden" name="id" value="{{menu.id}}">	
+	{% endif %}
+		<div class="form-group">
+			<label for="exampleFormControlInput1">Order</label>
+			<input type="text" class="form-control" value="{{ menu.url_order }}" name="url_order">
+		 </div>
+		 
+		 <button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+	</form>
+{% endblock %}

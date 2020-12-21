@@ -1,7 +1,9 @@
 {% include 'templates/partials/head.twig' %}
 {% block headblock %}{% endblock %}
 
-	
+	{% if boards_off and auth.admin < 1 %}
+		{% include 'templates/partials/boards_off.twig' %}
+	{% else %}
 		
 	{% include 'templates/partials/navigation.twig' %}
 		
@@ -11,7 +13,7 @@
 	{% include 'templates/partials/flash.twig' %}
 	{% block content %}{% endblock %}
 	
-	
+	{% endif %}
     </main><!-- /.container -->
 	<!-- footer -->
 	<footer class="footer">

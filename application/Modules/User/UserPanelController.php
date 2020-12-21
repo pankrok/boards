@@ -96,7 +96,7 @@ class UserPanelController extends Controller
 	
 	public function postProfilePicture($request, $response)
 	{
-	
+			$this->auth->checkBan();
 			$uploadedFiles = $request->getUploadedFiles();
 			$user = UserModel::find($this->auth->user()['id']);
 
@@ -138,6 +138,7 @@ class UserPanelController extends Controller
 	
 	public function postChangeData($request, $response)
 	{
+		$this->auth->checkBan();
 		if($this->auth->check())
 		{
 			

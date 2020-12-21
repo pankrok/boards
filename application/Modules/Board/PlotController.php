@@ -75,6 +75,7 @@ class PlotController extends Controller
 			
 
 			$data = PostsModel::where('posts.plot_id', $arg['plot_id'] )
+					->orderBy('posts.created_at', 'ASC')
 					->skip(($paginator->getCurrentPage()-1)*$paginator->getItemsPerPage())
 					->take($paginator->getItemsPerPage())
 					->join('users', 'users.id', '=', 'posts.user_id')
@@ -152,7 +153,7 @@ class PlotController extends Controller
 	
 	public function replyPost($request, $response)
 	{
-	
+		$this->auth->checkBan();
 		$plot = PlotsModel::select('locked', 'board_id', 'plot_name', 'id')->find($request->getParsedBody()['plot_id']);
 		$locked = $plot->locked;
 		
@@ -161,7 +162,6 @@ class PlotController extends Controller
 		if($this->auth->check() && !$locked){
 			
 			$user =UserModel::find($this->auth->user()['id']);
-			 ;
 			PostsModel::create([
 				'user_id' => $user->id,
 				'plot_id' => $request->getParsedBody()['plot_id'],
@@ -203,7 +203,7 @@ class PlotController extends Controller
 			$itemsPerPage = $this->settings['pagination']['plots'];
 			$pages = ceil($totalItems / $itemsPerPage);
 			$this->cache->setName('board.getPlot');
-			$name = $this->getBasePath .'/plot/' .$plot->plot_name. '/'.$plot->id;
+			$name = $this->getBasePath .'/plot/' . $this->urlMaker->toUrl($plot->plot_name) . '/'.$plot->id;
 			if($pages > 1)
 				$this->cache->delete($name);
 			$name .= '/'.$pages;
@@ -223,6 +223,7 @@ class PlotController extends Controller
 	
 	public function newPlot($request, $response, $arg)
 	{
+		$this->auth->checkBan();
 		$this->view->getEnvironment()->addGlobal('board_id', $arg['board_id']);
 		$board = BoardsModel::find($arg['board_id']);
 		
@@ -234,7 +235,7 @@ class PlotController extends Controller
 	public function newPlotPost($request, $response)
 	{
 		$data['csrf'] = self::csftToken(); 
-					
+		$this->auth->checkBan();			
 		if($request->getParsedBody()['board_id'])
 		{
 		
@@ -298,6 +299,7 @@ class PlotController extends Controller
 	public function reportPost($request, $response)
 	{
 		$data['csrf'] = self::csftToken();
+		$this->auth->checkBan();
 		
 		$postID = $request->getParsedBody()['post_id'];
 		$reasonID = $request->getParsedBody()['reason_id'];
@@ -321,9 +323,11 @@ class PlotController extends Controller
 	
 	public function likeit($request, $response)
 	{
-		
+	
+		$this->auth->checkBan();
 		$data['csrf'] = self::csftToken();
 		$postID = substr($request->getParsedBody()['post_id'], 5);
+		$url = 
 		$data['likeit'] = LikeitModel::where([
 			['user_id', intval($_SESSION['user'])],
 			['post_id', intval($postID)]
@@ -362,7 +366,9 @@ class PlotController extends Controller
 								  <strong>'.$this->translator->trans('lang.reputation added').'</strong>
 								</div></div>';
 			
-
+			$this->cache->setName('board.getPlot');
+			$this->cache->delete($request->getParsedBody()['url']);
+			
 		}
 		else
 		{
@@ -378,6 +384,7 @@ class PlotController extends Controller
 	
 	public function editPost($request, $response)
 	{		
+		$this->auth->checkBan();
 		$body = $request->getParsedBody();
 		$data['token'] = self::csftToken();
 		$post = PostsModel::find($body['post_id']);
@@ -390,21 +397,25 @@ class PlotController extends Controller
 			$post->content = $body['content'];
 			$post->save() ? $data['response'] = 'success' : $data['response']  = 'danger';
 			
+			$page = $this->UserPanelController->findPage($post->created_at, $post->plot_id);
+			$plot = $this->urlMaker->toUrl(PlotsModel::find($post->plot_id)->plot_name);
+			
+			$route = $this->router->urlFor('board.getPlot', [
+														'plot' => $plot,
+														'plot_id' => $post->plot_id,
+														'page' => $page
+														]);
+														
+			$this->cache->setName('board.getPlot');
+			$this->cache->delete($route);
+			$route .= '#post-'.$body['post_id'];
+			
 			if ($request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest') {
 					
 				$response->getBody()->write(json_encode($data));
 				return $response->withHeader('Content-Type', 'application/json')
 							->withStatus(201);	
 			}
-			
-			$page = $this->UserPanelController->findPage($post->created_at, $post->plot_id);
-			$plot = $this->urlMaker->toUrl(PlotsModel::find($post->plot_id)->name);
-			
-			$route = $this->router->urlFor('board.getPlot', [
-														'plot' => $plot,
-														'plot_id' => $post->plot_id,
-														'page' => $page
-														]) . '#post-'.$body['post_id'];
 			
 			$this->flash->addMessage($data['response'] , 'Post edition:' . $data['response'] );
 			return $response

@@ -7,6 +7,9 @@ use Slim\Routing\RouteCollectorProxy;
 $app->get('[/]', 'HomeController:index')->setName('home');
 $app->get('/cron[/{key}]', 'CronController:main')->setName('cron');
 
+#page
+$app->get('/i[/{id}]', 'PageController:page')->setName('page');
+
 #category
 $app->get('/category/{category}/{category_id}[/{page}]', 'CategoryController:getCategory')->setName('category.getCategory');
 
@@ -123,9 +126,29 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
 	$admin->post('/settings/save', 'AdminSettingsController:saveSettings')->setName('admin.post.settings');
 	$admin->map(['GET', 'POST'], '/mail/settings', 'AdminSettingsController:mailer')->setName('admin.mail.settings');
 	
+	$admin->group('/menu', function (RouteCollectorProxy $adminMenu) {
+		$adminMenu->get('/list', 'AdminMenuController:index')->setName('admin.menu');
+		$adminMenu->map(['GET', 'POST'], '/manage[/{id}]', 'AdminMenuController:manageItem')->setName('admin.menu.manage');
+		$adminMenu->post('/delete', 'AdminMenuController:deleteItem')->setName('admin.menu.delete');
+	});
+	
+	$admin->group('/pages', function (RouteCollectorProxy $adminPages) {
+		$adminPages->get('/list', 'AdminPagesController:index')->setName('admin.pages');
+		$adminPages->map(['GET', 'POST'], '/manage[/{id}]', 'AdminPagesController:managePage')->setName('admin.page.edit');
+		$adminPages->post('/delete', 'AdminPagesController:deletePage')->setName('admin.page.delete');
+	
+	});
 	$admin->group('/users', function (RouteCollectorProxy $adminUser) {
 		$adminUser->get('/list[/{page}]', 'AdminUserController:index')->setName('admin.users');
 		$adminUser->get('/edit/{id}', 'AdminUserController:editUser')->setName('admin.user.edit');
+		$adminUser->post('/save', 'AdminUserController:saveUserData')->setName('admin.user.save');
+		$adminUser->post('/delete', 'AdminUserController:deleteUser')->setName('admin.user.delete');
+		$adminUser->get('/groups[/{page}]', 'AdminGroupController:index')->setName('admin.groups');
+		$adminUser->get('/group/add', 'AdminGroupController:addGroup')->setName('admin.groups.add');
+		$adminUser->get('/group/edit/{id}', 'AdminGroupController:editGroup')->setName('admin.groups.edit');
+		$adminUser->post('/group/manage', 'AdminGroupController:groupPost')->setName('admin.groups.post');
+		$adminUser->post('/group/delete', 'AdminGroupController:deleteGroup')->setName('admin.groups.delete');
+		
 	});
 	
 });

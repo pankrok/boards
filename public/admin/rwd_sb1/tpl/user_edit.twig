@@ -1,0 +1,106 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+<div class="row">
+	<ul class="nav">
+	  <li class="nav-item">
+		<a class="nav-link active" href="{{ path_for('admin.users') }}">back</a>
+	  </li>
+	</ul>
+</div><hr />
+<form action="{{ path_for('admin.user.save') }}" method="post">
+<input type="hidden" name="id" value="{{ user.id }}">
+		<div class="row">
+        <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    <img src="{{ user.avatar }}" alt="Admin" class="rounded-circle" width="150">
+                    <div class="mt-3">
+                      <h4><input class="form-control" type="text" name="username" value="{{ user.username }}"></h4> 
+                      <p class="text-secondary mb-1">{{ user.grupe_name|raw }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+			</div>
+		            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Join</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user.created_at }}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input class="form-control" type="text" name="email" value="{{ user.email }}">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Group</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <div class="form-group">
+						<select class="form-control" name="main_group">
+						{% for group in groups %}
+						  <option value="{{ group.id }}" {% if group.id == user.main_group %}selected{% endif %}>{{ group.grupe_name|raw }}</option>
+						{% endfor %}
+						</select>
+						</div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Warn level</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                     <input class="form-control" type="text" name="warn_level" value="{{ user.warn_level }}">
+                    </div>
+                  </div>
+				  <hr>
+				  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Banned</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                     <select class="form-control" name="banned">
+						  <option value="1" {% if user.banned %}selected{% endif %}>YES</option>
+						  <option value="0" {% if not user.banned %}selected{% endif %}>NO</option>
+						</select>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Admin level</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                     <div class="form-group">
+						<select class="form-control" name="admin_lvl">
+						{% for i in 0..10 %}
+						  <option value="{{ i }}" {% if i == user.admin_lvl %}selected{% endif %}>{{ i }}</option>
+						{% endfor %}
+						</select>
+						</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+</form>	
+		
+{% endblock %}

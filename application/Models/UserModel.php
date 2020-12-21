@@ -42,6 +42,7 @@ class UserModel extends Model
 			'away_end',
 			'lang',
 			'warn_level',
+			'banned',
 			'priv_notes',
 			'lostpw'
         ];
