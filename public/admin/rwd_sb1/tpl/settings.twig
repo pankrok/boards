@@ -5,22 +5,22 @@
 
 <form action="{{ path_for('admin.post.settings') }}"  method="post">
 <div class="form-group">
-   <label for="boards_off">Turn off boards</label>
+   <label for="boards_off">{{ trans('admin.turn off boards') }}</label>
     <select class="form-control" id="boards_off" name="boards_off">
-		<option {% if  settings.board.boards_off %}selected{% endif %} value="1">Yes</option>
-		<option {% if not settings.board.boards_off %}selected{% endif %} value="0">No</option>
+		<option {% if  settings.board.boards_off %}selected{% endif %} value="1">{{ trans('admin.yes') }}</option>
+		<option {% if not settings.board.boards_off %}selected{% endif %} value="0">{{ trans('admin.no') }}</option>
     </select>
   </div>
   <div class="form-group">
-    <label for="BoardName">Board name</label>
+    <label for="BoardName">{{ trans('admin.board name') }}</label>
     <input type="text" class="form-control" id="BoardName" name="main_page_name" value="{{ settings.board.main_page_name }}">
   </div>
   <div class="form-group">
-    <label for="emailAddress">Email address</label>
+    <label for="emailAddress">{{ trans('admin.email address') }}</label>
     <input type="email" class="form-control" id="emailAddress" name="main_mail" value="{{ settings.board.main_mail }}">
   </div>
   <div class="form-group">
-    <label for="boardsPagination">Board pagination</label>
+    <label for="boardsPagination">{{ trans('admin.board pagination') }}</label>
     <select class="form-control" id="boardsPagination" name="boards">
       {% for i in 1..5 %}
 		<option {% if (i*10) == settings.pagination.boards %}selected{% endif %} value="{{ i * 10 }}">{{ i * 10 }}</option>
@@ -28,7 +28,7 @@
     </select>
   </div>
    <div class="form-group">
-    <label for="plotPagination">Plot pagination</label>
+    <label for="plotPagination">{{ trans('admin.plot pagination') }}</label>
     <select class="form-control" id="plotPagination" name="plots">
       {% for i in 1..5 %}
 		<option {% if (i*20) == settings.pagination.plots %}selected{% endif %} value="{{ i * 20 }}">{{ i * 20 }}</option>
@@ -36,7 +36,7 @@
     </select>
   </div>
    <div class="form-group">
-    <label for="plotPagination">Users list pagination</label>
+    <label for="plotPagination">{{ trans('admin.users list pagination') }}</label>
     <select class="form-control" id="plotPagination" name="users">
       {% for i in 1..10 %}
 		<option {% if (i*10) == settings.pagination.users %}selected{% endif %} value="{{ i * 10 }}">{{ i * 10 }}</option>
@@ -44,14 +44,14 @@
     </select>
   </div>
   <div class="form-group">
-   <label for="plugins">Plugins</label>
+   <label for="plugins">{{ trans('admin.plugins') }}</label>
     <select class="form-control" id="plotPagination" name="plugins">
-		<option {% if  settings.plugins.active %}selected{% endif %} value="1">On</option>
-		<option {% if not settings.plugins.active %}selected{% endif %} value="0">Off</option>
+		<option {% if  settings.plugins.active %}selected{% endif %} value="1">{{ trans('admin.on') }}</option>
+		<option {% if not settings.plugins.active %}selected{% endif %} value="0">{{ trans('admin.off') }}</option>
     </select>
   </div>
   
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
 </form>
 
 

@@ -1,0 +1,26 @@
+
+<form action="#" method="post">
+<div class="form-group">
+    <label for="exampleFormControlTextarea1">Example textarea</label>
+    <textarea name="plugin_data" class="form-control" id="exampleFormControlTextarea1" style="height: 240px !important;">{{ data }}</textarea>
+ </div>
+ <button class="btn btn-primary float-right" type="submit">{{ trans('admin.submit') }}</button>
+</form>
+{% block endcontent %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script>
+
+var editor = new Jodit('#exampleFormControlTextarea1', {
+	langusage: 'pl',
+    autofocus: true,
+	height: "auto",
+	"defaultMode": "2",
+	"buttons": "|,,|,|,|,|,|,undo,redo,|",
+	toolbarAdaptive: true,
+	allowResizeX: false,
+    allowResizeY: true
+});
+
+</script>
+{% endblock %}

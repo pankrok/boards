@@ -83,6 +83,23 @@ return [
 	'menu' => 'Linki w nagłówku',
 	'pages' => 'Strony informacyjne',
 	'add page' => 'Dodaj stronę',
-	
+	'make copy' => 'Utwórz kopię',
+	'edit template' => 'Edytuj szablon',
+	'name' => 'Nazwa',
+	'turn off boards' => 'Wyłącz forum',
+	'email address' => 'Adres e-mail',
+	'board pagination' => 'Ilość stron tablicy',
+	'plot pagination' => 'Ilość stron tematu',
+	'users list pagination' => 'Ilość stron listu użytkowników',
+	'on' => 'Włączone',
+	'off' => 'Wyłączone',
+	'add menu link' => 'Dodaj link w menu',
+	'delete page' => 'Usunać stronę',	
+	'page' => 'Strona',
+	'mail address' => 'Adres email',
+	'sender name' => 'Nadawca',
+	'type' => 'Sposób wysyłki',
+	'password' => 'Hasło',
+	'plugin info' => 'Informacje o pluginie'
 	
 ];

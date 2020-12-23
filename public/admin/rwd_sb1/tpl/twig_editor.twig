@@ -16,7 +16,7 @@
 		<form action="{{ path_for('admin.skin.twig.save') }}" method="post">
 		<input type="hidden" name="twig_id" value="{{ id }}">
 		<input type="hidden" name="skin_id" value="{{ skin_id }}">
-		<textarea name="code" id="editor"></textarea>
+		<textarea name="code" id="editor">{{ code }}</textarea>
 		<span class="p-2 float-right">
 			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#saveTpl">
 			  {{ trans('admin.save') }}
@@ -52,7 +52,7 @@
 
 
 {% block endcontent %}
-<span id="rawcode" style="display: none;">{{ code|raw }}</span>
+
 <link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
 <script>
@@ -67,7 +67,7 @@ var editor = new Jodit('#editor', {
 	allowResizeX: false,
     allowResizeY: true
 });
-editor.value = $('#rawcode').html();
+
 
 </script>
 {% endblock %}

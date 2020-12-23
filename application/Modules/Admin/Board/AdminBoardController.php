@@ -95,7 +95,7 @@ class AdminBoardController extends Controller
 			'board_description' => $body['desc'],
 			'category_id' => $body['cat_id'],
 			'board_order' => $body['order'],
-			'visability' => 1
+			'active' => 1
 		]);
 		
 		return $response
@@ -134,14 +134,15 @@ class AdminBoardController extends Controller
 	{
 		$body = $request->getParsedBody();
 		$board = BoardsModel::find($arg['id']);
-
+		
 		if($body)
 		{
+			isset($body['visability']) ? $visability = 1 : $visability = 0;
 			$board->board_name = $body['name'];
 			$board->board_description = $body['desc'];
 			$board->category_id = $body['cat_id'];
 			$board->board_order = $body['order'];
-			$board->visability	= $body['visability'];
+			$board->active	= $visability;
 			$board->save();
 		}
 		
@@ -152,6 +153,25 @@ class AdminBoardController extends Controller
 		return $this->adminView->render($response, 'board_edit.twig');
 	}
 	
+	public function editCategory($request, $response, $arg)
+	{
+		$body = $request->getParsedBody();
+		$category = CategoryModel::find($arg['id']);
+		
+		if(!empty($body))
+		{
+			isset($body['visability']) ? $visability = 1 : $visability = 0;
+			$category->name = $body['name'];
+			$category->category_order = $body['order'];
+			$category->active	= $visability;
+			$category->save();
+		}
+		
+		$this->adminView->getEnvironment()->addGlobal('category', $category->toArray());
+		$this->adminView->getEnvironment()->addGlobal('id', $arg['id']);
+		
+		return $this->adminView->render($response, 'category_edit.twig');
+	}
 	
 	protected function getCategories()
 	{
@@ -161,7 +181,7 @@ class AdminBoardController extends Controller
 	
 	protected function getBoards()
 	{
-		
+		$boards = false;
 		$handler = \Application\Models\BoardsModel::orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
 		foreach($handler as $k => $v)
 		{

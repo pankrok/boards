@@ -1,0 +1,12 @@
+
+
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+	
+	<h2>{{ pluginName }}</h2>
+	<hr>
+       {% include pluginName ~'/twig/main.twig' %}
+		
+{% endblock %}

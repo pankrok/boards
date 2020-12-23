@@ -30,6 +30,11 @@ class EventMiddleware extends Middleware
 			$this->container->get('event')->addGlobalEvent('global.event');
 			$this->container->get('event')->addGlobalEvent($name);		
 		}
+		else
+		{
+			global $admin;
+			$admin = true;
+		}
 		
 		return $handler->handle($request);
 	}

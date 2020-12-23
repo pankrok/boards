@@ -1,0 +1,15 @@
+<div class="row content-bg p-2 mx-4 my-1 text-center border border-secondary">
+	<div class="col-12 col-md-4 m-auto"> 
+		%s
+	</div>
+	<div class="col-9 col-md-3 m-auto"> 
+		%s &nbsp; %s
+	</div>
+	<div class="col-3 col-md-1 m-auto"> 
+		%s/%s
+	</div>
+	<div class="col-5 col-md-1 m-auto">
+		%s
+	</div>
+	<div class="col-7 col-md-3 m-auto">&nbsp;%s</div>
+</div>

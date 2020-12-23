@@ -1,0 +1,5 @@
+<ul class="list-group">
+{% for server in servers %}
+  <li class="list-group-item"><a href="{{ path_for('admin.plugins.ext', {'pluginName': 'ServerList', 'param1': 'edit', 'param2': server.id}) }}">{{ server.name }}</li>
+{% endfor %}
+</ul>

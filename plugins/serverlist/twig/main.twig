@@ -1,0 +1,23 @@
+<ul class="nav justify-content-end">
+  <li class="nav-item">
+    <a class="nav-link" href="{{ path_for('admin.plugins.ext', {'pluginName': 'ServerList'}) }}">Lista</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ path_for('admin.plugins.ext', {'pluginName': 'ServerList', 'param1': 'add'}) }}">Dodaj serwer</a>
+  </li>
+
+</ul>
+
+{% if params.1 == 'add' %}
+
+	{% include 'ServerList/twig/add.twig' %}
+
+{% elseif params.1 == 'edit' %}
+
+	{% include 'ServerList/twig/edit.twig' %}
+
+{% else %}
+
+	{% include 'ServerList/twig/list.twig' %}
+
+{% endif %}

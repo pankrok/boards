@@ -1,10 +1,10 @@
 {
-    "username": "board@boards.com",
+    "username": "boards@boards.s89.eu",
     "name": "BOARDS SYSTEM",
     "type": "MAIL",
     "host": "",
     "password": "",
     "port": "587",
     "tls": "1",
-    "auth": "1"
+    "auth": "0"
 }

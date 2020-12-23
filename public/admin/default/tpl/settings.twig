@@ -1,0 +1,25 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+
+
+{% for mkay, data in settings %}
+    
+	{% if data is iterable %}
+	<p><b>#{{ mkay}}</b></p>
+		{% for key, val in data %}
+		
+			<p>>>{{ key }} = {{ val }}</p>
+			
+		{% endfor %}
+	{% else %}
+	
+		<p>>{{ mkay}} = {{ data }}</p>
+		
+	{% endif %}
+	
+{% endfor %}
+
+  
+{% endblock %}

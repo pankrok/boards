@@ -12,15 +12,32 @@ class AdminPluginController extends Controller
 	
 	public function pluginList($request, $response, $arg)
 	{
-		$list = PluginsModel::get()->toArray();
+		$this->event->getPluginLoader()->reloadPluginsList();
 		
+		$list = PluginsModel::get()->toArray();
+		foreach($list as $k => $v)
+		{
+			$h = $v['plugin_name'];
+			$name = "\\Plugins\\$h\\$h";
+			$list[$k]['info'] = $name::info();
+		}
+
 		$this->adminView->getEnvironment()->addGlobal('plugins', $list);
 		return $this->adminView->render($response, 'plugins.twig');
 	}
 	
 	public function pluginControl($request, $response, $arg)
 	{
-		return $this->adminView->render($response, 'plugins_control.twig');
+		global $params;
+		$params = [
+			'1' => $arg['param1'] ?? null,
+			'2' => $arg['param2'] ?? null
+		];	
+		
+		$this->container->get('event')->addGlobalEvent('plugin.contoller.'.$arg['pluginName']);	
+		$this->adminView->getEnvironment()->addGlobal('params', $params);
+		$this->adminView->getEnvironment()->addGlobal('pluginName', $arg['pluginName']);
+		return $this->adminView->render($response, 'plugin_ext.twig');
 	}
 	
 	public function pluginInstall($request, $response)
@@ -55,13 +72,6 @@ class AdminPluginController extends Controller
 		$body = $request->getParsedBody();	
 		$this->event->getPluginLoader()->deactivePlugin($body['plugin_name']);
 		
-		return $response->withHeader('Location', $this->router->urlFor('admin.plugins.get'))
-		  ->withStatus(302);;
-	}
-	
-	public function pluginReload($request, $response)
-	{
-		$this->event->getPluginLoader()->reloadPluginsList();
 		return $response->withHeader('Location', $this->router->urlFor('admin.plugins.get'))
 		  ->withStatus(302);;
 	}

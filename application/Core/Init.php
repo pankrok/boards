@@ -97,14 +97,9 @@ $container->set('flash', function($container) {
 
 $container->set('view', function($container){
 	
-	if(isset($_SERVER['HTTPS'])){
-		$protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-	}
-	else{
-		$protocol = 'http';
-	}
 
-	$assets = $protocol . "://" . $_SERVER['HTTP_HOST'] . '/public';
+
+	$assets = $container->get('getBasePath') . '/public';
 	
 	$twigSettings = $container->get('settings')['twig'];	
 	$skin = $_SESSION['skin'] ?? $twigSettings['skin'];	
@@ -150,10 +145,15 @@ $container->set('view', function($container){
 $container->set('adminView', function($container){
 	
 	$twigSettings = $container->get('settings')['admin'];
-    $view = new \Slim\Views\Twig(MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',[
-        'cache' => false,
-        'debug' => true, // remove debug!
-    ]);
+    $view = new \Slim\Views\Twig(
+		[
+			MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',
+			MAIN_DIR.'/plugins'
+		],
+		[
+			'cache' => false,
+			'debug' => true, // remove debug!
+		]);
     $view->addExtension(new \Twig\Extension\DebugExtension()); // remove debug!
 	
     $router = $container->get('router');

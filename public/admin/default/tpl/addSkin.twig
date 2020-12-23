@@ -1,0 +1,18 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+
+ {% for skin in skins %}
+		<p><form action="{{ path_for('admin.add.skin.post') }}" method="post"><input type="hidden" id="skin_name" name="skin_name" value="{{ skin }}">{{ skin }}<input type="submit" value="Submit"></form></p>
+	{% endfor %}
+{% if not skins %}
+
+<div class="alert alert-warning" role="alert">
+  <strong>All skins are installed in your board.</strong>
+</div>
+
+{% endif %}
+
+  
+{% endblock %}

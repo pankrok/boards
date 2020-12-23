@@ -1,0 +1,59 @@
+{% extends 'templates/main.twig' %}
+
+{% block headblock %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="p-2">
+<form action="{{ path_for('admin.edit.board') }}/{{ id }}" method="post" id="addBoard">
+  <div class="row">
+		<div class="form-group col-4">
+		<label for="SelectCategory">Select Category:</label>
+		<select class="form-control" id="SelectCategory" name="cat_id">
+		  {% for category in categories %}
+		  <option value="{{ category.id }}" {% if category.id == data.id %}selected{% endif %}>{{ category.name }}</option>	  
+		  {% endfor %}
+		</select>
+	  </div>
+	  <div class="form-group col-4">
+		<label for="boardName">Board name</label>
+		<input type="text" class="form-control" id="boardName" name="name" value="{{ data.board_name }}">
+	  </div>
+	  <div class="form-group col-2">
+		<label for="boardOrder">Board order</label>
+		<input type="text" class="form-control" id="boardOrder" name="order" value="{{ data.board_order }}">
+	  </div>
+	  <div class="form-check col-2">
+		<input type="checkbox" class="form-check-input" id="Active" name="visability" {% if data.visability == true %}checked{% endif %}>
+		<label class="form-check-label" for="Acrive" >Active {{data.visability}}</label>
+	  </div>
+  </div> 
+  <div class="form-group">
+    <label for="BoardDesc">Board description</label>
+    <textarea class="form-control" id="BoardDesc" rows="3" name="desc">{{ data.board_description }}</textarea>
+  </div>
+  <div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+   </div>
+</form>
+</div>
+{% endblock %}
+
+{% block endcontent %}
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script>
+
+var editor = new Jodit('#BoardDesc', {
+	langusage: 'pl',
+    autofocus: true,
+	height: "280",
+	toolbarAdaptive: false,
+	allowResizeX: false,
+    allowResizeY: false,
+
+});
+
+</script>
+{% endblock %}
+

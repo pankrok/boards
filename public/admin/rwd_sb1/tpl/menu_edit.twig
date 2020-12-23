@@ -7,7 +7,7 @@
 	<form action="{{ path_for('admin.menu.manage') }}" method="post">
 	{% if not menu %}
 	   <div class="form-group">
-			<label for="exampleFormControlSelect1">Page</label>
+			<label for="exampleFormControlSelect1">{{ trans('admin.page') }}</label>
 			<select class="form-control" name="name">
 			{% for link in links %}
 			  <option value="{{ link.url }};{{ link.name }}">{{ link.name|raw }}</option>
@@ -18,7 +18,7 @@
 	<input type="hidden" name="id" value="{{menu.id}}">	
 	{% endif %}
 		<div class="form-group">
-			<label for="exampleFormControlInput1">Order</label>
+			<label for="exampleFormControlInput1">{{ trans('admin.order') }}</label>
 			<input type="text" class="form-control" value="{{ menu.url_order }}" name="url_order">
 		 </div>
 		 

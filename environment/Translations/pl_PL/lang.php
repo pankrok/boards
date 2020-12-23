@@ -77,5 +77,7 @@ return [
 	'Plots' => 'Tematów',
 	'Join' => 'Dołączył',
 	'submint edit' => 'Zmodyfikuj',
+	'First name' => 'Imię',
+	'Last name' => 'Nazwisko',
 	
 ];

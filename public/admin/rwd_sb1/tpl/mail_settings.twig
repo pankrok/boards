@@ -5,15 +5,15 @@
 
 <form action="{{ path_for('admin.mail.settings') }}" method="post">
   <div class="form-group">
-    <label for="username">Email address</label>
+    <label for="username">{{ trans('admin.mail address') }}</label>
     <input type="email" class="form-control" id="username" name="username" placeholder="name@example.com" value="{{ mail_cfg.username }}">
   </div>
    <div class="form-group">
-    <label for="name">Sender name</label>
+    <label for="name">{{ trans('admin.sender name') }}</label>
     <input type="text" class="form-control" id="name" name="name" value="{{ mail_cfg.name }}">
   </div>
   <div class="form-group">
-    <label for="type">Example select</label>
+    <label for="type">{{ trans('admin.type') }}</label>
     <select class="form-control" id="type" name="type">
       <option value="MAIL" {% if mail_cfg.type == "MAIL" %}selected{% endif %}>PHP Mail function</option>
       <option value="SMTP" {% if mail_cfg.type == "smtp" %}selected{% endif %}>SMTP</option>
@@ -25,7 +25,7 @@
     <input type="text" class="form-control" id="host" name="host" value="{{ mail_cfg.host }}">
   </div>
      <div class="form-group">
-    <label for="password">Password</label>
+    <label for="password">{{ trans('admin.password') }}</label>
     <input type="password" class="form-control" id="password" name="password" value="{{ mail_cfg.password }}">
   </div>
      
@@ -40,15 +40,15 @@
   <div class="form-group">
     <label for="tls">TLS</label>
     <select class="form-control" id="tls" name="tls">
-      <option value="0" {% if mail_cfg.tls == "0" %}selected{% endif %}>Yes</option>
-      <option value="1" {% if mail_cfg.tls == "1" %}selected{% endif %}>No</option>
+      <option value="0" {% if mail_cfg.tls == "0" %}selected{% endif %}>{{ trans('admin.yes') }}</option>
+      <option value="1" {% if mail_cfg.tls == "1" %}selected{% endif %}>{{ trans('admin.no') }}</option>
     </select>
   </div>
   <div class="form-group">
     <label for="auth">Auth</label>
     <select class="form-control" id="auth" name="auth">
-      <option value="0" {% if mail_cfg.auth == "0" %}selected{% endif %}>Yes</option>
-      <option value="1" {% if mail_cfg.auth == "1" %}selected{% endif %}>No</option>
+      <option value="0" {% if mail_cfg.auth == "0" %}selected{% endif %}>{{ trans('admin.yes') }}</option>
+      <option value="1" {% if mail_cfg.auth == "1" %}selected{% endif %}>{{ trans('admin.no') }}</option>
     </select>
   </div>
  </span>

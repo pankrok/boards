@@ -39,11 +39,19 @@ class PluginLoaderController
 			$allFiles = scandir(MAIN_DIR.'/plugins/'); 
 			$files = array_diff($allFiles, ['.', '..']);
 			
+			$plugins = PluginsModel::get()->toArray();
+			foreach($plugins as $val)
+			{
+				if(!array_search($val['plugin_name'], $files))
+					PluginsModel::find($val['id'])->delete();
+				
+			}
+			
 			foreach ($files as $k => $v)
 			{               
-				if(substr($v, -4) == '.php'){
+				if(substr($v, -4) != '.php'){
 					
-					$name = substr($v, 0, -4);
+					$name = $v;
 					$plugin = PluginsModel::firstOrCreate(['plugin_name' => $name]);
 				
 				}
@@ -70,17 +78,25 @@ class PluginLoaderController
 	public function reloadPluginsList()
 	{
 		if($this->cache->receive('Plugins')) $this->cache->erase('Plugins');
-		PluginsModel::truncate();
 		
+	
 		$allFiles = scandir(MAIN_DIR.'/plugins/'); 
 		$files = array_diff($allFiles, ['.', '..']);
-
+		
+		$plugins = PluginsModel::get()->toArray();
+		foreach($plugins as $val)
+		{
+			if(!array_search($val['plugin_name'], $files))
+				PluginsModel::find($val['id'])->delete();
+			
+		}
+	
 		if(is_array($files)){
 			foreach ($files as $k => $v)
 			{               
-				if(substr($v, -4) == '.php'){
+				if(substr($v, -4) != '.php'){
 					
-					$name = substr($v, 0, -4);
+					$name = $v;
 					$plugin = PluginsModel::firstOrCreate(['plugin_name' => $name]); 
 					$plugin->save();
 					

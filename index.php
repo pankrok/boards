@@ -7,17 +7,23 @@
 ************/
 
 declare(strict_types=1);
-ini_set( 'display_errors', 'on');
-
-$t = (microtime(true)); #remove from production!
-
+ini_set( 'display_errors', 'off');
 DEFINE('MAIN_DIR', __DIR__);
 
-require MAIN_DIR . '/application/Core/Init.php';
-$app->run();
-
-
-$mem = round((memory_get_usage()/1024/1024),2);#remove from production!
-$dt = round((microtime(true) - $t) * 1000, 2);#remove from production!
-//echo('<br /><font size="1" class="right">script execution time: ' . $dt .' | memory usage: '.$mem.' MB</font>');#remove from production!
+if(file_exists(__DIR__ . '/environment/Config/db_settings.php'))
+{
+	require MAIN_DIR . '/application/Core/Init.php';
+	$app->run();
+}
+else
+{
+	header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+	if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
+         $url = "https://";   
+    else  
+         $url = "http://";    
+    $url.= $_SERVER['HTTP_HOST'];     
+    $url.= $_SERVER['REQUEST_URI'] . '/install';   
+	header("Location: $url");
+}
 

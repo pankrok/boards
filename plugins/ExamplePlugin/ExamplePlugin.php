@@ -10,17 +10,23 @@ class ExamplePlugin implements PluginInterface
 
     public static function getSubscribedEvents()
     {
-        return ['home.loaded' => 'MyFooPlugin'];
+        return [
+			'home.loaded' => 'myFooPlugin',
+			'plugin.contoller.ExamplePlugin' => 'myAdminFunc'
+			];
 
     }
 
 	public static function info() : array
 	{
 		return [
+			'name' => 'Example Plugin',
 			'version' => '1.1',
+			'panel' => true,
 			'boards_v' => '1.1.20',
 			'author' => 'PanKrok',
 			'website' => 's89.eu',
+			'desc' => 'This is an example plugin.'
 		];
 		
 	}
@@ -47,19 +53,24 @@ class ExamplePlugin implements PluginInterface
 		return true;
 	}
 
-    public function MyFooPlugin($data)
+    public function myFooPlugin($data)
     {
-	   $content = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-					 <strong>'.$data->translate('Holy guacamole!') .'</strong> '.$data->translate('This is a plugin example!') .'<br />		  
-					  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					  </button>
-					</div>';
-		
-			
+		$text = file_get_contents($data->getPluginsDir().'/ExamplePlugin/data/example.txt');
+		$content = sprintf($text, $data->translate('Holy guacamole!'), $data->translate('This is a plugin example!'));
 					
 		$data->setTwigData('bar', $content);		
     }
+	
+	public function myAdminFunc($data)
+	{
+		if(isset($_POST['plugin_data']))
+		{
+			file_put_contents($data->getPluginsDir().'/ExamplePlugin/data/example.txt', $_POST['plugin_data']);
+		}
+		
+		$content = file_get_contents($data->getPluginsDir().'/ExamplePlugin/data/example.txt');
+		$data->setAdminTwigData('data', $content);
+	}
 	
 	public function translations($data)
 	{

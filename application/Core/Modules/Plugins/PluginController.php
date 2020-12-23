@@ -50,12 +50,10 @@ class PluginController
 		$this->pluginLoader = new PluginLoaderController($container->get('cache'));
 		self::$tplDir = $container->get('settings')['twig']['skin'];
 		
-		//($this->pluginLoader->reloadPluginsList()); // remove that in stable version
-		
 		if(is_array($this->pluginLoader->getPluginsList())){
 			foreach ($this->pluginLoader->getPluginsList() as $val)
 			{	
-				if($val['active'] && class_exists('Plugins\\'.$val['plugin_name'].'\\'.$val['plugin_name']))
+				if(($val['active'] || isset($GLOBALS['admin'])) && class_exists('Plugins\\'.$val['plugin_name'].'\\'.$val['plugin_name']))
 				{
 					$pluginName = 'Plugins\\'. (string)$val['plugin_name'] .'\\'.(string)$val['plugin_name'];
 					$this->dispacher->addSubscriber(new $pluginName()); 
@@ -64,6 +62,8 @@ class PluginController
 		}
 		
     }
+	
+	
 	
 	public function addGlobalEvent($eventName)
 	{
@@ -87,7 +87,7 @@ class PluginController
 		
 		$filecontent = file_get_contents($tpl);
 		$pattern = '/('. $find .')(.*?)/s';
-		$result = preg_replace($pattern,  $find.$html, $filecontent);
+		$result = preg_replace($pattern,  $find."\n".$html."\n", $filecontent);
 
 		return file_put_contents($tpl, $result);			
 		
@@ -98,17 +98,26 @@ class PluginController
 		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template;
 		$filecontent = file_get_contents($tpl);
 		$pattern = '/('. $find .')(.*?)/s';
-		$result = str_replace($find,  '', $filecontent);
+		$result = str_replace("\n".$find."\n",  '', $filecontent);
 		return file_put_contents($tpl, $result);			
 		
 	}
 	
-	public static function createTable()
+	public static function createTable($table, $query)
 	{
-		$txt = 'CREATE TABLE `boards`.`test` ( `id` INT NOT NULL AUTO_INCREMENT , `a` INT NOT NULL , `b` INT NOT NULL , `c` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;';
+		$db = require(MAIN_DIR . '/environment/Config/db_settings.php');
+		$txt = 'CREATE TABLE `'.$db['database'].'`.`'. $db['prefix']. $table .'` ( '.$query.') ENGINE = InnoDB;';
 
-		var_Dump(DB::statement($txt));
-		
+		$return = DB::statement($txt);
+		return $return;
+	}
+	
+	public static function dropTable($table)
+	{
+		$db = require(MAIN_DIR . '/environment/Config/db_settings.php');
+		$txt = 'DROP TABLE `'.$db['database'].'`.`'. $db['prefix']. $table;
+		$return = DB::statement($txt);
+		return $return;
 	}
 	
 }

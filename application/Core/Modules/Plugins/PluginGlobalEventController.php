@@ -25,6 +25,7 @@ class PluginGlobalEventController extends Event
 	protected $_cache;
 	protected $translator;
 	protected $tplDir;
+	protected $plugin_dir;
 	
 	
 	/**
@@ -35,12 +36,13 @@ class PluginGlobalEventController extends Event
     public function __construct($container)
     {
         $this->twig = $container->get('view');
+		$this->adminTwig = $container->get('adminView');
 		$this->db = $container->get('db');
 		$this->auth = $container->get('auth');
 		$this->_cache = $container->get('cache');
-		$this->translator = $container->get('translator');
-		
+		$this->translator = $container->get('translator');		
 		$this->tplDir = $container->get('settings')['twig']['skin'];
+		$this->plugins_dir = MAIN_DIR . '/plugins';
     }
 	
 	/**
@@ -55,6 +57,11 @@ class PluginGlobalEventController extends Event
 		$this->twig->getEnvironment()->addGlobal('plugin_'.$name , $data);
     }
 	
+	public function setAdminTwigData($name, $data)
+    {
+		$this->adminTwig->getEnvironment()->addGlobal($name , $data);
+    }
+
 	/**
 	* Find and replace string in Twig template
 	* @param $tpl path to in skins/view/ of Twig template
@@ -67,6 +74,11 @@ class PluginGlobalEventController extends Event
 	// {
 		// return $this->db;
 	// }
+	
+	public function getPluginsDir()
+	{
+		return $this->plugins_dir;
+	}
 	
 	public function translate($string)
 	{

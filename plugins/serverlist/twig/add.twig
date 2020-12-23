@@ -1,0 +1,27 @@
+<form action="#" method="post">
+ <input type="hidden" class="form-control" id="add" name="add" value="1">
+  <div class="form-group">
+    <label for="name">Nazwa</label>
+    <input type="text" class="form-control" id="name" name="name">
+    <small id="nameHelp" class="form-text text-muted">Wyświetla się kiedy serwer jest wyłączony oraz na liście w panelu administracyjnym.</small>
+  </div>
+  <div class="form-group">
+    <label for="game">Typ serwera</label>
+    <input type="text" class="form-control" id="game" name="game">
+  </div>
+  <div class="form-group">
+    <label for="ip">ip</label>
+    <input type="text" class="form-control" id="ip" name="ip">
+  </div>
+   <div class="form-group">
+    <label for="port">port</label>
+    <input type="text" class="form-control" id="port" name="port">
+  </div>
+  <div class="form-group">
+    <label for="admin">administrator</label>
+    <input type="text" class="form-control" id="admin" name="admin">
+    <small id="adminHelp" class="form-text text-muted">nick administratora serwera</small>
+  </div>
+  <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
+  
+</form>

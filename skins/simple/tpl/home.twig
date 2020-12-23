@@ -1,6 +1,9 @@
 {% extends 'templates/main.twig' %}
 
 {% block content %}
+{{ plugin_serverlist | raw }}
+
+
 <div class="row">
 
 	{% include 'templates/partials/modules.twig' %}
@@ -84,7 +87,9 @@
 	
 	
 	
-	<!-- boardstats -->{{ plugin_bar | raw }}
+	<!-- boardstats -->
+{{ plugin_bar | raw }}
+
 	<div class="col-12 order-3">
 	
 	<div class="card border-light mb-3">

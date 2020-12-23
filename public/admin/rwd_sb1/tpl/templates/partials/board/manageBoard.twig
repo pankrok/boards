@@ -7,10 +7,10 @@
 				<div class="card-header">
 					<div class="row">
 						<div class="col-sm-auto col-md-11">
-							Item Name
+							{{ trans('admin.name') }}
 						</div>
 						<div class="col-sm-auto col-md-1">
-							order
+							{{ trans('admin.order') }}
 						</div>
 					</div>
 				</div>
@@ -25,7 +25,7 @@
 						<input type="text" value="{{ category.category_order }}" id="Category-{{ category.id }}" name="Category-{{ category.id }}" class="form-control float-right">
 				</div>
 				<div class="col-sm-auto col-md-11 order-1">
-					<strong>{{ category.name|raw }}</strong> <a href="{{ base_url}}/{{ admin_url }}/category/edit/{{ category.id }}" class="btn btn-outline-success btn-sm fas fa-edit mx-2">edit</a>
+					<strong>{{ category.name|raw }}</strong> <a href="{{ path_for('admin.edit.category', {'id': category.id}) }}" class="btn btn-outline-success btn-sm fas fa-edit mx-2">edit</a>
 					<a href="{{ path_for('admin.delete.board', {'element': 'category', 'id': category.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('admin.delete') }}</a>
 					<span class="float-right px-3">
 					<input type="checkbox" class="form-check-input" id="CategoryChecbox-{{ category.id }}" name="CategoryChecbox-{{ category.id }}" {% if category.active %}checked{% endif %}>

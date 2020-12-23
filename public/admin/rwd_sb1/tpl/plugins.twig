@@ -1,34 +1,64 @@
 {% extends 'templates/main.twig' %}
 {% block content %}
 <div class="row">
-	<div class="col">
+	<div class="col p-2">
 		<ul class="list-group list-group-flush">
 		{% for plugin in plugins %}
-		  <li class="list-group-item"><span class="float-left">{{ plugin.plugin_name }} | version: {{ plugin.version }}</span>
-		  {% if plugin.active %}
-			<form action="{{ path_for('admin.plugins.deactive') }}" method="post">
-			<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-			<button type="submit" class="btn btn-warning float-right mx-2">Deactive</button>
-			</form>
-		  {% else %}
-			<form action="{{ path_for('admin.plugins.active') }}" method="post">
-			<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-			<button type="submit" class="btn btn-success float-right mx-2" {% if not plugin.install %}disabled{% endif %}>Active</button>
-			</form>
-		  {% endif %}
-			
-		  {% if plugin.install %}
-			<form action="{{ path_for('admin.plugins.uninstall') }}" method="post">
-			<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-			<button type="submit" class="btn btn-danger float-right mx-2" {% if plugin.active %}disabled{% endif %}>Uninstall</button>
-			</form>
-		  {% else %}
-			<form action="{{ path_for('admin.plugins.install') }}" method="post">
-			<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-			<button type="submit" class="btn btn-success float-right mx-2">Install</button>
-			</form>
-		  {% endif %}
+		  <li class="list-group-item">
+		  <div class="row">
+			  <div class="col p-2">
+			  <span class="float-left">
+			  {% if plugin.install and plugin.info.panel %}
+			  <a href="{{ path_for('admin.plugins.ext', {'pluginName': plugin.plugin_name}) }}">
+			  {{ plugin.info.name }}
+			  </a> 
+			  {% else %}{{ plugin.plugin_name }}{% endif %}
+			  </div>
+			  </span>
+			  <div class="col p-2">
+				  <button class="btn btn-primary mx-4" type="button" data-toggle="collapse" data-target="#plugin-{{ plugin.id }}" aria-expanded="false" aria-controls="plugin-{{ plugin.id }}">
+					{{ trans('admin.plugin info') }}
+				  </button>
+			  </div>
+			  <div class="col float-right m-auto">
+			  {% if plugin.active %}
+				<form action="{{ path_for('admin.plugins.deactive') }}" method="post">
+				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
+				<button type="submit" class="btn btn-warning float-right mx-2">Deactive</button>
+				</form>
+			  {% else %}
+				<form action="{{ path_for('admin.plugins.active') }}" method="post">
+				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
+				<button type="submit" class="btn btn-success float-right mx-2" {% if not plugin.install %}disabled{% endif %}>Active</button>
+				</form>
+			  {% endif %}
+			  {% if plugin.install %}
+				<form action="{{ path_for('admin.plugins.uninstall') }}" method="post">
+				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
+				<button type="submit" class="btn btn-danger float-right mx-2" {% if plugin.active %}disabled{% endif %}>Uninstall</button>
+				</form>
+			  {% else %}
+				<form action="{{ path_for('admin.plugins.install') }}" method="post">
+				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
+				<button type="submit" class="btn btn-success float-right mx-2">Install</button>
+				</form>
+			  {% endif %}
+			  </div>
+		  </div>
 		  </li>
+		  <div class="collapse" id="plugin-{{ plugin.id }}">
+		  <div class="card card-body">
+			  <div class="row text-dark">
+				<div class="col p-2">{{ trans('admin.version') }}: {{ plugin.info.version }}</div>
+				<div class="col p-2">{{ trans('admin.author') }}: {{ plugin.info.author }}</div>
+				<div class="col p-2">{{ trans('admin.author website') }}: {{ plugin.info.website }}</div>
+				<div class="col-12">	
+					<p>{{ trans('admin.description') }}:</p><hr>
+					<p>{{ plugin.info.desc }}</p>
+				</div>
+			  </div>
+		  </div>
+		</div>
 		{% endfor %}
 		</ul>
 	</div>

@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block content %}
+<nav class="nav">
+  <a class="nav-link active" href="{{ path_for('admin.boards') }}">Back</a>
+</nav>
 <div class="p-2">
 <form action="{{ path_for('admin.edit.board') }}/{{ id }}" method="post" id="addBoard">
   <div class="row">

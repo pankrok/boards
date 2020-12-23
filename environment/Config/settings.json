@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "djAuMS4w",
+        "version": "MC4xLjE",
         "show_version": "1",
         "log_level": "3",
         "debug": "1",
@@ -8,10 +8,10 @@
         "admin": "acp"
     },
     "board": {
-        "main_page_name": "Boards forum script",
+        "main_page_name": "BOARDS",
         "main_mail": "admin@s89.eu",
         "boards_off": 0,
-        "default_group": "3",
+        "default_group": "1",
         "confirm_reg": "0"
     },
     "admin": {

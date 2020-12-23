@@ -77,7 +77,7 @@ class HomeController extends Controller
 	protected function getBoards()
 	{
 		$boards = [];
-		$handler = \Application\Models\BoardsModel::orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
+		$handler = \Application\Models\BoardsModel::where('active', '1')->orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
 		
 		foreach($handler as $k => $v)
 		{
