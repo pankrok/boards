@@ -150,9 +150,11 @@ class CacheCore
 
 	}
 	
-	public function clearTwigCache()
+	public function clearTwigCache($skin)
 	{
-		$files =  self::getDirContents(MAIN_DIR . '/bootstrap/cache/skins');
+		if(!isset($skin)) return false;
+		
+		$files =  self::getDirContents(MAIN_DIR . '/skins/' . $skin . '/cache/twig');
 		foreach($files as $v)
 		{
 			if(is_file($v))

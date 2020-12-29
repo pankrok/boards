@@ -100,6 +100,8 @@ return [
 	'sender name' => 'Nadawca',
 	'type' => 'Sposób wysyłki',
 	'password' => 'Hasło',
-	'plugin info' => 'Informacje o pluginie'
+	'plugin info' => 'Informacje o pluginie',
+	
+	'update' => 'Aktualizacja',
 	
 ];

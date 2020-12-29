@@ -1,0 +1,46 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block updateblock %}
+    <h2>Boards version: {{ version }}</h2>
+	
+	<span id="up-btn-span" style="display: none;">
+    <button id="update-btn" class="btn btn-secondary">Update your Boards</button>
+	</span>
+	<div id="up-content">
+	
+	</div>   <br />
+	<div id="message-content" class="alert" role="alert" style="display: none;">
+	</div>
+	
+	<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="UpdateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="UpdateModalLabel">Board update</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="progress">
+	  <div id="update-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+	</div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+	
+		
+{% endblock %}
+
+{% block endcontent %}
+<script>
+var path = "{{ base_url() }}/application/Core/Updater.php";
+</script>
+<script src="{{ base_url() }}/public/admin/rwd_sb1/js/update.js"></script>
+
+{% endblock %}

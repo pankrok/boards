@@ -54,7 +54,7 @@ class ServerList implements PluginInterface
 			  `admin` varchar(255) NOT NULL,
 			  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-			  add PRIMARY KEY (`id`)";
+			   PRIMARY KEY (`id`)";
 			  
 		PluginController::createTable('serverlist', $q);
 		

@@ -47,7 +47,7 @@ class PluginController
 		$this->dispacher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 		$this->globalEvent = new PluginGlobalEventController($container);
 		$this->adminEvent = new PluginAdminEventController($container);
-		$this->pluginLoader = new PluginLoaderController($container->get('cache'));
+		$this->pluginLoader = new PluginLoaderController($container->get('cache'),$container->get('settings')['twig']['skin']);
 		self::$tplDir = $container->get('settings')['twig']['skin'];
 		
 		if(is_array($this->pluginLoader->getPluginsList())){
@@ -95,7 +95,7 @@ class PluginController
 	
 	public static function  removeFromTpl($template, $find)
 	{
-		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template;
+		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template; 
 		$filecontent = file_get_contents($tpl);
 		$pattern = '/('. $find .')(.*?)/s';
 		$result = str_replace("\n".$find."\n",  '', $filecontent);
@@ -115,7 +115,7 @@ class PluginController
 	public static function dropTable($table)
 	{
 		$db = require(MAIN_DIR . '/environment/Config/db_settings.php');
-		$txt = 'DROP TABLE `'.$db['database'].'`.`'. $db['prefix']. $table;
+		$txt = 'DROP TABLE `'.$db['database'].'`.`'. $db['prefix']. $table . '`';
 		$return = DB::statement($txt);
 		return $return;
 	}

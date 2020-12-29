@@ -127,4 +127,9 @@ return function(App $app)
 		return new Application\Modules\Admin\Users\AdminGroupController($container);
 	});
 	
+	$container->set('AdminUpdateController', function($container)
+	{
+		return new Application\Modules\Admin\Updater\AdminUpdateController($container);
+	});
+	
 };

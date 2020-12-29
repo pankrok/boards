@@ -7,6 +7,7 @@ namespace Application\Core\Modules\ErrorController;
 use \Slim\Handlers\ErrorHandler;
 use Monolog\Logger;
 
+
 class ErrorController extends ErrorHandler
 {
     protected $_logger;

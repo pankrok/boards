@@ -22,15 +22,17 @@ class PluginLoaderController
 	**/
    
 	protected $cache;
+	protected $skin;
 	
 	/**
     * Constructor load plugin list from cache or create new list in cache 
     * @return void
     **/
 	
-    public function __construct($cache)
+    public function __construct($cache, $skin)
     {
 		$this->cache = $cache;
+		$this->skin = $skin;
 		
 		
 		if(!$cacheData = $cache->receive('Plugins'))
@@ -118,6 +120,9 @@ class PluginLoaderController
 		$pluginName::activation();		
 		$plugin->active = true;		
 		$plugin->save();
+		
+		$this->cache->clearTwigCache($this->skin);
+		$this->cache->clearCache();
 		return true;
 		
 	}
@@ -132,6 +137,9 @@ class PluginLoaderController
 		$pluginName::deactivation();		
 		$plugin->active = false;
 		$plugin->save();
+		
+		$this->cache->clearTwigCache($this->skin);
+		$this->cache->clearCache();
 		return true;
 		
 	}
@@ -146,6 +154,9 @@ class PluginLoaderController
 		$pluginName::install();		
 		$plugin->install = true;
 		$plugin->save();
+		
+		$this->cache->clearTwigCache($this->skin);
+		$this->cache->clearCache();
 
 	}
 	
@@ -159,6 +170,9 @@ class PluginLoaderController
 		$pluginName::uninstall();		
 		$plugin->install = false;
 		$plugin->save();
+		
+		$this->cache->clearTwigCache($this->skin);
+		$this->cache->clearCache();
 		
 	}
     

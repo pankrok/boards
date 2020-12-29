@@ -153,4 +153,6 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
     
   });
   
+  $admin->get('/update', 'AdminUpdateController:index')->setName('admin.update');
+  
 });

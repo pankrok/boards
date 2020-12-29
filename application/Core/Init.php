@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use DI\Container;
 use Slim\Factory\AppFactory;
+use Slim\Middleware\OutputBufferingMiddleware;
 use Respect\Validation\Validator as v;
 use Middlewares\TrailingSlash;
 use MatthiasMullie\Minify;
@@ -30,7 +31,6 @@ $app->setBasePath((function () {
     return '';
 })());
 
-$container = $app->getContainer();
 $container->set('getBasePath', function() use($app)
 {
 	return $app->getBasePath();
@@ -96,8 +96,6 @@ $container->set('flash', function($container) {
 });
 
 $container->set('view', function($container){
-	
-
 
 	$assets = $container->get('getBasePath') . '/public';
 	
@@ -122,6 +120,9 @@ $container->set('view', function($container){
 		$view->getEnvironment()->addGlobal('css', $skinAssets['css']);
 		$view->getEnvironment()->addGlobal('js', $skinAssets['js']);
 	}
+	
+
+	
     $view->getEnvironment()->addGlobal('auth', [ 
        'check' => $container->get('auth')->check(),
        'user' => $container->get('auth')->user(),
@@ -130,7 +131,16 @@ $container->set('view', function($container){
 	
 	$view->getEnvironment()->addGlobal('menus', Application\Modules\Board\MenuController::getMenu());	
 	
-	$view->getEnvironment()->addGlobal('boards_off', $container->get('settings')['board']['boards_off']);
+	if(file_exists(MAIN_DIR . '/environment/Config/lock'))
+	{
+		$lock = 1;
+	}
+	else
+	{
+		$lock = $container->get('settings')['board']['boards_off'];
+	}
+	
+	$view->getEnvironment()->addGlobal('boards_off', $lock);
 	$view->getEnvironment()->addGlobal('main_title', $container->get('settings')['board']['main_page_name']);
 	
 	$view->getEnvironment()->addGlobal('assets', $assets);
@@ -165,7 +175,9 @@ $container->set('adminView', function($container){
 	$filter = new \Twig\TwigFilter('base64_decode', function ($string) {
 		return base64_decode($string);
 	});
-	
+
+	$lock = file_exists(MAIN_DIR . '/environment/Config/lock');
+	$view->getEnvironment()->addGlobal('lock', $lock);
 	$view->getEnvironment()->addFilter($filter);	
 	$view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);
     $view->getEnvironment()->addGlobal('admin', $container->get('auth')->checkAdmin());

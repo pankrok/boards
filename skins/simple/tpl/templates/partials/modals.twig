@@ -32,7 +32,7 @@
 		  </div>
 
 		  <div class="modal-footer bg-light">
-		  <small class="text-center text-muted justify-content-center"><a href="">{{ trans('Forget password')}}.</a></small>
+		  <small class="text-center text-muted justify-content-center"><a href="{{ path_for('auth.forget.pass') }}">{{ trans('Forget password')}}.</a></small>
 
 			
 		  </div>
@@ -79,7 +79,7 @@
 		  <div class="modal-dialog" role="document">
 			<div class="modal-content text-center ">
 			  <div class="modal-header bg-light">
-				<h5 class="modal-title " id="editPost">{{ trans('Edit Post') }} : ##post name##</h5>
+				<h5 class="modal-title " id="editPost">{{ trans('Edit Post') }}</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				  <span aria-hidden="true">&times;</span>
 				</button>
