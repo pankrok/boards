@@ -29,6 +29,7 @@ class AdminSkinEditorController extends Controller
 		$this->adminView->getEnvironment()->addGlobal('id', $arg['id']);
 		$this->adminView->getEnvironment()->addGlobal('code', $code);
 		$this->adminView->getEnvironment()->addGlobal('list', $list);
+		$this->adminView->getEnvironment()->addGlobal('type', 'twig');
 		return $this->adminView->render($response, 'twig_editor.twig');	
 	}
 	
@@ -41,6 +42,7 @@ class AdminSkinEditorController extends Controller
 			
 		
 		file_put_contents($files[$body['twig_id']], $body['code']);
+		$this->cache->cleanAllSkinsCache();
 		$this->flash->addMessage('success', 'Skin save success!');
 		
 		return $response
@@ -75,6 +77,7 @@ class AdminSkinEditorController extends Controller
 		$this->adminView->getEnvironment()->addGlobal('id', $arg['id']);
 		$this->adminView->getEnvironment()->addGlobal('code', $code);
 		$this->adminView->getEnvironment()->addGlobal('list', $list);
+		$this->adminView->getEnvironment()->addGlobal('type', 'css');
 		return $this->adminView->render($response, 'twig_editor.twig');	
 	}
 	
@@ -103,6 +106,7 @@ class AdminSkinEditorController extends Controller
 		$this->adminView->getEnvironment()->addGlobal('id', $arg['id']);
 		$this->adminView->getEnvironment()->addGlobal('code', $code);
 		$this->adminView->getEnvironment()->addGlobal('list', $list);
+		$this->adminView->getEnvironment()->addGlobal('type', 'js');
 		return $this->adminView->render($response, 'twig_editor.twig');	
 	}
 	
@@ -125,10 +129,11 @@ class AdminSkinEditorController extends Controller
 			$dirlist[$k] = substr($v, $count);
 		}
 		
-		
+		$this->cache->cleanAllSkinsCache();
 		$this->adminView->getEnvironment()->addGlobal('skin_id', $arg['skin_id']);
 		$this->adminView->getEnvironment()->addGlobal('main_skin_dir', substr($dir, $count));
 		$this->adminView->getEnvironment()->addGlobal('dir_list', array_reverse($dirlist));
+		
 		return $this->adminView->render($response, 'add_file.twig');	
 	}
 	
@@ -167,7 +172,7 @@ class AdminSkinEditorController extends Controller
 				
 			}
 			
-			
+			$this->cache->cleanAllSkinsCache();
 			$this->flash->addMessage('info', "file created");
 		}
 		else
@@ -236,7 +241,7 @@ class AdminSkinEditorController extends Controller
 			'version' => $skinDir->version,
 			'active' => 0
 		]);
-		
+		$this->cache->cleanAllSkinsCache();
 		
 		return $response
 		  ->withHeader('Location', $this->router->urlFor('admin.skinlist'))

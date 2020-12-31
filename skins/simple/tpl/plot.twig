@@ -18,17 +18,77 @@
 		<!-- /paginator -->
 		<div class="card my-2" >
 		  <div class="card-header">
-			<strong>{{ title }}</strong>
+			<strong>{% if locked %}<i class="fas fa-lock text-danger mx-2"></i> {% endif %}{{ title }}</strong>{% if auth.admin %} 
+			<button type="button" class="btn btn-outline-warning btn-sm float-right mx-2" data-toggle="modal" data-target="#editPlotModal">
+			  {{ trans('edit') }}
+			</button>
+			
+			<!-- Modal -->
+			<div class="modal fade" id="editPlotModal" tabindex="-1" role="dialog" aria-labelledby="editPlotModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			  <form method="post" action="{{ path_for('board.lock.plot') }}">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="editPlotModalLabel">{{ trans('edit') }}: {{ title }}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					
+						<div class="control-group">
+							<input type="hidden" name="id" value="{{ plot.plot_id }}">
+							<div class="form-group">
+								<input type="text" name="plot_name" class="form-control" aria-describedby="plotNameHelp" id="plot_name" value="{{ title }}">
+								<small id="plotNameHelp" class="form-text text-muted">{{ trans('edit plot name') }}.</small>
+							</div>
+							<div class="form-group">
+							<label for="boardSelect">{{ trans('board') }}</label>
+							<select class="form-control" id="boardSelect" name="board_select">
+							  {% for boardSelect in board_list %}
+							  <option value="{{ boardSelect.id }}">{{ boardSelect.board_name }}</option>
+							  {% endfor %}
+							</select>
+						  </div>
+							<div class="row">
+								<div class="col-auto">
+									<label class="control control-checkbox" for="hidden">{{ trans('hidden') }}
+										<input type="checkbox" id="hidden" name="hidden" {% if hidden %}checked{% endif %}>
+										 <div class="control_indicator"></div>
+									</label>
+								</div>
+								<div class="col-auto">	
+									<label class="control control-checkbox" for="lock">{{ trans('locked') }}
+										<input type="checkbox" id="lock" name="lock" {% if locked %}checked{% endif %}>
+										 <div class="control_indicator"></div>	
+									</label>
+								</div>
+							</div>
+						</div>		
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit" class="btn btn-success">{{ trans('submit') }}</button>
+				  </div>
+				</div>
+				</form>
+			  </div>
+			</div>
+				{% endif %}
 		  </div>
 		 </div>		
 		{% for post in plot.posts %}
 		<!-- one posts -->
+		{% if post.hidden == 0 or auth.admin %}
 		<div id="post-{{ post.id }}" class="card mb-3">
 		 <div class="card-body">
 		  <div class="row mx-0">
 			<div class="col-2 border-right d-none d-md-block p-2 text-center">
+			{% if post.hidden %}<i class="far fa-eye-slash"></i> {{ trans('hidden') }}{% endif %}
 				<p class="fs-15b m-2"><a href="{{ post.user_url }}">{{ post.username_html | raw }}</a></p>
-				<!-- <p class="fs-10b m-0 {% if 1==1%}fc-green{% else %}fc-g{% endif %}">{% if 1==1 %}online{% else %}offline{% endif %}</p> -->
+				<p class="fs-10b m-0 {% if isOnline(post.user_id) %}fc-green{% else %}fc-g{% endif %}">
+					{% if isOnline(post.user_id) %}online{% else %}offline{% endif %}
+				</p> 
 				<img src="{{ post.avatar }}" class="rounded-circle mx-auto d-block post-av" alt="{{ post.username }}">
 				<div class="mx-auto w-75">
 				<p class="fs-12 m-2">{{ post.group | raw }}</p><br />
@@ -57,8 +117,9 @@
 			<div class="col-12 col-md-10">
 			 
 				<div class="d-none d-md-block card-title fs-10">Posted: {{ post.created_at }}<a <a id="report-{{ post.id }}" href="#" class="float-right raport"><i class="fas fa-exclamation-circle"></i> {{ trans('Report post') }}</a></div>
-				<div id="content-{{ post.id }}" class="card-text">{{ post.content|raw }}</div>
-				
+				<div id="content-{{ post.id }}" class="card-text">{{ post.content|raw }}
+				</div>
+				{% if post.edit_by %}<hr /><small class="float-left mx-4">{{ trans('edit by') }}: {{ post.edit_by }}</small>{% endif %}
 			  
 			  
 			</div>
@@ -70,12 +131,20 @@
 				<a id="post-edit-{{ post.id }}" class="post-edit fas fa-edit point"  title="{{ trans('edit') }}"></a>
 				</small>
 				{% endif %}
+				{% if auth.admin %}
+				<small class="float-left my-auto mx-2">
+				<a href="{{ path_for('admin.user.edit', {'id': post.user_id}) }}" class="post-edit fas fa-exclamation-triangle"  title="{{ trans('moderate') }}"></a>
+				</small>
+				{% endif %}
+				
 				<small class="likebox float-right my-auto">
 				<span class="badge badge-secondary mr-3 my-1 fs-15">{{ post.post_reputation }} <i class="far fa-thumbs-up"></i></span>
 				{% if auth.check %}<a id="like-{{ post.id }}" class="far fa-thumbs-up fa-2x likeit"></a>
 				{% endif %}</small>
+				
 			  </div>
 		</div>
+		{% endif %}
 		<!-- /one posts -->	
 		{% endfor %}
 	<!-- paginator -->
@@ -106,7 +175,9 @@
 				</div>
 			</div>
 		</div>
-	</div>	
+	</div>
+	{% else %}
+	
 	<!-- /Quick Reply -->	
 	{% endif %}
 	
@@ -116,8 +187,82 @@
 	</div>
 
 {% endblock %}
-
 {% block endcontent %}
+<!-- Modal report post -->
+<div class="modal fade" id="RaportModal" tabindex="-1" role="dialog" aria-labelledby="RaportModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+	<div class="modal-content text-center ">
+	  <div class="modal-header bg-light">
+		<h5 class="modal-title " id="RaportModal">{{ trans('Raport Post') }}</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		  <span aria-hidden="true">&times;</span>
+		</button>
+	  </div>
+	  <div class="modal-body">
+		<form action="#" method="post">
+			<div class="input-group">
+			  <select class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+				{% for reason in reasons %}
+				<option value="{{reason.id}}">{{ trans(reason.reason) }}</option>
+				{% endfor %}
+			  </select>
+			  <div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="button">Report</button>
+			  </div>
+			</div>
+		</form>
+	  </div>
+
+	</div>
+  </div>
+</div>
+<!-- Modal report post -->
+{% if auth.check %}
+
+	<!-- Modal edit post -->
+	<div class="modal fade" id="editPost" tabindex="-1" role="dialog" aria-labelledby="editPost" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content text-center ">
+		  <div class="modal-header bg-light">
+			<h5 class="modal-title " id="editPost">{{ trans('Edit Post') }}</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<form id="editPostForm" action="#" method="post">
+
+				<div class="input-group text-left">
+					<input type="hidden" id="editPlotID" value="">
+					<textarea id="editPostJodit" name="editor"></textarea>
+					</div>
+					{% if auth.admin > 1 %}
+					<div class="row mt-2">
+						<div class="col">
+						<div class="control-group text-left ">
+							<label class="control control-checkbox" for="hidePost">{{ trans('hide post') }}
+								<input type="checkbox" id="hidePost" name="hide">
+								<div class="control_indicator mt-1"></div>
+							</label>
+						</div>
+						</div>
+						<div class="col">
+							<button id="post-edit-btn" type="button" class="btn btn-light float-right my-auto">{{ trans('submint edit') }}</button>
+						</div>
+					</div>
+					{% endif %}
+
+				 
+
+			</form>
+		  </div>
+
+		</div>
+	  </div>
+	</div>
+	<!-- Modal edit post -->
+
+{% endif %}
 <link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
 <script src="{{base_url() }}/public/scripts/plot.js"></script>
@@ -126,5 +271,4 @@ var urlForReply = "{{ path_for('board.replyPost') }}";
 var urlEditPost = "{{ path_for('board.edit') }}";
 var likePost = "{{ path_for('board.likeit') }}";
 </script>
-
 {% endblock %}

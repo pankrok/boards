@@ -70,6 +70,11 @@ return function(App $app)
 		return new Application\Modules\Auth\ForgetPasswordController($container);
 	});
 	
+	$container->set('OnlineController', function($container)
+	{
+		return new Application\Modules\User\OnlineController($container);
+	});
+	
 	# Admin controllers section
 	
 	$container->set('AdminHomeController', function($container)

@@ -15,6 +15,7 @@ class PostsModel extends Model
 			'content',
 			'post_reputation',
 			'hidden',
+			'edit_by'
         ];
     
 }

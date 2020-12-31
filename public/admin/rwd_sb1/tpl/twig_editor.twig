@@ -8,7 +8,7 @@
 	<div class="col-sm col-md-3">
 		<div class="list-group vh-100 overflow-auto">
 		{% for key, val in list %}
-		  <a href="{{ path_for('admin.skin.twig.edit', {'skin_id': skin_id, 'id': key}) }}" class="list-group-item list-group-item-action" {% if key == id %}active{% endif %}>{{ val }}</a>
+		  <a href="{{ path_for('admin.skin.'~type~'.edit', {'skin_id': skin_id, 'id': key}) }}" class="list-group-item list-group-item-action" {% if key == id %}active{% endif %}>{{ val }}</a>
 		  {% endfor %} 
 		</div>
 	</div>
@@ -28,7 +28,7 @@
 			  <div class="modal-dialog" role="document">
 				<div class="modal-content">
 				  <div class="modal-header">
-					<h5 class="modal-title" id="saveTplModalLabel">Save template</h5>
+					<h5 class="modal-title" id="saveTplModalLabel">{{ trans('admin.submit') }}</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					  <span aria-hidden="true">&times;</span>
 					</button>

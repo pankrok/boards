@@ -112,6 +112,7 @@ $container->set('view', function($container){
 	if($twigSettings['debug']) $view->addExtension(new \Twig\Extension\DebugExtension());
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
+	$view->addExtension(new Application\Core\Modules\Views\Extensions\OnlineExtension($container->get('OnlineController')));
 
 	if(file_exists(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'))
 	{
@@ -171,6 +172,7 @@ $container->set('adminView', function($container){
 
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
+	
 	
 	$filter = new \Twig\TwigFilter('base64_decode', function ($string) {
 		return base64_decode($string);

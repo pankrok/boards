@@ -1,0 +1,30 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+      
+        <h1>{{ trans('admin.cache') }}</h1>
+		
+		<p>{{ trans('admin.clean cache') }}:</p>
+		<form action="{{ path_for('admin.cache') }}" method="post">
+		<input type="hidden" name="p" value="1">
+		<div class="row p-4">
+			<div class="col-12 mx-auto form-check">
+			<label class="control control-checkbox" for="objects">{{ trans('admin.objects') }}
+				<input type="checkbox" class="form-check-input" id="objects" name="objects">
+				<div class="control_indicator mt-1"></div>
+			</label>
+			<label class="control control-checkbox" for="skins">{{ trans('admin.skins') }}
+				<input type="checkbox" class="form-check-input" id="skins" name="skins">
+				<div class="control_indicator mt-1"></div>
+			</label>
+
+			  </div>
+			  <div class="col-12 mt-4">
+			  <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
+			  </div>
+			</div>
+		  
+		</form>
+		
+{% endblock %}

@@ -18,8 +18,10 @@ createCFG();echo '<div class="col-12"><div class="message blue">CFG created! <sp
 	  adres panelu admina:<br>
 	  <input type="text" name="admin" value="<?php if(isset($_POST['admin']))echo $_POST['admin']; ?>">
 	 <small>zostaw puste aby logować się domena.pl/acp</small>
-	  <br><br>
-	  <input class="mx-auto btn" type="submit" value="Submit">
+	  <?php if(!$next){ echo'
+				<br><br>
+				<input class="mx-auto btn" type="submit" value="Submit">
+			'; }?>
 	</form> 
 
 

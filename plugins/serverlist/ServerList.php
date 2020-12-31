@@ -53,7 +53,7 @@ class ServerList implements PluginInterface
 			  `port` varchar(5) NOT NULL,
 			  `admin` varchar(255) NOT NULL,
 			  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+			  `created_at` timestamp NULL,
 			   PRIMARY KEY (`id`)";
 			  
 		PluginController::createTable('serverlist', $q);
@@ -69,6 +69,7 @@ class ServerList implements PluginInterface
 
 	public function panel($data)
 	{
+		$cacheTime = json_decode(file_get_contents($data->getPluginsDir() . '/ServerList/data/servers.json') ,true);
 		if(isset($_POST['add']))
 		{
 			ServerListModel::create([
@@ -89,6 +90,8 @@ class ServerList implements PluginInterface
 			$server->admin = $_POST['admin'];
 			$server->save();
 		}
+		if(isset($_POST['add']))
+		
 		
 		if(isset($_POST['id']) && isset($_POST['delete']))
 		{
@@ -102,10 +105,16 @@ class ServerList implements PluginInterface
 		
 		$servers = ServerListModel::get()->toArray();
 		$data->setAdminTwigData('servers', $servers);
+		$data->setAdminTwigData('cacheTime', $cacheTime);
 	}
 
     public function showList($data)
     {
+		$cacheTime = json_decode(file_get_contents($data->getPluginsDir() . '/ServerList/data/servers.json') ,true);
+		$cache = $data->cache();
+		$cache->setName('serverlist');
+		if(!$content = $cache->receive('list'))
+		{
 			$content = '<div class="card border-light mb-3">';
 			$text = file_get_contents($data->getPluginsDir() . '/ServerList/data/server_head.txt');
 			$content .= sprintf($text, 'nazwa', 'adres', 'mapa', 'graczy', 'max', 'online', 'opiekun');
@@ -157,7 +166,9 @@ class ServerList implements PluginInterface
 				
 			}
 			
-		$content .= '</div>';
+			$content .= '</div>';
+			$cache->store('list', $content, $cacheTime);
+		}
 		$data->setTwigData('serverlist', $content);		
 		return true;
     }

@@ -5,6 +5,9 @@
   <li class="nav-item">
     <a class="nav-link" href="{{ path_for('admin.plugins.ext', {'pluginName': 'ServerList', 'param1': 'add'}) }}">Dodaj serwer</a>
   </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{ path_for('admin.plugins.ext', {'pluginName': 'ServerList', 'param1': 'settings'}) }}">Ustawienia</a>
+  </li>
 
 </ul>
 
@@ -15,6 +18,10 @@
 {% elseif params.1 == 'edit' %}
 
 	{% include 'ServerList/twig/edit.twig' %}
+
+{% elseif params.1 == 'settings' %}
+
+	{% include 'ServerList/twig/settings.twig' %}
 
 {% else %}
 

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Application\Modules\User;
 
 use Application\Models\UserModel;
@@ -77,7 +77,11 @@ class UserPanelController extends Controller
 			{
 				$page = self::findPage($v['created_at'], $v['plot_id']);
 				$posts[$k]['url'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($v['plot_name']) . '/' . $v['plot_id'] . '/'. $page . '#post-'. $v['id'];		
-			}			
+			}
+			$html = $this->group->getGroupDate($data->main_group, $data->username);
+			$data['name_html'] = $html['username'];
+			$data['group_name'] = $html['group'];
+			
 			$title = $this->translator->trans('lang.user') . ': ' .$data->username;
 			$this->view->getEnvironment()->addGlobal('posts', $posts);
 			$this->view->getEnvironment()->addGlobal('profile', $data);

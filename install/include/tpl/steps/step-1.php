@@ -29,8 +29,11 @@ if($_POST)
 	  	  <br>
 	  prefix:<br>
 	  <input type="text" name="prefix" value="<?php if(isset($_POST['prefix']))echo $_POST['prefix']; ?>">
-	  <br><br>
-	  <input class="mx-auto btn" type="submit" value="Submit">
+	  <?php if(!$next){ echo'
+				<br><br>
+				<input class="mx-auto btn" type="submit" value="Submit">
+			'; }?>
+	  
 	</form> 
 
 

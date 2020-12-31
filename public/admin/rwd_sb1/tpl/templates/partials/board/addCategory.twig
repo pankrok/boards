@@ -1,19 +1,27 @@
 <div class="p-2">
-<form action="{{ path_for('admin.add.category') }}" method="post" id="addCategory">
-  <div class="row">
-    <div class="col-5-md p-1">
-      <input type="text" class="form-control" placeholder="{{ trans('admin.category name') }}" name="name">
-    </div>
-    <div class="col-5-md p-1">
-      <input type="text" class="form-control" placeholder="{{ trans('admin.order') }}" name="order">
-    </div>
-	<div class="col-2-md p-1">
-      <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
-    </div>
-  </div>
-  <div class="form-check">
-		<input type="checkbox" class="form-check-input" name="active" checked>
-		<label class="form-check-label" for="exampleCheck1">{{ trans('admin.active') }}</label>
-    </div>
-</form>
-</div>
+	<form action="{{ path_for('admin.add.category') }}" method="post" id="addCategory">
+	  <div class="row">
+		<div class="col p-1">
+		  <small id="nameHelp" class="form-text text-muted text-center">{{ trans('admin.category name') }}.</small>
+		  <input type="text"  aria-describedby="nameHelp" class="form-control" placeholder="{{ trans('admin.category name') }}" name="name" value="{{ category.name }}">
+		
+		</div>
+		<div class="col p-1">
+		 <small id="orderHelp" class="form-text text-muted text-center">{{ trans('admin.order') }}.</small>
+		  <input type="text" aria-describedby="orderHelp" class="form-control" placeholder="{{ trans('admin.order') }}" name="order" value="{{ category.category_order }}">
+		 
+		</div>
+		<div class="col p-1 mx-4 mt-4">
+			<label class="control control-checkbox" for="active">{{ trans('admin.active') }}
+				<input type="checkbox" id="active" class="form-check-input" name="active" {% if category.acrive %}checked{% endif %}>
+				<div class="control_indicator mt-1"></div>
+			</label>
+		</div>
+		<div class="col mt-3 p-1">
+		  <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
+		</div>
+	  
+	  
+		</div>
+	</form>
+	</div>

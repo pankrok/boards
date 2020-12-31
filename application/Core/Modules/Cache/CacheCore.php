@@ -169,6 +169,18 @@ class CacheCore
 		
 	}
 	
+	public function cleanAllSkinsCache()
+	{
+		$dirs = scandir(MAIN_DIR . '/skins');
+		$dirs = array_diff($dirs, ['.', '..']);
+
+		foreach($dirs as $dir)
+		{
+			self::clearTwigCache($dir);
+		}
+		
+	}
+	
 	private function getDirContents($dir, &$results = array()) 
 	{
 		$files = scandir($dir);

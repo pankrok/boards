@@ -36,6 +36,7 @@ class CacheMiddleware extends Middleware
 		
 		$routeName = $routeContext->getRoutingResults()->getUri();
 		$cache = $this->container->get('cache');
+		$cache->deleteExpired();
 		
 		$cache->setName($name);
 		if(!$cacheData = $cache->receive($routeName))

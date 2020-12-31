@@ -71,7 +71,7 @@ class BoardController extends Controller
 		
 		foreach($data as $k => $v)
 		{
-			$postsCount = PostsModel::where('plot_id', $v['id'])->count();
+			$postsCount = PostsModel::where([['plot_id', $v['id']], ['hidden', 0]])->count();
 			$lastPostData = PostsModel::where('plot_id', $v['id'])
 										->orderBy('created_at', 'desc')
 										->join('users', 'users.id', '=', 'posts.user_id')

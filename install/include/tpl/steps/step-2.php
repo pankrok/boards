@@ -22,9 +22,10 @@ if(($_POST))
 	  	  <br>
 	  password validation:<br>
 	  <input type="password" name="passwordv" value="<?php if(isset($_POST['passwordv']))echo $_POST['passwordv']; ?>">
-	  
-	  <br><br>
-	  <input class="mx-auto btn" type="submit" value="Submit">
+	  <?php if(!$next){ echo'
+				<br><br>
+				<input class="mx-auto btn" type="submit" value="Submit">
+			'; }?>
 	</form> 
 
 

@@ -78,7 +78,7 @@ class AdminSkinsBoxesController extends Controller
 		$this->adminView->getEnvironment()->addGlobal('skin_id', $arg['skin_id']);
 		
 			
-														
+		$this->cache->cleanAllSkinsCache();										
 		return $this->adminView->render($response, 'edit_module.twig');														
 	}
 	
@@ -211,7 +211,7 @@ class AdminSkinsBoxesController extends Controller
 		if($skins_boxes && $box && $costum_box)
 		{
 			$this->flash->addMessage('success', 'module added');
-			
+			$this->cache->cleanAllSkinsCache();
 		}
 		else
 		{
@@ -233,6 +233,7 @@ class AdminSkinsBoxesController extends Controller
 		$skins_boxes->active = json_encode($handler);
 		$skins_boxes->save();
 		
+		$this->cache->cleanAllSkinsCache();
 		return $response
 				->withHeader('Location', $this->router->urlFor('admin.modules.skin.get', ['route' => $body['route'], 'id' => $body['skin_id']]))
 				->withStatus(302);
@@ -247,7 +248,7 @@ class AdminSkinsBoxesController extends Controller
 		
 		if($costum_box->delete())
 		$box->delete();
-		
+		$this->cache->cleanAllSkinsCache();
 		
 		return $response
 				->withHeader('Location', $this->router->urlFor('admin.modules.skin.get', ['route' => 'home', 'id' => $body['skin_id']]))

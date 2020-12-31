@@ -14,20 +14,20 @@
         <div class="col-lg py-2 order-2 bg-white rounded">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">Profile</a>
+                    <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">{{ trans('user.profile') }}</a>
                 </li>
                 <!--<li class="nav-item">
                     <a href="" data-target="#messages" data-toggle="tab" class="nav-link">Messages</a>
                 </li>-->
         {% if can_edit %}
         <li class="nav-item">
-                    <a href="" data-target="#edit" data-toggle="tab" class="nav-link">Edit</a>
+                    <a href="" data-target="#edit" data-toggle="tab" class="nav-link">{{ trans('edit') }}</a>
                 </li>
         {% endif %}
             </ul>
             <div class="tab-content py-4">
                 <div class="tab-pane active" id="profile">
-                    <h5 class="mb-3">User Profile </h5>
+                    <h5 class="mb-3">{{ trans('User Profile') }} </h5>
                     <div class="row">        
                         <div class="col-md-12">
                             <h5 class="mt-2"><i class="fas fa-clock"></i> {{ trans('last 20 posts') }}</h5>
@@ -132,14 +132,13 @@
         </div>
         <div class="col-lg-3 order-1 text-center">
     
-      
-      <div class="avatar-status {% if 1==1 %}online{% else %}offline{% endif %}"></div>  
+      <div class="avatar-status {% if isOnline(profile.id) %}online{% else %}offline{% endif %}"></div>  
             <img src="{% if profile.avatar %}{{ base_url() }}/public/upload/avatars/{{profile._150}}{% else %}{{ base_url() }}/public/img/avatar.png{% endif %}" class="profile-av mx-auto fluid rounded-circle d-block bg-white" alt="avatar">
       
       {% if can_edit %}<a class="avatar-change" href="#" data-toggle="modal" data-target="#changeAvatar"></a>{% endif %}
       
       
-      <h2 class="fs-30b">{{ profile.name_html | raw }}</h2>
+      <h2 class="fs-30b mt-4">{{ profile.name_html | raw }}</h2>
       <h3 class="fs-15b">{{ profile.group_name | raw }}</h3>
       
       <!-- module -->

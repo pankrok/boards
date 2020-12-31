@@ -1,7 +1,16 @@
 {% for skin in skins %}
-		<p><form action="{{ path_for('admin.add.skin.post') }}" method="post"><input type="hidden" id="skin_name" name="skin_name" value="{{ skin }}"><b>{{ skin }}</b>
-		<button class="btn btn-success" type="submint">Install</button>
-		</form></p>
+<form action="{{ path_for('admin.add.skin.post') }}" method="post">
+<div class="row py-2 border-bottom">
+
+	<div class="col">
+		<input type="hidden" id="skin_name" name="skin_name" value="{{ skin }}"><b>{{ skin }}</b>
+	</div>
+	<div class="col-auto">
+		<button class="btn btn-outline-success btn-sm" type="submint">{{ trans('admin.install') }}</button>
+	</div>
+
+</div>
+</form>
 {% endfor %}
 {% if not skins %}
 

@@ -91,6 +91,7 @@ function editPost(id, len){
 				  url: urlEditPost,
 				  data: { 
 				  'content': 	$('#editPostJodit').val(),
+				  'hide': 	$('#hidePost').val(),
 				  'post_id': 	(id).substring(10,len),
 				  "csrf_name" : csrfName,
 				  "csrf_value" : csrfValue
@@ -119,6 +120,7 @@ $("#quickReply-btn").click(function () {
 var link = window.location + "",
     data = link.split("#");
 $(function () {
+	$('#hidePost').val(0)
     setTimeout(function () {
         scrollToAnchor(data[1]);
     }, 500),
@@ -136,5 +138,14 @@ $(function () {
                 $("#post-edit-btn").click(function () {
                     editPost(o.target.id, t);
                 });
+        });
+		
+        $('#hidePost').click(function(){
+            if($(this).prop("checked") == true){
+                $('#hidePost').val(1)
+            }
+            else if($(this).prop("checked") == false){
+                $('#hidePost').val(0)
+            }
         });
 });

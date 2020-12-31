@@ -12,11 +12,12 @@ return function(App &$app)
 	$debug = (bool)$container->get('settings')['core']['debug'];
 		
 	$app->addBodyParsingMiddleware();
-
+	
 	$app->add(new Application\Middleware\TrailingShashMiddleware(true));
-	$app->add(new Application\Middleware\OldInputMiddleware($container));
-	$app->add(new Application\Middleware\ModulesMiddleware($container));
+	$app->add(new Application\Middleware\BreadcrumbsMiddleware($container));
 	$app->add(new Application\Middleware\CacheMiddleware($container));
+	$app->add(new Application\Middleware\OldInputMiddleware($container));	
+	$app->add(new Application\Middleware\ModulesMiddleware($container));
 	$app->add(new Application\Middleware\EventMiddleware($container));
 	$app->add(new Application\Middleware\MessageMiddleware($container));
 

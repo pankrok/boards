@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 23, 2020 at 02:39 PM
+-- Generation Time: Dec 31, 2020 at 01:04 PM
 -- Server version: 10.1.47-MariaDB-0+deb9u1
--- PHP Version: 7.4.12
+-- PHP Version: 7.4.13
 
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -239,6 +239,7 @@ CREATE TABLE `brd_plots` (
   `pinned` tinyint(1) DEFAULT NULL,
   `pinned_order` int(11) DEFAULT NULL,
   `locked` tinyint(1) NOT NULL DEFAULT '0',
+  `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `posts_nuber` int(11) DEFAULT '0',
   `views` int(11) NOT NULL DEFAULT '0',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -273,7 +274,8 @@ CREATE TABLE `brd_posts` (
   `plot_id` int(11) NOT NULL,
   `content` text NOT NULL,
   `post_reputation` int(11) NOT NULL DEFAULT '0',
-  `hidden` tinyint(1) NOT NULL DEFAULT '1',
+  `hidden` tinyint(1) DEFAULT '0',
+  `edit_by` varchar(255) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -484,7 +486,8 @@ ALTER TABLE `brd_plugins`
 ALTER TABLE `brd_posts`
   ADD PRIMARY KEY (`id`),
   ADD KEY `plot_id` (`plot_id`),
-  ADD KEY `brd_posts_ibfk_2` (`user_id`);
+  ADD KEY `brd_posts_ibfk_2` (`user_id`),
+  ADD KEY `edit_by` (`edit_by`);
 
 --
 -- Indexes for table `brd_skins`
@@ -512,6 +515,7 @@ ALTER TABLE `brd_userdata`
 --
 ALTER TABLE `brd_users`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
   ADD KEY `main_group` (`main_group`),
   ADD KEY `avatar` (`avatar`);
 
@@ -529,7 +533,7 @@ ALTER TABLE `brd_boards`
 -- AUTO_INCREMENT for table `brd_boxes`
 --
 ALTER TABLE `brd_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `brd_categories`
@@ -547,7 +551,7 @@ ALTER TABLE `brd_chatbox`
 -- AUTO_INCREMENT for table `brd_costum_boxes`
 --
 ALTER TABLE `brd_costum_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `brd_groups`
@@ -577,7 +581,7 @@ ALTER TABLE `brd_menu`
 -- AUTO_INCREMENT for table `brd_pages`
 --
 ALTER TABLE `brd_pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `brd_plotread`
@@ -607,13 +611,13 @@ ALTER TABLE `brd_posts`
 -- AUTO_INCREMENT for table `brd_skins`
 --
 ALTER TABLE `brd_skins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `brd_skins_boxes`
 --
 ALTER TABLE `brd_skins_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `brd_userdata`
@@ -662,7 +666,8 @@ ALTER TABLE `brd_plots`
 --
 ALTER TABLE `brd_posts`
   ADD CONSTRAINT `brd_posts_ibfk_1` FOREIGN KEY (`plot_id`) REFERENCES `brd_plots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `brd_posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+  ADD CONSTRAINT `brd_posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `brd_posts_ibfk_3` FOREIGN KEY (`edit_by`) REFERENCES `brd_users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `brd_skins_boxes`

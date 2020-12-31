@@ -6,13 +6,13 @@
 
 {% block content %}
 <nav class="nav">
-  <a class="nav-link active" href="{{ path_for('admin.boards') }}">Back</a>
+  <a class="nav-link active" href="{{ path_for('admin.boards') }}">{{ trans('admin.back') }}</a>
 </nav>
 <div class="p-2">
 <form action="{{ path_for('admin.edit.board') }}/{{ id }}" method="post" id="addBoard">
   <div class="row">
 		<div class="form-group col-4">
-		<label for="SelectCategory">Select Category:</label>
+		<label for="SelectCategory">{{ trans('admin.select category') }}:</label>
 		<select class="form-control" id="SelectCategory" name="cat_id">
 		  {% for category in categories %}
 		  <option value="{{ category.id }}" {% if category.id == data.id %}selected{% endif %}>{{ category.name }}</option>	  
@@ -20,24 +20,26 @@
 		</select>
 	  </div>
 	  <div class="form-group col-4">
-		<label for="boardName">Board name</label>
+		<label for="boardName">{{ trans('admin.board name') }}</label>
 		<input type="text" class="form-control" id="boardName" name="name" value="{{ data.board_name }}">
 	  </div>
 	  <div class="form-group col-2">
-		<label for="boardOrder">Board order</label>
+		<label for="boardOrder">{{ trans('admin.order') }}</label>
 		<input type="text" class="form-control" id="boardOrder" name="order" value="{{ data.board_order }}">
 	  </div>
-	  <div class="form-check col-2">
-		<input type="checkbox" class="form-check-input" id="Active" name="visability" {% if data.active == true %}checked{% endif %}>
-		<label class="form-check-label" for="Acrive" >Active {{data.active}}</label>
+	  <div class="control-group col-2 mt-4">
+	  <label class="control control-checkbox mt-2" for="Active">{{ trans('admin.active') }}
+		<input type="checkbox" id="Active" name="visability" {% if data.active == true %}checked{% endif %}>
+		<div class="control_indicator mt-1"></div>
+	  </label>
 	  </div>
   </div> 
   <div class="form-group">
-    <label for="BoardDesc">Board description</label>
+    <label for="BoardDesc">{{ trans('admin.board description') }}</label>
     <textarea class="form-control" id="BoardDesc" rows="3" name="desc">{{ data.board_description }}</textarea>
   </div>
   <div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
    </div>
 </form>
 </div>

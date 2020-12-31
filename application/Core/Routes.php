@@ -6,6 +6,7 @@ use Slim\Routing\RouteCollectorProxy;
 #home
 $app->get('[/]', 'HomeController:index')->setName('home');
 $app->get('/cron[/{key}]', 'CronController:main')->setName('cron');
+$app->post('/online', 'OnlineController:setOnline')->setName('online');
 
 #page
 $app->get('/i[/{id}]', 'PageController:page')->setName('page');
@@ -24,6 +25,7 @@ $app->group('/plot', function (RouteCollectorProxy $plot) {
   $plot->post('/new/send/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
   $plot->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
   $plot->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
+  $plot->post('/lockplot', 'PlotController:lockPlot')->setName('board.lock.plot');
 });
 #sign
 $app->group('/auth', function (RouteCollectorProxy $auth) {
@@ -127,6 +129,7 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
   $admin->get('/settings', 'AdminSettingsController:index')->setName('admin.get.settings');
   $admin->post('/settings/save', 'AdminSettingsController:saveSettings')->setName('admin.post.settings');
   $admin->map(['GET', 'POST'], '/mail/settings', 'AdminSettingsController:mailer')->setName('admin.mail.settings');
+  $admin->map(['GET', 'POST'], '/cleancache', 'AdminSettingsController:cleanCache')->setName('admin.cache');
   
   $admin->group('/menu', function (RouteCollectorProxy $adminMenu) {
     $adminMenu->get('/list', 'AdminMenuController:index')->setName('admin.menu');

@@ -103,5 +103,16 @@ return [
 	'plugin info' => 'Informacje o pluginie',
 	
 	'update' => 'Aktualizacja',
+	'clean cache' => 'Wyczyść cache',
+	'objects' => 'obiektów',
+	'skins' => 'skórek',
+	'object cache removed' => 'pamięć cache obiektów została usunięta',
+	'skins cache removed' => 'pamięć cache skórek została usunięta',
+	'back' => 'Powrót',
+	'add new module' => 'Dodaj nowy moduł',
+	'install' => 'Zainstaluj',
+	'deactive' => 'Wyłącz',
+	'activate' => 'Włącz',
+	'uninstall' => 'Odinstaluj',
 	
 ];

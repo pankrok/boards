@@ -48,4 +48,24 @@ class AdminSettingsController extends Controller
 		return $this->adminView->render($response, 'mail_settings.twig');
 	}
 	
+	public function cleanCache($request, $response)
+	{
+		$body = $request->getParsedBody();
+		$message = '';
+		if(isset($body['objects'])) 
+		{
+			$this->cache->clearCache();
+			$message .= $this->translator->trans('admin.object cache removed');
+		}
+		if(isset($body['skins'])) 
+		{
+			$this->cache->cleanAllSkinsCache();
+			if(isset($body['objects'])) $message .= ', ';
+			$message .=  $this->translator->trans('admin.skins cache removed');
+		}
+		if(isset($body['skins']) || isset($body['objects']))
+			$this->flash->addMessage('info', $message);
+			
+		return $this->adminView->render($response, 'cache.twig');	
+	}
 }

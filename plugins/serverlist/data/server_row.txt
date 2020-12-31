@@ -1,4 +1,4 @@
-<div class="row content-bg p-2 mx-4 my-1 text-center border border-secondary">
+<div class="row content-bg p-2 mx-4 my-1 text-center border border-secondary d-none d-md-flex">
 	<div class="col-12 col-md-4 m-auto"> 
 		<img class="rounded-circle" src="%s" /> %s
 	</div>

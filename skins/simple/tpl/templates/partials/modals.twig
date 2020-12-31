@@ -40,71 +40,7 @@
 	  </div>
 	</div>
 	<!-- Modal Login -->
-	
-	<!-- Modal report post -->
-	<div class="modal fade" id="RaportModal" tabindex="-1" role="dialog" aria-labelledby="RaportModal" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-		<div class="modal-content text-center ">
-		  <div class="modal-header bg-light">
-			<h5 class="modal-title " id="RaportModal">{{ trans('Raport Post') }}</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			  <span aria-hidden="true">&times;</span>
-			</button>
-		  </div>
-		  <div class="modal-body">
-			<form action="#" method="post">
-				<div class="input-group">
-				  <select class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-					{% for reason in reasons %}
-					<option value="{{reason.id}}">{{ trans(reason.reason) }}</option>
-					{% endfor %}
-				  </select>
-				  <div class="input-group-append">
-					<button class="btn btn-outline-secondary" type="button">Report</button>
-				  </div>
-				</div>
-			</form>
-		  </div>
 
-		</div>
-	  </div>
-	</div>
-	<!-- Modal report post -->
-	
-	
-	{% if auth.check %}
-	
-		<!-- Modal report post -->
-		<div class="modal fade" id="editPost" tabindex="-1" role="dialog" aria-labelledby="editPost" aria-hidden="true">
-		  <div class="modal-dialog" role="document">
-			<div class="modal-content text-center ">
-			  <div class="modal-header bg-light">
-				<h5 class="modal-title " id="editPost">{{ trans('Edit Post') }}</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				  <span aria-hidden="true">&times;</span>
-				</button>
-			  </div>
-			  <div class="modal-body">
-				<form id="editPostForm" action="#" method="post">
-
-					<div class="input-group text-left" style="height: 380px">
-						<input type="hidden" id="editPlotID" value="">
-						<textarea id="editPostJodit" name="editor"></textarea>
-						</div>
-					  <div class="input-group-append">
-						<button id="post-edit-btn" type="button" class="btn btn-light">{{ trans('submint edit') }}</button>
-					  </div>
-					 
-
-				</form>
-			  </div>
-
-			</div>
-		  </div>
-		</div>
-		<!-- Modal report post -->
-	
-	{% endif %}
 	
 	<!-- ***/Modals sections*** 
 	================================================== -->

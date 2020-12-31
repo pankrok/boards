@@ -3,7 +3,7 @@
 
 {% block content %}
 
-        <ul class="list-group">
+        <ul class="list-group mt-5">
 			{% for user in users %}
 		  <li class="list-group-item">
 			<a href="{{ path_for('admin.user.edit', {'id':user.id}) }}">{{ user.username }}</a>

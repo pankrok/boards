@@ -2,10 +2,15 @@
 
 
 {% block content %}
+<nav class="nav">
+  <a class="nav-link active" href="{{ path_for('admin.menu') }}">{{ trans('admin.back') }}</a>
+</nav>
 	<h1>Menu link: {{ menu.name|raw }}</h1>
-	
+
 	<form action="{{ path_for('admin.menu.manage') }}" method="post">
+	<div class="row">
 	{% if not menu %}
+	<div class="col">
 	   <div class="form-group">
 			<label for="exampleFormControlSelect1">{{ trans('admin.page') }}</label>
 			<select class="form-control" name="name">
@@ -14,14 +19,18 @@
 			{% endfor %}
 			</select>
 		  </div>
+	</div>
 	{% else %}
 	<input type="hidden" name="id" value="{{menu.id}}">	
 	{% endif %}
+	<div class="col">
 		<div class="form-group">
 			<label for="exampleFormControlInput1">{{ trans('admin.order') }}</label>
 			<input type="text" class="form-control" value="{{ menu.url_order }}" name="url_order">
 		 </div>
-		 
+	</div>
+	</div>	
 		 <button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
 	</form>
+	
 {% endblock %}

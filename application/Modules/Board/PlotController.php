@@ -74,7 +74,7 @@ class PlotController extends Controller
 		
 			
 
-			$data = PostsModel::where('posts.plot_id', $arg['plot_id'] )
+			$data = PostsModel::where('posts.plot_id', $arg['plot_id'])
 					->orderBy('posts.created_at', 'ASC')
 					->skip(($paginator->getCurrentPage()-1)*$paginator->getItemsPerPage())
 					->take($paginator->getItemsPerPage())
@@ -97,12 +97,17 @@ class PlotController extends Controller
 			$plot_data['plot_data'] = $data;	
 			$plot_data['locked'] = $plot->locked;	
 			$plot_data['title'] = $plot->plot_name;
+			$plot_data['hidden'] = $plot->hidden;
+			
+			$boardList = BoardsModel::select('id', 'board_name')->get()->toArray();
 			
 			$cache = [
 				'paginator' => $paginator,
 				'data' => $data,
 				'locked' => $plot->locked,	
-				'plot_name' => $plot->plot_name
+				'plot_name' => $plot->plot_name,
+				'hidden' => $plot->hidden,
+				'plotList' => $boardList 
 			];
 			$this->cache->store($routeName, $cache, $this->settings['cache']['cache_time']);
 		}
@@ -112,6 +117,8 @@ class PlotController extends Controller
 			$plot_data['plot_data'] = $cache['data'];	
 			$plot_data['locked'] = $cache['locked'];	
 			$plot_data['title'] = $cache['plot_name'];
+			$plot_data['hidden'] = $cache['hidden'];
+			$boardList = $cache['plotList'];
 			$this->cache->deleteExpired();
 			
 		}
@@ -138,11 +145,11 @@ class PlotController extends Controller
 			$v->save();
 		}	
 			
-		
-		
 		$this->view->getEnvironment()->addGlobal('paginator', $paginator);
+		$this->view->getEnvironment()->addGlobal('board_list', $boardList);
 		$this->view->getEnvironment()->addGlobal('title', $plot_data['title']);
 		$this->view->getEnvironment()->addGlobal('locked', $plot_data['locked']);
+		$this->view->getEnvironment()->addGlobal('hidden', $plot_data['hidden']);
 		if($plot_data) $this->view->getEnvironment()->addGlobal('plot', [
 															'posts' => $plot_data['plot_data'], 
 															'plot_id' => $arg['plot_id'],
@@ -393,8 +400,9 @@ class PlotController extends Controller
 		{	
 		
 			$body['content'] = $this->purifier->purify($body['content']);
-			
+			$post->hidden = ($body['hide'] ? 1 : 0);
 			$post->content = $body['content'];
+			$post->edit_by = $this->auth->user()['username'];
 			$post->save() ? $data['response'] = 'success' : $data['response']  = 'danger';
 			
 			$page = $this->UserPanelController->findPage($post->created_at, $post->plot_id);
@@ -426,5 +434,22 @@ class PlotController extends Controller
 		{
 			return $response->withStatus(403);
 		}
+	}
+	
+	public function lockPlot($request, $response)
+	{
+		$body = $request->getParsedBody();
+		$plot = PlotsModel::find($body['id']);
+		$plot->plot_name =  $this->purifier->purify($body['plot_name']);
+		$plot->board_id = $body['board_select'];
+		$plot->locked = $body['lock'] ? 1 : 0;
+		$plot->hidden = $body['hidden'] ? 1 : 0;
+		$plot->save();
+		$body['lock'] ? $lock = 'locked' : $lock = 'ulocked';
+		
+		$this->flash->addMessage('success' , $this->translator->trans('Plot '.$lock.' success!') );
+		return $response
+		  ->withHeader('Location', $this->router->urlFor('board.getPlot', ['plot_id'=>$body['id'], 'plot' => $this->urlMaker->toUrl($plot->plot_name)]))
+		  ->withStatus(302);
 	}
 }

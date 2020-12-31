@@ -1,8 +1,6 @@
 {% extends 'templates/main.twig' %}
 
 {% block content %}
-{{ plugin_serverlist | raw }}
-
 
 <div class="row">
 
@@ -88,8 +86,6 @@
 	
 	
 	<!-- boardstats -->
-{{ plugin_bar | raw }}
-
 	<div class="col-12 order-3">
 	
 	<div class="card border-light mb-3">
@@ -97,7 +93,7 @@
 		
 		<div class="card-body collapse show" id="board-stats">
 			<h6 class="card-title"><b>{{ trans('Whos Online') }}:</b></h6>
-			<p class="card-text">{% for user in stats.online %}<a href="{{ base_url() }}/user/{{ setString.toUrl(user.username) }}/{{ user.id }}">{{ user.username_html  | raw }},</a> {% endfor %}</p>
+			<p class="card-text">{% for user in online %}<a href="{{ user.url }}">{{ user.username | raw }},</a> {% endfor %}</p>
 			<h6 class="card-title"><b>{{ trans('Group legend') }}:</b></h6>
 			<p class="card-text">{% for group in boards.groups_legend %}{{ group.grupe_name |raw }}, {% endfor %}</p>
 			

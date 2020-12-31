@@ -53,7 +53,7 @@ class HomeController extends Controller
 			
 			$this->view->getEnvironment()->addGlobal('user', $user);
 		}
-		$this->view->getEnvironment()->addGlobal('sidebar_active', true);
+		$this->view->getEnvironment()->addGlobal('online', $this->OnlineController->getOnlineList());
 		$this->view->getEnvironment()->addGlobal('stats', $this->StatisticController->getStats());
 		$this->event->addGlobalEvent('home.loaded');	
 		return $this->view->render($response, 'home.twig');	;

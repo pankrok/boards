@@ -27,17 +27,27 @@
 						<li class="list-group-item bg-white">
 						<div class="row w-100 fs-10b">
 							<div class="col-1 col-md-1"></div>
-							<div class="col-6 col-md-5">Topic / Author</div>	
-							<div class="col-4 col-md-2 text-center">Replies / Views</div>
-							<div class="col-2 d-none d-md-block text-center">Rating</div>
-							<div class="col-2 d-none d-md-block text-center">Last post</div>
+							<div class="col-6 col-md-5">{{ trans('Topic') }} / {{ trans('Author') }}</div>	
+							<div class="col-4 col-md-2 text-center">{{ trans('replys') }} / {{ trans('Views') }}</div>
+							<div class="col-2 d-none d-md-block text-center">{{ trans('Rating') }}</div>
+							<div class="col-2 d-none d-md-block text-center">{{ trans('Last post') }}</div>
 						</div>
 						</li>
 						{% for plot in board.plots %}
+						{% if plot.hidden == 0 or auth.admin %}
 						<!-- one plot -->
 						<li class="list-group-item bg-light">
 						<div class="row w-100">
-							<div class="col-1 col-md-1"><i class="fas fa-file"></i></div>
+							<div class="col-1 col-md-1">
+							{% if plot.locked %}
+								<i class="fas fa-lock text-danger"></i>
+							{% else %}
+								<i class="fas fa-file"></i>
+							{% endif %}
+							{% if plot.hidden %}
+								<span class="badge badge-info mx-2"><i class="far fa-eye-slash"></i></span>
+							{% endif %}
+							</div>
 							<div class="col-6 col-md-5">
 								<div class="row">
 									<div class="col-12"><h2><a href="{{ plot.url }}">{{ plot.plot_name }}</a></h2></div>
@@ -62,6 +72,7 @@
 						</div>
 						</li>
 						<!-- /one plot -->	
+						{% endif %}
 						{% endfor %}
 					</ul>
 

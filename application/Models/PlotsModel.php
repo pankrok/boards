@@ -18,6 +18,7 @@ class PlotsModel extends Model
 			'pinned',
 			'pinned_order',
 			'locked',
+			'hidden',
 			'views',
 	
         ];

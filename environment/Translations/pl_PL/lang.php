@@ -34,6 +34,10 @@ return [
 	'Email address' => 'Adres e-mail',
 	'Confirm Email address' => 'Potwierdź adres e-mail',
 	'Referrer' => 'Polecający',
+	'Author' => 'Autor',
+	'Views' => 'Odsłon',
+	'Rating' => 'Ocena',
+	'Board' => 'Tablica',
 	'Posts' => 'Postów',
 	'Threads' => 'Tematów',
 	'Newest Member' => 'Najnowszy',
@@ -79,5 +83,15 @@ return [
 	'submint edit' => 'Zmodyfikuj',
 	'First name' => 'Imię',
 	'Last name' => 'Nazwisko',
+	'Edit Post' => 'Edytuj post',
+	'user.profile' => 'Profil',
+	'User Profile' => 'Profil użytkownika',
+	'edit' => 'Edytuj',
+	'locked' => 'Zablokowany',
+	'hidden' => 'Ukryty',
+	'edit plot name' => 'Edycja nazwy tematu',
+	'hide post' => 'Ukryj post',
+	'submit' => 'Zapisz',
+	'board' => 'Tablica'
 	
 ];
