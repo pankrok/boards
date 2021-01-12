@@ -17,6 +17,7 @@ class SkinsBoxesModel extends Model
 						'box_id',
 						'box_order',
 						'side',
+						'hide_on_mobile',
 						'active'
 					];
 }

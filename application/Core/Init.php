@@ -95,6 +95,10 @@ $container->set('flash', function($container) {
 	return new \Slim\Flash\Messages;
 });
 
+$container->set('UnreadController', function($container) {
+	return new \Application\Modules\Board\UnreadController($container);	
+});
+
 $container->set('view', function($container){
 
 	$assets = $container->get('getBasePath') . '/public';
@@ -110,9 +114,11 @@ $container->set('view', function($container){
     
     $router = $container->get('router');
 	if($twigSettings['debug']) $view->addExtension(new \Twig\Extension\DebugExtension());
+	$view->addExtension(new \Twig\Extension\StringLoaderExtension());
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
 	$view->addExtension(new Application\Core\Modules\Views\Extensions\OnlineExtension($container->get('OnlineController')));
+	$view->addExtension(new Application\Core\Modules\Views\Extensions\UnreadExtension($container->get('UnreadController')));
 
 	if(file_exists(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'))
 	{

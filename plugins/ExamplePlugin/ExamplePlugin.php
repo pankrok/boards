@@ -34,7 +34,23 @@ class ExamplePlugin implements PluginInterface
 	public static function activation() : bool
 	{
 		PluginController::addToTpl('home.twig', '<!-- boardstats -->', '{{ plugin_bar | raw }}');
-		return true;
+		// {"home":1,"category.getCategory":1,"board.getBoard":0,"board.getPlot":0,"board.newPlot":1,"auth.signin":0,"auth.signup":0,"user.profile":0,"userlist":1}
+		$pagesArr = [
+				'home' => 1,
+				'category.getCategory' => 0,
+				'board.getBoard' => 0,
+				'board.getPlot' => 0,
+				'board.newPlot' => 0,
+				'auth.signin' => 0,
+				'auth.signup' => 0,
+				'user.profile' => 0,
+				'userlist' => 0
+			];
+			
+		$module = PluginController::addModule('', 'Example', 'Example plugin module', 'right', 0, $pagesArr);
+		$module ? $ret = true : $ret = false;
+		
+		return $ret;
 	}
 	
 	public static function deactivation() : bool

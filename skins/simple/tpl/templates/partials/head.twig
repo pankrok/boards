@@ -8,10 +8,5 @@
     <title>{{ main_title }}{% if title %} - {{ title }}{% endif %}</title>
 
     <link rel="canonical" href="{{ canonical }}">
-
-    <!-- Bootstrap core CSS -->
-    <link href="{{ assets }}/css/bootstrap.min.css" rel="stylesheet">
-	<link href="{{ assets }}/css/all.min.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-	<link href="{{ assets }}/css/dropzone.css" rel="stylesheet">
-    {{ skin_assets.css.main|raw }}
+	{{ skin_assets.css.loader|raw }}
+   

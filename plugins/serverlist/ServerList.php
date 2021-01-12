@@ -27,7 +27,7 @@ class ServerList implements PluginInterface
 			'boards_v' => '1.1.20',
 			'author' => 'PanKrok',
 			'website' => 's89.eu',
-			'desc' => ''
+			'desc' => '@twig_var: {{ plugin_serverlist | raw }},\n' . PHP_EOL . 'bla'
 		];
 		
 	} 
@@ -53,7 +53,7 @@ class ServerList implements PluginInterface
 			  `port` varchar(5) NOT NULL,
 			  `admin` varchar(255) NOT NULL,
 			  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			  `created_at` timestamp NULL,
+			  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
 			   PRIMARY KEY (`id`)";
 			  
 		PluginController::createTable('serverlist', $q);
@@ -113,15 +113,16 @@ class ServerList implements PluginInterface
 		$cacheTime = json_decode(file_get_contents($data->getPluginsDir() . '/ServerList/data/servers.json') ,true);
 		$cache = $data->cache();
 		$cache->setName('serverlist');
-		if(!$content = $cache->receive('list'))
-		{
-			$content = '<div class="card border-light mb-3">';
+		
+			$content = '';
 			$text = file_get_contents($data->getPluginsDir() . '/ServerList/data/server_head.txt');
 			$content .= sprintf($text, 'nazwa', 'adres', 'mapa', 'graczy', 'max', 'online', 'opiekun');
 			$servers = ServerListModel::get()->toArray();
 			if(empty($servers))
 				return false;
-				
+		
+		if(!$content = $cache->receive('list'))
+		{
 			$gq = new serverlist\GameQ3\GameQ3();
 			
 			foreach($servers as $k => $server)
@@ -139,7 +140,8 @@ class ServerList implements PluginInterface
 			}
 			
 			$results = $gq->requestAllData();
-			
+		
+		
 			foreach($results as $k => $result)
 			{
 				if($result["info"]['online']){
@@ -166,8 +168,8 @@ class ServerList implements PluginInterface
 				
 			}
 			
-			$content .= '</div>';
-			$cache->store('list', $content, $cacheTime);
+			
+			$cache->store('list', $content, $cacheTime['cache']);
 		}
 		$data->setTwigData('serverlist', $content);		
 		return true;

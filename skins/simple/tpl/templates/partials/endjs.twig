@@ -1,4 +1,13 @@
+	<!-- Dark Mode
+	================================================== -->
+	<link href="{{ assets }}/css/dark-mode.css" rel="stylesheet">
+	<script src="{{ assets }}/scripts/dark-mode-switch.min.js"></script>
 	
+	<!-- Bootstrap core CSS -->
+    <link href="{{ assets }}/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{ assets }}/css/all.min.css" rel="stylesheet">
+	{{ skin_assets.css.main|raw }}
+    
 	<!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -9,7 +18,4 @@
 	<script> var checkOnline = "{{ path_for('online') }}"; </script>
 	<script src="{{ assets }}/scripts/online.js"></script>
 	
-	<!-- Dark Mode
-	================================================== -->
-	<link href="{{ assets }}/css/dark-mode.css" rel="stylesheet">
-	<script src="{{ assets }}/scripts/dark-mode-switch.min.js"></script>
+	

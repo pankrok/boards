@@ -44,7 +44,7 @@ class ModulesMiddleware extends Middleware
 				$boxes[$position] = SkinsBoxesModel::where([['side', $position], ['skin_id', $activeSkin]])
 								->leftJoin('boxes', 'skins_boxes.box_id', 'boxes.id')
 								->leftJoin('costum_boxes', 'boxes.costum_id', 'costum_boxes.id')
-								->select('skins_boxes.side', 'skins_boxes.box_order', 'skins_boxes.active', 'boxes.costum_id', 'boxes.engine', 'costum_boxes.translate', 'costum_boxes.name_prefix', 'costum_boxes.name', 'costum_boxes.html')
+								->select('skins_boxes.side', 'skins_boxes.box_order', 'skins_boxes.active', 'skins_boxes.hide_on_mobile', 'boxes.costum_id', 'boxes.engine', 'costum_boxes.translate', 'costum_boxes.name_prefix', 'costum_boxes.name', 'costum_boxes.html')
 								->orderBy('skins_boxes.box_order', 'desc')->get()->toArray();
 				
 				

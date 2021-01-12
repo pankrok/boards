@@ -103,6 +103,61 @@ class PluginController
 		
 	}
 	
+	public static function addModule(string $prefix, string $name, string $html, string $side, int $order, array $pages): bool
+	{
+		if($side !== 'top' || $side !== 'bottom' || $side !== 'left' || $side !== 'right')
+			$side = 'top';
+		
+		$skinId = \Application\Models\SkinsModel::where('active', 1)->first()->id;
+		$costumBox = \Application\Models\CostumBoxModel::create([
+			'name_prefix' => $prefix,
+			'name' => $name,
+			'html' => $html
+		]);
+		
+		if(isset($costumBox))
+		{
+			$box = \Application\Models\BoxModel::create([
+				'costum_id' => $costumBox->id,
+				'costum' => 1
+			]);
+		}
+		else
+		{
+			return false;
+		}
+		
+		if(isset($box))
+		{	
+			$skinBoxes = \Application\Models\SkinsBoxesModel::create([
+				'skin_id' => $skinId,
+				'box_id' => $box->id,
+				'side' => $side,
+				'box_order' => $order,
+				'active' => json_encode($pages)
+			]);
+		}
+		else
+		{
+			return false;
+		}
+		
+		if(isset($skinBoxes))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	
+	public static function removeModule(string $name)
+	{
+		
+	}
+	
 	public static function createTable($table, $query)
 	{
 		$db = require(MAIN_DIR . '/environment/Config/db_settings.php');

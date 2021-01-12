@@ -96,7 +96,8 @@ class AdminSkinsController extends Controller
 			$this->flash->addMessage('success', 'skin added');
 		}
 		
-		return $response;
+		return $response->withHeader('Location', $this->router->urlFor('admin.skinlist'))
+		  ->withStatus(302)	;
 	}
 	
 	public function editSkin($request, $response)

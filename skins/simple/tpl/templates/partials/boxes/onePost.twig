@@ -1,0 +1,68 @@
+<!-- one posts -->
+		{% if post.hidden == 0 or auth.admin %}
+		<div id="post-{{ post.id }}" class="card mb-3">
+		 <div class="card-body">
+		  <div class="row mx-0">
+			<div class="col-2 border-right d-none d-md-block p-2 text-center">
+			{% if post.hidden %}<i class="far fa-eye-slash"></i> {{ trans('hidden') }}{% endif %}
+				<p class="fs-15b m-2"><a href="{{ post.user_url }}">{{ post.username_html | raw }}</a></p>
+				<p class="fs-10b m-0 {% if isOnline(post.user_id) %}fc-green{% else %}fc-g{% endif %}">
+					{% if isOnline(post.user_id) %}online{% else %}offline{% endif %}
+				</p> 
+				<img src="{{ post.avatar }}" class="rounded-circle mx-auto d-block post-av" alt="{{ post.username }}">
+				<div class="mx-auto w-75">
+				<p class="fs-12 m-2">{{ post.group | raw }}</p><br />
+
+				
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Posts') }}:</span> <span class="float-right">{{ post.posts }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Plots') }}:</span> <span class="float-right">{{ post.plots }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Join') }}:</span> <span class="float-right"> {{ post.created_at }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Reputatnion') }}:</span> <span class="float-right">{{ post.reputation }}</span></p><br />
+				</div>
+			</div>
+			
+			<!-- mobile author -->
+			<div class="col-md-2 d-block d-md-none px-0">
+				<div class="row mx-auto">
+					<div class="col-2 my-1 border-bottom border-dark">
+						<img src="{{ post.avatar }}" class="rounded-circle mx-auto d-block post-av " alt="{{ post.username }}">
+					</div>
+					<div class="col-10 my-1 border-bottom border-dark">
+					<p class="fs-12b mb-1"><a href="#">{{ post.username_html | raw }}</a></p>
+					<p class="fs-10 mb-1">Posted: stworzony o</p>
+					</div> 
+				</div>
+			</div>
+			<!-- /mobile author -->
+			<div class="col-12 col-md-10">
+			 
+				<div class="d-none d-md-block card-title fs-10">Posted: {{ post.created_at }}<a <a id="report-{{ post.id }}" href="#" class="float-right raport"><i class="fas fa-exclamation-circle"></i> {{ trans('Report post') }}</a></div>
+				<div id="content-{{ post.id }}" class="card-text">{{ post.content|raw }}
+				</div>
+				{% if post.edit_by %}<hr /><small class="float-left mx-4">{{ trans('edit by') }}: {{ post.edit_by }}</small>{% endif %}
+			  
+			  
+			</div>
+		  </div>
+		</div>
+		<div class="card-footer py-3 text-muted">
+				{% if auth.admin or (post.user_id == auth.check and post.created_at|date("dmY") == "now"| date('dmY') ) %}
+				<small class="float-left my-auto">
+				<a id="post-edit-{{ post.id }}" class="post-edit fas fa-edit point"  title="{{ trans('edit') }}"></a>
+				</small>
+				{% endif %}
+				{% if auth.admin %}
+				<small class="float-left my-auto mx-2">
+				<a href="{{ path_for('admin.user.edit', {'id': post.user_id}) }}" class="post-edit fas fa-exclamation-triangle"  title="{{ trans('moderate') }}"></a>
+				</small>
+				{% endif %}
+				
+				<small class="likebox float-right my-auto">
+				<span class="badge badge-secondary mr-3 my-1 fs-15">{{ post.post_reputation }} <i class="far fa-thumbs-up"></i></span>
+				{% if auth.check %}<a id="like-{{ post.id }}" class="far fa-thumbs-up fa-2x likeit"></a>
+				{% endif %}</small>
+				
+			  </div>
+		</div>
+		{% endif %}
+		<!-- /one posts -->	

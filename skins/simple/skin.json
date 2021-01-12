@@ -5,7 +5,8 @@
 	"assets": {
         "css": [
             "main.css",
-			"bob.css"
+			"loader.css",
+			"noscript.css"
         ],
         "js": []
     }

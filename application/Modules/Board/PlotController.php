@@ -123,18 +123,17 @@ class PlotController extends Controller
 			
 		}
 		
-		if(	$this->auth->check() 
+		if($this->auth->check() 
 			&& $paginator->getCurrentPage() == ceil($paginator->getTotalItems()/$paginator->getItemsPerPage()) 
 			&& (self::lastPost($arg['plot_id']) > self::lastSeenPost($arg['plot_id'])))
 		{
-			PlotsReadModel::create([
-			'plot_id' => $arg['plot_id'],
-			'user_id' => $_SESSION['user'],
-			'timeline' => time()
+			$plotRead = PlotsReadModel::firstOrCreate([
+				'plot_id' => $arg['plot_id'],
+				'user_id' => $_SESSION['user']
 			]);
+			$plotRead->timeline = time();
+			$plotRead->save();
 			
-		}else{
-			#	cookie for unlogged
 		}
 		
 		if(!isset($_SESSION['view']) || $_SESSION['view'] !== $arg['plot_id'])
@@ -143,8 +142,8 @@ class PlotController extends Controller
 			$v = PlotsModel::find($arg['plot_id']);
 			$v->increment('views');
 			$v->save();
-		}	
-			
+		}
+		
 		$this->view->getEnvironment()->addGlobal('paginator', $paginator);
 		$this->view->getEnvironment()->addGlobal('board_list', $boardList);
 		$this->view->getEnvironment()->addGlobal('title', $plot_data['title']);
@@ -160,6 +159,7 @@ class PlotController extends Controller
 	
 	public function replyPost($request, $response)
 	{
+		
 		$this->auth->checkBan();
 		$plot = PlotsModel::select('locked', 'board_id', 'plot_name', 'id')->find($request->getParsedBody()['plot_id']);
 		$locked = $plot->locked;
@@ -169,9 +169,9 @@ class PlotController extends Controller
 		if($this->auth->check() && !$locked){
 			
 			$user =UserModel::find($this->auth->user()['id']);
-			PostsModel::create([
+			$newPost = PostsModel::create([
 				'user_id' => $user->id,
-				'plot_id' => $request->getParsedBody()['plot_id'],
+				'plot_id' => $plot->id,
 				'content' => $this->purifier->purify($request->getParsedBody()['content']),				
 			]);
 			
@@ -180,31 +180,42 @@ class PlotController extends Controller
 			
 			$avatar = $user->avatar ? self::base_url() .'/public/upload/avatars/'.$avatar->_85 : self::base_url() .'/public/img/avatar.png';	
 			$uurl = self::base_url() .'/user/'. $this->urlMaker->toUrl($user->username) .'/'. $user->id;
+			$group = $this->group->getGroupDate($user->main_group, $user->username);
 			
-			$skin = $_SESSION['skin'] ?? $this->settings['twig']['skin'];
-			$data['response'] = file_get_contents(MAIN_DIR.'/skins/'.$skin.'/tpl/ajax/newpost.twig');
-			$replace = [$uurl, $user->username, $avatar,  $user->user_grupe, $user->user_groupe, $user->posts, $user->plots, $user->created_at, $user->reputation, date("Y-m-d H:i:s"), $this->purifier->purify($request->getParsedBody()['content'])];
-			$find = ['{{uurl}}', '{{username}}', '{{avatar}}', '{{user_grupe}}', '{{posts}}', '{{plots}}', '{{join}}', '{{rep}}', '{{date}}', '{{created_at}}', '{{content}}'];
+			$var = [
+				'id' => $newPost->id,
+				'user_url' => $uurl, 
+				'username' => $user->username, 
+				'username_html' => $group['username'], 
+				'user_id' => $user->id,
+				'avatar' => $avatar,  
+				'group' => $group['group'],
+				'posts' => $user->posts, 
+				'plots' => $user->plots, 
+				'join' => $user->created_at, 
+				'reputation' => $user->reputation, 
+				'created_at' => date("Y-m-d H:i:s"), 
+				'content' => $this->purifier->purify($request->getParsedBody()['content'])
+			];
 			
-			$data['response'] = str_replace($find, $replace, $data['response']);
-			
+			$this->view->getEnvironment()->addGlobal('post', $var);
+			$data['response'] = $this->view->fetch('templates/partials/boxes/onePost.twig');
 			
 			$user->posts++;
 			$user->save();
 			
-			$user_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];
-			
 			$board = BoardsModel::find($plot->board_id);
 			$board->last_post_date = time();
-			$board->last_post_author = $user_html;
+			$board->last_post_author = $group['username'];
 			$board ->posts_number++;	
 			$board->save();
 			
-			PlotsReadModel::create([
-				'plot_id' => $request->getParsedBody()['plot_id'],
-				'user_id' => $_SESSION['user'],
-				'timeline' => time()
-			]);		
+			$plotRead = PlotsReadModel::firstOrCreate([
+				'plot_id' => $plot->id,
+				'user_id' => $_SESSION['user']
+				]);
+			$plotRead->timeline = time();
+			$plotRead->save();	
 			
 			$totalItems = PostsModel::where('plot_id', $request->getParsedBody()['plot_id'])->count();
 			$itemsPerPage = $this->settings['pagination']['plots'];
@@ -230,6 +241,7 @@ class PlotController extends Controller
 	
 	public function newPlot($request, $response, $arg)
 	{
+		
 		$this->auth->checkBan();
 		$this->view->getEnvironment()->addGlobal('board_id', $arg['board_id']);
 		$board = BoardsModel::find($arg['board_id']);
@@ -441,7 +453,6 @@ class PlotController extends Controller
 		$body = $request->getParsedBody();
 		$plot = PlotsModel::find($body['id']);
 		$plot->plot_name =  $this->purifier->purify($body['plot_name']);
-		$plot->board_id = $body['board_select'];
 		$plot->locked = $body['lock'] ? 1 : 0;
 		$plot->hidden = $body['hidden'] ? 1 : 0;
 		$plot->save();

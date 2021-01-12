@@ -60,21 +60,25 @@ class ChatboxController extends Controller
 		if (isset($request->getParsedBody()['shout']) && $request->getParsedBody()['shout'] != '' && $user)
 		{	
 	
-			$id = ChatboxModel::create([
+			$shout = ChatboxModel::create([
 				'user_id' => $_SESSION['user'],
 				'content' => $this->purifier->purify($request->getParsedBody()['shout'])
 			]);
 			
 			$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($user->username).'/'.$_SESSION['user'];
 			$avatar = $user->avatar ? $base_url. $this->settings['images']['path'] .$user->_38 : $base_url.'/public/img/avatar.png';
-			$shout = $this->purifier->purify($request->getParsedBody()['shout']);
 			$username_html = $this->group->getGroupDate($user->main_group, $user->username);
 			
-			$data['shout'] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/templates/partials/boxes/oneShout.twig');
-			$replace = [$id->id, $uurl, $username_html['username'], $avatar,  date("Y-m-d H:i:s"), $shout];
-			$find = ['{{ shout.id }}', '{{ shout.uurl }}', '{{ shout.username_html | raw }}', '{{ shout.avatar }}', '{{ shout.updated_at}}', '{{ shout.content }}'];
+
+			$this->view->getEnvironment()->addGlobal('shout', [
+				'id' =>		$shout->id, 
+				'uurl' =>		$uurl, 
+				'username_html' =>		$username_html['username'], 
+				'avatar' =>		$avatar, 
+				'updated_at' =>		$shout->created_at, 
+				'content' =>		$shout->content]);
 			
-			$data['shout'] = str_replace($find, $replace, $data['shout']);
+			$data['shout'] = $this->view->fetch('templates/partials/boxes/oneShout.twig');
 
 		}
 			
@@ -113,15 +117,20 @@ class ChatboxController extends Controller
 		{
 			$avatar = $shout->avatar ? $base_url. $this->settings['images']['path'] .$shout->_38 : $base_url.'/public/img/avatar.png';
 			$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($shout->username).'/'.$shout->user_id;
-			
-			$data['chatbox'][$i] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/templates/partials/boxes/oneShout.twig');
-			
+
 			$username_html = $this->group->getGroupDate($shout->main_group, $shout->username);
+
 			
-			$replace = [$shout->id, $uurl, $username_html['username'], $avatar, $shout->created_at, $shout->content];
-			$find = ['{{ shout.id }}', '{{ shout.uurl }}', '{{ shout.username_html | raw }}', '{{ shout.avatar }}', '{{ shout.updated_at}}', '{{ shout.content }}'];
-			$data['chatbox'] = str_replace($find, $replace, $data['chatbox']);
+			$this->view->getEnvironment()->addGlobal('shout', [
+				'id' =>		$shout->id, 
+				'uurl' =>		$uurl, 
+				'username_html' =>		$username_html['username'], 
+				'avatar' =>		$avatar, 
+				'updated_at' =>		$shout->created_at, 
+				'content' =>		$shout->content]);
 			
+			
+			$data['chatbox'][$i] = $this->view->fetch('templates/partials/boxes/oneShout.twig');
 			$i++;
 		}
 		
@@ -154,12 +163,16 @@ class ChatboxController extends Controller
 				$avatar = $user->avatar ? $base_url. $this->settings['images']['path'] .$user->_38 : $base_url.'/public/img/avatar.png';
 				$uurl = $base_url.'/user/'.$this->urlMaker->toUrl($user->username).'/'.$shout->user_id;
 				$user->username = $this->group->getGroupDate($user->main_group, $user->username)['username'];
-				$data['chatbox'][$i] = file_get_contents(MAIN_DIR.'/skins/'.$this->settings['twig']['skin'].'/tpl/templates/partials/boxes/oneShout.twig');
 				
-				$replace = [$shout->id, $uurl, $user->username, $avatar, $shout->created_at, $shout->content];
-				$find = ['{{ shout.id }}', '{{ shout.uurl }}', '{{ shout.username_html | raw }}', '{{ shout.avatar }}', '{{ shout.updated_at}}', '{{ shout.content }}'];
-				$data['chatbox'] = str_replace($find, $replace, $data['chatbox']);
-				
+				$this->view->getEnvironment()->addGlobal('shout', [
+				'id' =>		$shout->id, 
+				'uurl' =>		$uurl, 
+				'username_html' =>	$user->username, 
+				'avatar' =>		$avatar, 
+				'updated_at' =>		$shout->created_at, 
+				'content' =>		$shout->content]);
+					
+				$data['chatbox'][$i] = $this->view->fetch('templates/partials/boxes/oneShout.twig');
 				$i++;
 			}
 		}

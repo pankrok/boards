@@ -1,13 +1,21 @@
+<!doctype html>
+<html lang="pl">
+<head>
 {% include 'templates/partials/head.twig' %}
 {% block headblock %}{% endblock %}
-
+</head>
+<body>
+<div id="main-loader" class="load-overlay">
+  <div class="loading">
+  </div>
+</div>
 	{% if boards_off and auth.admin < 1 %}
 		{% include 'templates/partials/boards_off.twig' %}
 	{% else %}
 		
 	{% include 'templates/partials/navigation.twig' %}
 		
-    <main role="main" class="container mw-100">
+    <main role="main" class="container mw-100 h-100">
 
 	{% include 'templates/partials/breadcrumb.twig' %}	
 	{% include 'templates/partials/flash.twig' %}
@@ -18,7 +26,7 @@
 	<!-- footer -->
 	<footer class="footer">
       <div class="w-100 bg-light py-2 px-4">
-        <span class="text-muted">Powered by: <strong>BOARDS SCRIPT</strong></span>
+        <span class="text-muted">Powered by: <strong><a href="https://boards.s89.eu">BOARDS SCRIPT</a>	</strong></span>
       </div>
     </footer>
 	<!-- /footer -->
@@ -28,9 +36,13 @@
 {% block endcontent %}{% endblock %}
 <script>
       $(document).ready(function(){
-        $('body').fadeIn("fast");
+        $('#main-loader').fadeOut("fast");
       })
 </script>
+<noscript>
+	{{ skin_assets.css.noscript|raw }}
+</noscript> 
 {{ csrf.field | raw }}
-  
+</body>
+</html>
 

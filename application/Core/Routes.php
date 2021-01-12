@@ -21,7 +21,7 @@ $app->get('/board/{board}/{board_id}[/{page}]', 'BoardController:getBoard')->set
 $app->group('/plot', function (RouteCollectorProxy $plot) {
   $plot->get('/{plot}/{plot_id:[0-9]+}[/[{page:[0-9]+}]]', 'PlotController:getPlot')->setName('board.getPlot');
   $plot->post('/editpost', 'PlotController:editPost')->setName('board.edit');
-  $plot->get('/new/create/{board_id}', 'PlotController:newPlot')->setName('board.newPlot');
+  $plot->get('/new/create/{board_id:[0-9]+}', 'PlotController:newPlot')->setName('board.newPlot');
   $plot->post('/new/send/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
   $plot->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
   $plot->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
@@ -159,3 +159,17 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
   $admin->get('/update', 'AdminUpdateController:index')->setName('admin.update');
   
 });
+
+if($container->get('settings')['cache']['active'])
+{
+	if(!is_dir(MAIN_DIR.$container->get('settings')['cache']['cache_dir'].md5('slimRoute')))
+		mkdir(MAIN_DIR.$container->get('settings')['cache']['cache_dir'].md5('slimRoute'));
+		
+	$routeCollector = $app->getRouteCollector();
+	$routeCollector->setCacheFile(MAIN_DIR.
+	$container->get('settings')['cache']['cache_dir'].
+	md5('slimRoute').
+	'/'.
+	md5('route').
+	$container->get('settings')['cache']['cache_ext']);
+}

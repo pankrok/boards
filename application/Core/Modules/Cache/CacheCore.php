@@ -90,7 +90,7 @@ class CacheCore
 			return $content['data'];
 			
 		}
-		return false;
+		return null;
 	}
 	
 	public function delete($fname)

@@ -64,7 +64,7 @@ class BoardController extends Controller
 					['board_id', '=', $arg['board_id']]])
 				->join('users', 'users.id', '=', 'plots.author_id')
 				->select('plots.*', 'users.username', 'users.main_group')
-				->orderBy('updated_at', 'DESC')
+				->orderBy('created_at', 'DESC')
 				->skip(($paginator->getCurrentPage() - 1)*$paginator->getItemsPerPage())
 				->take($paginator->getItemsPerPage())
 				->get()->toArray();

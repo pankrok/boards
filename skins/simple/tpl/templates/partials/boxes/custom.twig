@@ -2,9 +2,9 @@
 		  <div class="card-header">{{ sidebar.name_prefix | raw }} {{ sidebar.name | raw }}</div>
 		  <div class="card-body px-2">
 			<p class="card-text">
-			<ul class="list-group list-group-flush">
-				 {{ sidebar.html | raw }}
+			</p><ul class="list-group list-group-flush">
+			    {{ include(template_from_string(sidebar.html | raw)) }}
 			</ul>
-			</p>
+			<p></p>
 		  </div>
 	</div>	

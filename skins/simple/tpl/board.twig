@@ -7,10 +7,10 @@
 	<!-- main board -->
 	<!-- new plot button -->
 	<div class="col-lg-12 order-0 my-2">
-		<a class="btn btn-secondary float-right" href="{{ new_plot }}" role="button">{{ trans('Start new plot') }}</a>
+		<a class="btn btn-secondary float-right" href="{{ path_for('board.newPlot', {'board_id': board.id}) }}" role="button">{{ trans('Start new plot') }}</a>
 	</div>
 	<div class="col-lg-12 order-5 my-2">
-		<a class="btn btn-secondary float-right" href="{{ new_plot }}" role="button">{{ trans('Start new plot') }}</a>
+		<a class="btn btn-secondary float-right" href="{{ path_for('board.newPlot', {'board_id': board.id}) }}" role="button">{{ trans('Start new plot') }}</a>
 	</div>
 	<!-- new plot button -->
 	<div class="col-lg order-1">		
@@ -42,7 +42,7 @@
 							{% if plot.locked %}
 								<i class="fas fa-lock text-danger"></i>
 							{% else %}
-								<i class="fas fa-file"></i>
+								<i class="{%  if not unread_plot(plot.id) %}text-success{% endif %} fas fa-file"></i>
 							{% endif %}
 							{% if plot.hidden %}
 								<span class="badge badge-info mx-2"><i class="far fa-eye-slash"></i></span>

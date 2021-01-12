@@ -14,7 +14,7 @@ return function(App &$app)
 	$app->addBodyParsingMiddleware();
 	
 	$app->add(new Application\Middleware\TrailingShashMiddleware(true));
-	$app->add(new Application\Middleware\BreadcrumbsMiddleware($container));
+    $app->add(new Application\Middleware\BreadcrumbsMiddleware($container));
 	$app->add(new Application\Middleware\CacheMiddleware($container));
 	$app->add(new Application\Middleware\OldInputMiddleware($container));	
 	$app->add(new Application\Middleware\ModulesMiddleware($container));
