@@ -1,20 +1,20 @@
 {
     "core": {
-        "version": "MC4xLjE",
+        "version": "MC4xLjI",
         "show_version": "1",
-        "log_level": "3",
-        "debug": "1",
+        "log_level": "1",
+        "debug": "0",
         "ssl": "1",
         "admin": "acp"
     },
     "board": {
-        "main_page_name": "Boards forum script",
+        "main_page_name": "BOARDS",
         "main_mail": "admin@s89.eu",
         "boards_off": 0,
         "default_group": "3",
         "unread": 30,
         "confirm_reg": "0",
-		"chatbox_h" : "260"
+        "chatbox_h": "260"
     },
     "admin": {
         "skin": "rwd_sb1"
@@ -27,14 +27,14 @@
         "path": "\/public\/upload\/avatars\/"
     },
     "cache": {
-        "active": "0",
+        "active": "1",
         "cache_time": "90",
         "cache_dir": "\/environment\/Cache\/objects\/",
         "cache_ext": ".c"
     },
     "twig": {
-        "debug": "1",
-        "cache": "0",
+        "debug": "0",
+        "cache": "1",
         "skin": "simple"
     },
     "pagination": {

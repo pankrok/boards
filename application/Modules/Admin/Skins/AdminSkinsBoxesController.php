@@ -171,6 +171,13 @@ class AdminSkinsBoxesController extends Controller
 
 		if($body['costum_box_id'] != 'system')
 		{
+			if(CostumBoxModel::where('name', $body['module_name'])->first())
+			{
+				$this->flash->addMessage('danger', 'module name shoud be unique!');
+				return $response
+				->withHeader('Location', $this->router->urlFor('admin.modules.skin.get', ['route' => 'home', 'id' => $body['skin_id']]))
+				->withStatus(302);
+			}
 			$costum_box = CostumBoxModel::updateOrCreate(['id' => $body['costum_box_id']],[
 				'name_prefix' => $body['module_name_prefix'],
 				'name' => $body['module_name'],

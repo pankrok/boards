@@ -1,6 +1,8 @@
 {% extends 'templates/main.twig' %}
 
 {% block content %}
+{{ plugin_serverlist | raw }}
+
 <div class="row">
 
 	{% include 'templates/partials/modules.twig' %}
@@ -78,14 +80,14 @@
 				</div>
 		</div>
 		{% endfor %}
-		<!-- /board -->		
+		<!-- \/board -->
+{{ plugin_bar | raw }}
+
+
 	</div>
 	<!-- /main board -->
 	
-	
-	
 	<!-- boardstats -->
-{{ plugin_bar | raw }}
 
 	<div class="col-12 order-3">
 	

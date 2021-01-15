@@ -8,196 +8,140 @@ use Application\Core\Controller;
 class UpdateController extends Controller
 {
 	
-	public function index($request, $response)
+	public function manager($request, $response, $arg)
 	{
-		if(file_exists(MAIN_DIR . '/environment/Config/lock'))
+		if(BOARDS === null) die();
+
+		$status = json_decode(file_get_contents($this->ServiceProvider->get('status')),true);
+		if($status['status'] == 'Update Error!')
 		{
-			self::status();
+			echo json_encode($status['message']);
+			return $response;
+		}
+
+		if(file_exists($this->ServiceProvider->get('lock')))
+		{
+			$return = self::status();
 		}
 		else
 		{
-			self::checkUpdate();		
+			if(isset($arg['start']))
+			{
+				if($status['status'] == 'boards is updated')
+				{
+					$return = self::checkUpdate();
+				}
+				else
+				{
+					$return = self::startUpdate();
+				}
+				echo $return;
+				return $response;
+			}
+			$return = self::checkUpdate();		
 		}
+		echo $return;
 		return $response;
 		
 	}
-	
+		
 	private function checkUpdate()
 	{
-		$host = 'https://' . unserialize(file_get_contents(MAIN_DIR . '/environment/Config/updates.dat'))['host'] 
-			. '/updates/last.txt';
 		
+		$this->log->info('checking for updates.');
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $host);
+		curl_setopt($ch, CURLOPT_URL, $this->ServiceProvider->url('checkUpdate'));
 		curl_setopt($ch, CURLOPT_VERBOSE, 1);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, false);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		$result = curl_exec($ch);
-		
-		$v = explode('.', $result);
-		$bv = explode('.', base64_decode($this->settings['core']['version']));
 
-		if(intval($v[0]) != intval($bv[0]) || intval($v[1]) != intval($bv[1]) || intval($v[2]) != intval($bv[2]))
-		{
-			echo json_encode(['status' => 'update start']);
-			self::startUpdate();
-		}else{
-			echo json_encode(['status' => 'Boards is updated']);
-		}
-	}
-	
-	private function status()
-	{
-		if(!is_dir(MAIN_DIR . '/environment/Update/tmp')) 
-		{
-			return false;
+		$this->log->info('Boards version is: '. $this->ServiceProvider->get('version'));
+		$this->log->info('Update version is: '. $result);
+
+		file_put_contents($this->ServiceProvider->get('update_list'), $result);
+		$result = json_decode($result, true);
+		$version = explode('.', $result[0]['version']);
+		$boardVersion = explode('.', $this->ServiceProvider->get('version'));
+		
+		if(	   intval($version[0]) !== intval($boardVersion[0]) 
+			|| intval($version[1]) !== intval($boardVersion[1]) 
+			|| intval($version[2]) !== intval($boardVersion[2])
+		){
+			$status = json_encode(['status' => 'boards can be updated']);
+			file_put_contents(
+				$this->ServiceProvider->get('status'),
+				$status
+			);
+			
 		}
 		else
 		{
-			$status = file_get_contents(MAIN_DIR . '/environment/Update/tmp/status.json');
-			$statusArr = json_decode($status, true);
-			foreach($statusArr as $k => $v)
-			{
-				if($v['start'] == 0 && $v['updated'] == 0)
-				{
-					$statusArr[$k]['start'] = 1;
-					file_put_contents(MAIN_DIR . '/environment/Update/tmp/status.json', json_encode($statusArr));
-					
-					self::$k();
-					
-					$statusArr[$k]['updated'] = 1;
-					file_put_contents(MAIN_DIR . '/environment/Update/tmp/status.json', json_encode($statusArr));
-					
-					break;
-				}
-				elseif($v['start'] == 1 && $v['updated'] == 0)
-				{
-					echo json_encode(['status' => 'in progress', 'data' => $statusArr]) ;
-					break;
-				}
-			}			
-			
-			if(end($statusArr)['updated'] == 1)
-			{
-				self::endUpdate();
-			}
-			echo json_encode(['status' => 'in progress', 'data' => $statusArr]);
+			$status = json_encode(['status' => 'boards is updated']);
+			file_put_contents(
+				$this->ServiceProvider->get('status'),
+				$status
+			);
 		}
+		return $status;
 	}
 	
-	private function updateFiles()
+	
+	private function status()
 	{
-		$this->log->info('Update files');
-		$files = parse_ini_file(MAIN_DIR . '/environment/Update/tmp/files/files.ini', true);
-		
-		foreach($files as $k => $v)
+		$return = file_get_contents($this->ServiceProvider->get('status'));
+		if(is_dir($this->ServiceProvider->get('tmp')))
 		{
-			$backup = file_get_contents(MAIN_DIR . $v['path'] . $k . '.php');
-			$md5 = md5($backup);
-			if($v['md5'] == $md5)
+			$status = json_decode(file_get_contents($this->ServiceProvider->get('update_status')), true);
+
+			foreach($status as $k => $v)
 			{
-				$this->log->info('Update application file: ' . $v['path'] . $k . '.php');
-				$h = file_get_contents(MAIN_DIR . '/environment/Update/tmp/files' . $v['path'] . $k . '.php');
-				file_put_contents(MAIN_DIR . $v['path'] . $k . '.php', $h);
-				file_put_contents(MAIN_DIR . $v['path'] . $k . '.php.back', $backup);
+				if($v['start'] == 0)
+				{
+					$controller = $k.'Controller';
+					$this->$controller->start();
+					break;
+				}
+				if($v['updated'] == 0 && $v['lock'] == 0)
+				{
+					$controller = $k.'Controller';
+					$this->$controller->start();
+					break;
+				}
+				if($v['updated'] == 0 && $v['lock'] == 1)
+				{
+					break;
+				}
 			}
-			else
+			if(end($status)['updated'])
 			{
-				$this->log->error($v['path'].$k. ' md5 not match');	
-				echo json_encode(['status' => 'Update Error!', 'message' => ['type' => 'alert-danger', 'data' => 'Update Error, check logs for details.']]);
-				self::revert('files');
-				self::deleteDir(MAIN_DIR.'/environment/Update/tmp');
-				unlink(MAIN_DIR.'/environment/Config/lock');
-				
-				die();
+				$status = self::endUpdate();
 			}
-			
 		}
-		$this->log->info('Update files end');
-	}
-	
-	
-	
-	private function updateDB()
-	{
-		$this->log->info('Update database');
-	}
-	
-	private function updateSkins()
-	{
-		$this->log->info('Update skins');
+		return json_encode($status);
 	}
 	
 	private function startUpdate()
 	{
 		$this->log->info('Update start');
-		$newfile = MAIN_DIR . '/environment/Config/lock';
-		$fh = fopen($newfile, 'w') or die("Can't create update lock!");
+		$fh = fopen($this->ServiceProvider->get('lock'), 'w') or die("Can't create update lock!");
 		fclose($fh);
 		self::getPackage();
+		
+		return json_encode(['status' => 'update start']);
 	}
 	
-	private function endUpdate()
-	{
-		self::clean();
-		
-		$settings = $this->settings;
-		$settings['core']['version'] = file_get_contents(MAIN_DIR.'/environment/Update/tmp/version.txt');
-		
-		$data = json_encode($settings, JSON_PRETTY_PRINT);
-		file_put_contents(MAIN_DIR.'/environment/Config/settings.json', $data);
-		
-		self::deleteDir(MAIN_DIR.'/environment/Update/tmp');
-		unlink(MAIN_DIR.'/environment/Config/lock');
-		$this->log->info('Boards update success');
-		echo json_encode(['status' => 'Boards is updated']);
-	}
-	
-	private function revert(string $step)
-	{
-		
-		if($step == 'files')
-		{
-			$this->log->info('revert files');
-			$files = parse_ini_file(MAIN_DIR . '/environment/Update/tmp/files/files.ini', true);
-			foreach($files as $k => $v)
-			{
-				
-				if(file_exists(MAIN_DIR . $v['path'] . $k . '.php.back'))
-				{
-					$content = file_get_contents(MAIN_DIR . $v['path'] . $k . '.php.back');
-					file_put_contents(MAIN_DIR . $v['path'] . $k . '.php');
-					unlink(MAIN_DIR . $v['path'] . $k . '.php.back');
-				}
-			}
-			
-			
-		}
-		// revert db
-		
-		// revert skins
-	}
-	
-	private function clean()
-	{
-		$this->log->info('clean files');
-		$files = parse_ini_file(MAIN_DIR . '/environment/Update/tmp/files/files.ini', true);
-		foreach($files as $k => $v)
-		{
-			$this->log->info('delete backup file: ' . $v['path'] . $k . '.php.back');
-			unlink(MAIN_DIR . $v['path'] . $k . '.php.back');			
-		}
-	}
 	
 	private function getPackage()
 	{
 		$this->log->info('downloading update package');
-		$output_filename = MAIN_DIR . '/environment/Update/' . base64_decode($this->settings['core']['version']) . '.tar.gz';
+		$version = json_decode(file_get_contents($this->ServiceProvider->get('update_list')), true)[0]['version'];
 		
-		$host = 'https://' . unserialize(file_get_contents(MAIN_DIR . '/environment/Config/updates.dat'))['host'] 
-			. '/updates/' . base64_decode($this->settings['core']['version']) . '.tar.gz';
-		
+		$output_filename = $this->ServiceProvider->get('update_dir')."$version.tar.gz";
+		$this->log->info($output_filename );
+		$host = $this->ServiceProvider->url("packages/update/$version.tar.gz");
+		$this->log->info($host);
 		if(!file_exists($output_filename))
 		{
 			$ch = curl_init();
@@ -216,6 +160,7 @@ class UpdateController extends Controller
 		{		
 			$p = new \PharData($output_filename);
 			$p->decompress(); 
+			$this->log->info("Boards $version file ungz");
 		}	
 		$output_filename = substr($output_filename, 0, -3);
 		
@@ -227,25 +172,79 @@ class UpdateController extends Controller
 				mkdir(MAIN_DIR . '/environment/Update/tmp', 0777, true);
 			}
 			$phar->extractTo(MAIN_DIR . '/environment/Update/tmp');
+			$this->log->info("Boards $version file untar");
 			unlink($output_filename);
 		}
 	}
 	
-	private function deleteDir($dirPath) {
-    if (! is_dir($dirPath)) {
-        throw new InvalidArgumentException("$dirPath must be a directory");
-    }
-    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-        $dirPath .= '/';
-    }
-    $files = glob($dirPath . '*', GLOB_MARK);
-    foreach ($files as $file) {
-        if (is_dir($file)) {
-            self::deleteDir($file);
-        } else {
-            unlink($file);
-        }
-    }
-    rmdir($dirPath);
-}
+	private function clean()
+	{
+		$this->log->info('clean files');
+		$files = json_decode(file_get_contents($this->ServiceProvider->get('files_ini')), true);
+		$version = json_decode(file_get_contents($this->ServiceProvider->get('update_list')), true)[0]['version'];
+		foreach($files as $k => $v)
+		{
+			$this->log->info('delete backup file: ' . $v['path'] . $k . '.php.back');
+			if(file_exists(MAIN_DIR . $v['path'] . $k . '.php.back'))
+				unlink(MAIN_DIR . $v['path'] . $k . '.php.back');
+		}
+		
+		if(file_exists($this->ServiceProvider->get('update_dir') .'/'.$version.'.tar.gz'))
+				unlink($this->ServiceProvider->get('update_dir') .'/'.$version.'.tar.gz');
+	}
+	
+	private function endUpdate()
+	{
+		self::clean();
+		
+		$settings = $this->settings;
+		$version = json_decode(file_get_contents($this->ServiceProvider->get('update_list')), true)[0]['version'];
+		$settings['core']['version'] = base64_encode($version);
+		
+		$data = json_encode($settings, JSON_PRETTY_PRINT);
+		file_put_contents($this->ServiceProvider->get('settings'), $data);
+		
+		self::deleteDir($this->ServiceProvider->get('tmp'));
+		unlink($this->ServiceProvider->get('lock'));
+		$this->log->info('Boards update success');
+		
+		$status = json_encode(['status' => 'boards is updated']);
+			file_put_contents(
+				$this->ServiceProvider->get('status'),
+				$status
+			);
+		return ['status' => 'finish'];
+	}
+	
+	public function statusUpdate($update): bool
+	{
+		if(file_put_contents($this->ServiceProvider->get('status'), json_encode($update)))
+		{	
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	public function deleteDir($dirPath) 
+	{
+		
+		if (!is_dir($dirPath)) {
+			throw new InvalidArgumentException("$dirPath must be a directory");
+		}
+		if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+			$dirPath .= '/';
+		}
+		$files = glob($dirPath . '*', GLOB_MARK);
+		foreach ($files as $file) {
+			if (is_dir($file)) {
+				self::deleteDir($file);
+			} else {
+				unlink($file);
+			}
+		}
+		rmdir($dirPath);
+	}
 }

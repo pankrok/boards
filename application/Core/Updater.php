@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 ini_set( 'display_errors', 'on');
 DEFINE('MAIN_DIR', __DIR__ . '/../..');
+DEFINE('BOARDS', 'BOARDS');
 
 use DI\Container;
 use Slim\Factory\AppFactory;
@@ -22,7 +23,7 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->addErrorMiddleware(true, true,true);
 $app->setBasePath((function () {
-    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+    $scriptDir = str_replace('\\', '/', substr(dirname($_SERVER['SCRIPT_NAME']),0,-17));
     $uri = (string) parse_url('http://a' . $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
     if (stripos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
         return $_SERVER['SCRIPT_NAME'];
@@ -36,9 +37,18 @@ $app->setBasePath((function () {
 $container = $app->getContainer();
 $container->set('getBasePath', function() use($app)
 {
-	return $app->getBasePath();
+  return $app->getBasePath();
 });
 
+$container->set('translator', function ($container) {
+	$fallback = $container->get('settings')['translations']['fallback'];
+	$loader = new \Illuminate\Translation\FileLoader(
+		new \Illuminate\Filesystem\Filesystem(), MAIN_DIR . '/environment/Translations'
+	);
+	$translator = new \Illuminate\Translation\Translator($loader, $_SESSION['lang'] ?? $fallback);
+	$translator->setFallback($fallback);
+	return $translator;
+});
 
 $container->set('settings', function ($container) {
     return json_decode(file_get_contents(MAIN_DIR . '/environment/Config/settings.json'), true);
@@ -57,17 +67,30 @@ $container->set('db', function ($container) use ($capsule) {
 });
 
 $container->set('log', function($container) {
-	$log = new Logger('update');
-	$log->pushHandler(new StreamHandler(MAIN_DIR . '/environment/Logs/update-' . base64_decode($container->get('settings')['core']['version'])  .'.log.txt', Logger::DEBUG));
-	
-	return $log;
+  $log = new Logger('update');
+  $log->pushHandler(new StreamHandler(MAIN_DIR . '/environment/Logs/update-' . base64_decode($container->get('settings')['core']['version'])  .'.log.txt', Logger::DEBUG));
+  
+  return $log;
 });
+
+$container->set('ServiceProvider', function($container)
+{
+  $services = new Application\Core\Modules\Updater\ServiceController($container);
+  $services->Init();
+  return $services;
+});  
 
 $container->set('UpdateController', function($container)
 {
-	return new Application\Core\Modules\Updater\UpdateController($container);
-});	
-		
-$app->get('[/]', 'UpdateController:index');
+  return new Application\Core\Modules\Updater\UpdateController($container);
+});  
+
+$container->set('FileUpdateController', function($container)
+{
+  return new Application\Core\Modules\Updater\FileUpdateController($container);
+});  
+       
+$app->get('/updater[/{start}]', 'UpdateController:manager');
+$app->get('/updater/files/update', 'FileUpdateController:manager');
 
 $app->run();

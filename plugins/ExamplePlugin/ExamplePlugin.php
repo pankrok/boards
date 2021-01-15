@@ -33,8 +33,8 @@ class ExamplePlugin implements PluginInterface
 	
 	public static function activation() : bool
 	{
-		PluginController::addToTpl('home.twig', '<!-- boardstats -->', '{{ plugin_bar | raw }}');
-		// {"home":1,"category.getCategory":1,"board.getBoard":0,"board.getPlot":0,"board.newPlot":1,"auth.signin":0,"auth.signup":0,"user.profile":0,"userlist":1}
+		PluginController::addToTpl('home.twig', '<!-- /board -->', '{{ plugin_bar | raw }}');
+		
 		$pagesArr = [
 				'home' => 1,
 				'category.getCategory' => 0,
@@ -55,6 +55,7 @@ class ExamplePlugin implements PluginInterface
 	
 	public static function deactivation() : bool
 	{
+		PluginController::removeModule('Example');
 		PluginController::removeFromTpl('home.twig', '{{ plugin_bar | raw }}');
 		return true;
 	}

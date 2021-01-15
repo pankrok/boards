@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 31, 2020 at 01:04 PM
+-- Generation Time: Jan 15, 2021 at 08:02 AM
 -- Server version: 10.1.47-MariaDB-0+deb9u1
 -- PHP Version: 7.4.13
 
@@ -64,7 +64,8 @@ CREATE TABLE `brd_boxes` (
 INSERT INTO `brd_boxes` (`id`, `costum_id`, `costum`, `engine`) VALUES
 (1, 1, 0, 'userdata'),
 (2, 2, 0, 'statistics'),
-(3, 3, 1, 'custom');
+(3, 3, 1, 'custom'),
+(19, 20, 1, 'custom');
 
 -- --------------------------------------------------------
 
@@ -105,8 +106,8 @@ CREATE TABLE `brd_costum_boxes` (
   `id` int(11) NOT NULL,
   `translate` tinyint(1) NOT NULL DEFAULT '0',
   `name_prefix` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `html` blob NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `html` blob,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -116,7 +117,10 @@ CREATE TABLE `brd_costum_boxes` (
 --
 
 INSERT INTO `brd_costum_boxes` (`id`, `translate`, `name_prefix`, `name`, `html`, `updated_at`, `created_at`) VALUES
-(3, 1, '<i class=\"fa fa-bullhorn\"></i>', 'Announcements', 0x3c64697620636c6173733d226974656d5f6d61696e223e090909090d0a093c703e536f6d6520717569636b206578616d706c65207465787420746f206275696c64206f6e207468652063617264207469746c6520616e64206d616b65207570207468652062756c6b206f66207468652063617264277320636f6e74656e742e3c2f703e0d0a3c2f6469763e, '2020-11-23 10:33:28', '0000-00-00 00:00:00');
+(1, 0, 'system', 'userdata', NULL, '2021-01-14 13:23:52', '0000-00-00 00:00:00'),
+(2, 0, 'system', 'statistics', NULL, '2021-01-14 13:24:16', '0000-00-00 00:00:00'),
+(3, 1, '<i class=\"fa fa-bullhorn\"></i>', 'Announcements', 0x3c64697620636c6173733d226974656d5f6d61696e223e090909090d0a093c703e536f6d6520717569636b206578616d706c65207465787420746f206275696c64206f6e207468652063617264207469746c6520616e64206d616b65207570207468652062756c6b206f66207468652063617264277320636f6e74656e742e3c2f703e0d0a3c2f6469763e, '2020-11-23 10:33:28', '0000-00-00 00:00:00'),
+(20, 0, '', 'Example', 0x4578616d706c6520706c7567696e206d6f64756c65, '2021-01-14 16:58:25', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -283,6 +287,23 @@ CREATE TABLE `brd_posts` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `brd_serverlist`
+--
+
+CREATE TABLE `brd_serverlist` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `game` varchar(63) NOT NULL,
+  `ip` varchar(63) NOT NULL,
+  `port` varchar(5) NOT NULL,
+  `admin` varchar(255) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `brd_skins`
 --
 
@@ -302,7 +323,7 @@ CREATE TABLE `brd_skins` (
 --
 
 INSERT INTO `brd_skins` (`id`, `name`, `dirname`, `author`, `version`, `active`, `updated_at`, `created_at`) VALUES
-(2, 'simple', 'simple', 'PanKrok', '1.0', 1, '2020-12-16 13:53:38', '2020-11-24 13:51:27');
+(1, 'simple', 'simple', 'PanKrok', '1.0', 1, '2021-01-12 07:02:49', '2020-11-24 13:51:27');
 
 -- --------------------------------------------------------
 
@@ -316,6 +337,7 @@ CREATE TABLE `brd_skins_boxes` (
   `box_id` int(11) NOT NULL,
   `side` varchar(8) DEFAULT 'right',
   `box_order` int(11) NOT NULL DEFAULT '0',
+  `hide_on_mobile` tinyint(1) NOT NULL DEFAULT '0',
   `active` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -323,10 +345,11 @@ CREATE TABLE `brd_skins_boxes` (
 -- Dumping data for table `brd_skins_boxes`
 --
 
-INSERT INTO `brd_skins_boxes` (`id`, `skin_id`, `box_id`, `side`, `box_order`, `active`) VALUES
-(1, 2, 1, 'right', 0, '{\"home\":1}'),
-(2, 2, 2, 'right', 1, '{\"home\":1}'),
-(3, 2, 3, 'top', 6, '{\"home\":1,\"category.getCategory\":1,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":1,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":1}');
+INSERT INTO `brd_skins_boxes` (`id`, `skin_id`, `box_id`, `side`, `box_order`, `hide_on_mobile`, `active`) VALUES
+(1, 1, 1, 'right', 0, 0, '{\"home\":1}'),
+(2, 1, 2, 'right', 1, 0, '{\"home\":1}'),
+(3, 1, 3, 'top', 6, 0, '{\"home\":1,\"category.getCategory\":1,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":1,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":1}'),
+(23, 1, 19, 'top', 0, 0, '{\"home\":1,\"category.getCategory\":0,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":0,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":0}');
 
 -- --------------------------------------------------------
 
@@ -406,7 +429,8 @@ ALTER TABLE `brd_boards`
 -- Indexes for table `brd_boxes`
 --
 ALTER TABLE `brd_boxes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `costum_id` (`costum_id`);
 
 --
 -- Indexes for table `brd_categories`
@@ -425,7 +449,8 @@ ALTER TABLE `brd_chatbox`
 -- Indexes for table `brd_costum_boxes`
 --
 ALTER TABLE `brd_costum_boxes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `brd_groups`
@@ -464,7 +489,9 @@ ALTER TABLE `brd_pages`
 -- Indexes for table `brd_plotread`
 --
 ALTER TABLE `brd_plotread`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`) USING BTREE,
+  ADD KEY `plot_id` (`plot_id`) USING BTREE;
 
 --
 -- Indexes for table `brd_plots`
@@ -488,6 +515,12 @@ ALTER TABLE `brd_posts`
   ADD KEY `plot_id` (`plot_id`),
   ADD KEY `brd_posts_ibfk_2` (`user_id`),
   ADD KEY `edit_by` (`edit_by`);
+
+--
+-- Indexes for table `brd_serverlist`
+--
+ALTER TABLE `brd_serverlist`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `brd_skins`
@@ -533,7 +566,7 @@ ALTER TABLE `brd_boards`
 -- AUTO_INCREMENT for table `brd_boxes`
 --
 ALTER TABLE `brd_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `brd_categories`
@@ -551,7 +584,7 @@ ALTER TABLE `brd_chatbox`
 -- AUTO_INCREMENT for table `brd_costum_boxes`
 --
 ALTER TABLE `brd_costum_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `brd_groups`
@@ -608,16 +641,22 @@ ALTER TABLE `brd_posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `brd_serverlist`
+--
+ALTER TABLE `brd_serverlist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `brd_skins`
 --
 ALTER TABLE `brd_skins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `brd_skins_boxes`
 --
 ALTER TABLE `brd_skins_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `brd_userdata`
@@ -642,6 +681,12 @@ ALTER TABLE `brd_boards`
   ADD CONSTRAINT `brd_fgk` FOREIGN KEY (`category_id`) REFERENCES `brd_categories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `brd_boxes`
+--
+ALTER TABLE `brd_boxes`
+  ADD CONSTRAINT `brd_boxes_ibfk_1` FOREIGN KEY (`costum_id`) REFERENCES `brd_costum_boxes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `brd_chatbox`
 --
 ALTER TABLE `brd_chatbox`
@@ -653,6 +698,13 @@ ALTER TABLE `brd_chatbox`
 ALTER TABLE `brd_likeit`
   ADD CONSTRAINT `brd_likeit_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `brd_posts` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `brd_likeit_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `brd_plotread`
+--
+ALTER TABLE `brd_plotread`
+  ADD CONSTRAINT `brd_plotread_ibfk_1` FOREIGN KEY (`plot_id`) REFERENCES `brd_plots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `brd_plotread_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `brd_plots`
@@ -673,7 +725,7 @@ ALTER TABLE `brd_posts`
 -- Constraints for table `brd_skins_boxes`
 --
 ALTER TABLE `brd_skins_boxes`
-  ADD CONSTRAINT `brd_skins_boxes_ibfk_1` FOREIGN KEY (`skin_id`) REFERENCES `brd_skins` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `brd_skins_boxes_ibfk_1` FOREIGN KEY (`skin_id`) REFERENCES `brd_skins` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `brd_skins_boxes_ibfk_2` FOREIGN KEY (`box_id`) REFERENCES `brd_boxes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

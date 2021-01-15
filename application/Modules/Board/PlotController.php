@@ -222,8 +222,11 @@ class PlotController extends Controller
 			$pages = ceil($totalItems / $itemsPerPage);
 			$this->cache->setName('board.getPlot');
 			$name = $this->getBasePath .'/plot/' . $this->urlMaker->toUrl($plot->plot_name) . '/'.$plot->id;
-			if($pages > 1)
+			
+			if($pages == 1)
+			{
 				$this->cache->delete($name);
+			}
 			$name .= '/'.$pages;
 			$this->cache->delete($name);
 			$this->BoardController->boardCleanCache($plot->board_id);

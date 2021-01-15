@@ -84,7 +84,7 @@ class PluginController
 	public static function addToTpl($template, $find, $html)
 	{
 		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template;
-		
+		$find = str_replace('/', '\/', $find);
 		$filecontent = file_get_contents($tpl);
 		$pattern = '/('. $find .')(.*?)/s';
 		$result = preg_replace($pattern,  $find."\n".$html."\n", $filecontent);
@@ -97,8 +97,10 @@ class PluginController
 	{
 		$tpl = MAIN_DIR . '/skins/' . $GLOBALS['tplDir'] . '/tpl/' . $template; 
 		$filecontent = file_get_contents($tpl);
+		$find = str_replace("/",  '\/', $find);
 		$pattern = '/('. $find .')(.*?)/s';
 		$result = str_replace("\n".$find."\n",  '', $filecontent);
+		$result = str_replace('\\/',  '/', $result);
 		return file_put_contents($tpl, $result);			
 		
 	}
@@ -155,7 +157,8 @@ class PluginController
 	
 	public static function removeModule(string $name)
 	{
-		
+		$deleteBox = \Application\Models\CostumBoxModel::where('name', $name)->delete();
+		return $deleteBox;
 	}
 	
 	public static function createTable($table, $query)

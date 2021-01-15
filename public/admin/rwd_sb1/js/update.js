@@ -5,13 +5,18 @@ $(function() {
 			success: function(result){
 				
 				result = JSON.parse(result);	
-				if(result.status != "Boards is updated")
+				if(result.status == "boards is updated")
 				{
-					$("#up-btn-span").fadeIn();
+					$("#up-content").html(result.status);
+				}
+				else if(result.status == "Update Error!")
+				{
+					$("#up-content").html(result.message.data).addClass(result.message.type).fadeIn();
 				}
 				else
 				{
-					 $("#up-content").html(result.status);
+					$("#up-btn-span").fadeIn();					
+					
 				}
 			}});
 	
@@ -30,7 +35,7 @@ function update()
 			success: function(result){
 				
 				result = JSON.parse(result);
-				if(result.status == "Boards is updated" || result.status == "Update Error!")
+				if(result.status == "boards is updated" || result.status == "Update Error!")
 				{
 					if(result.message)
 					{
@@ -41,14 +46,33 @@ function update()
 					setTimeout(function () { 
 						$('#updateModal').modal('hide');
 					}, 500);
-					setTimeout(function () { $("#update-bar").attr('aria-valuenow', '0').css('width', '0%');
-					}, 1500);
+					setTimeout(function () { 
+						location.reload();
+					}, 1000);
 				}
 				else
 				{
+					if(result.status == "update start")
+					{
+						$("#current-update").html(result.status);
+						$("#update-bar").attr('aria-valuenow', '10').css('width', '10%');
+					}
+					
+					if(typeof(result.FileUpdate) !== 'undefined')
+					{
+						$("#current-update").html("files update");
+						$("#update-bar").attr('aria-valuenow', '25').css('width', '25%');
+					}
+					
+					if(result.status == "finish")
+					{
+						$("#current-update").html(result.status);
+						$("#update-bar").attr('aria-valuenow', '99').css('width', '99%');
+					}
+					
 					setTimeout(function () {
 						update();
-					}, 5000);
+					}, 1000);
 				}
 			}});
 }
