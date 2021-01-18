@@ -13,16 +13,12 @@ class Validator
     
     public function validate($request, array $rules)
     {
-        foreach($rules as $field => $rule)
-        {
-           try
-           {	
-               $rule->setName($field)->assert($request->getParsedBody()[$field]);
-           } 
-           catch (NestedValidationException $e)
-           {
-               $this->errors[$field] = $e->getMessages();
-           }
+        foreach ($rules as $field => $rule) {
+            try {
+                $rule->setName($field)->assert($request->getParsedBody()[$field]);
+            } catch (NestedValidationException $e) {
+                $this->errors[$field] = $e->getMessages();
+            }
         }
         
         $_SESSION['errors'] = $this->errors;

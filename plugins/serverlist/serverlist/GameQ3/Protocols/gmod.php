@@ -18,8 +18,9 @@
 
 
 namespace GameQ3\protocols;
- 
-class Gmod extends \GameQ3\Protocols\Source {
-	protected $name = "gmod";
-	protected $name_long = "Garry's Mod";
+
+class Gmod extends \GameQ3\Protocols\Source
+{
+    protected $name = "gmod";
+    protected $name_long = "Garry's Mod";
 }

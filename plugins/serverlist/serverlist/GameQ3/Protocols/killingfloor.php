@@ -18,14 +18,15 @@
 
 
 namespace GameQ3\protocols;
- 
-class Killingfloor extends \GameQ3\Protocols\Unreal2 {
-	protected $name = "killingfloor";
-	protected $name_long = "Killing Floor";
 
-	protected $query_port = 7708;
-	protected $connect_port = 7707;
-	protected $ports_type = self::PT_DIFFERENT_COMPUTABLE;
+class Killingfloor extends \GameQ3\Protocols\Unreal2
+{
+    protected $name = "killingfloor";
+    protected $name_long = "Killing Floor";
 
-	protected $connect_string = 'steam://connect/{IDENTIFIER}'; // same as source
+    protected $query_port = 7708;
+    protected $connect_port = 7707;
+    protected $ports_type = self::PT_DIFFERENT_COMPUTABLE;
+
+    protected $connect_string = 'steam://connect/{IDENTIFIER}'; // same as source
 }

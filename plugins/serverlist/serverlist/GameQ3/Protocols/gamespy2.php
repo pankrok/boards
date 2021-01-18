@@ -19,220 +19,225 @@
  */
 
 namespace GameQ3\protocols;
- 
+
 use GameQ3\Buffer;
 
-class Gamespy2 extends \GameQ3\Protocols {
+class Gamespy2 extends \GameQ3\Protocols
+{
+    protected $packets = array(
+        'details' => "\xFE\xFD\x00\x43\x4F\x52\x59\xFF\x00\x00",
+        'players' => "\xFE\xFD\x00\x43\x4F\x52\x59\x00\xFF\xFF",
+    );
 
-	protected $packets = array(
-		'details' => "\xFE\xFD\x00\x43\x4F\x52\x59\xFF\x00\x00",
-		'players' => "\xFE\xFD\x00\x43\x4F\x52\x59\x00\xFF\xFF",
-	);
+    protected $protocol = 'gamespy2';
+    protected $name = 'gamespy2';
+    protected $name_long = "Gamespy2";
+    
+    protected $ports_type = self::PT_UNKNOWN;
 
-	protected $protocol = 'gamespy2';
-	protected $name = 'gamespy2';
-	protected $name_long = "Gamespy2";
-	
-	protected $ports_type = self::PT_UNKNOWN;
+    
+    public function init()
+    {
+        if ($this->isRequested('teams')) {
+            $this->result->setIgnore('teams', false);
+        }
 
-	
-	public function init() {
-		if ($this->isRequested('teams'))
-			$this->result->setIgnore('teams', false);
+        $this->queue('details', 'udp', $this->packets['details'], array('response_count' => 1));
+        if ($this->isRequested('players')) {
+            $this->queue('players', 'udp', $this->packets['players'], array('response_count' => 1));
+        }
+    }
+    
+    protected function processRequests($qid, $requests)
+    {
+        if ($qid === 'details') {
+            return $this->_process_details($requests['responses']);
+        } elseif ($qid === 'players') {
+            return $this->_process_players($requests['responses']);
+        }
+    }
+    
+    protected function _put_var($key, $val)
+    {
+        switch ($key) {
+            case 'hostname':
+                $this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
+                break;
+            case 'mapname':
+                $this->result->addGeneral('map', $val);
+                break;
+            case 'gamever':
+                $this->result->addGeneral('version', $val);
+                break;
+            case 'gametype':
+                $this->result->addGeneral('mode', $val);
+                break;
+            case 'numplayers':
+                $this->result->addGeneral('num_players', $val);
+                break;
+            case 'maxplayers':
+                $this->result->addGeneral('max_players', $val);
+                break;
+            case 'password':
+                $this->result->addGeneral('password', $val == 1);
+                break;
+            default:
+                $this->result->addSetting($key, $val);
+        }
+    }
+    
+    protected function _process_details($packets)
+    {
+        $buf = new Buffer($packets[0]);
+        
+        // Make sure the data is formatted properly
+        if ($buf->lookAhead(5) != "\x00\x43\x4F\x52\x59") {
+            $this->debug("Data for ".__METHOD__." does not have the proper header. Header: ".$buf->lookAhead(5));
+            return false;
+        }
 
-		$this->queue('details', 'udp', $this->packets['details'], array('response_count' => 1));
-		if ($this->isRequested('players'))
-			$this->queue('players', 'udp', $this->packets['players'], array('response_count' => 1));
-	}
-	
-	protected function processRequests($qid, $requests) {
-		if ($qid === 'details') {
-			return $this->_process_details($requests['responses']);
-		} else
-		if ($qid === 'players') {
-			return $this->_process_players($requests['responses']);
-		}
-	}
-	
-	protected function _put_var($key, $val) {
-		switch($key) {
-			case 'hostname':
-				$this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
-				break;
-			case 'mapname':
-				$this->result->addGeneral('map', $val);
-				break;
-			case 'gamever':
-				$this->result->addGeneral('version', $val);
-				break;
-			case 'gametype':
-				$this->result->addGeneral('mode', $val);
-				break;
-			case 'numplayers':
-				$this->result->addGeneral('num_players', $val);
-				break;
-			case 'maxplayers':
-				$this->result->addGeneral('max_players', $val);
-				break;
-			case 'password':
-				$this->result->addGeneral('password', $val == 1);
-				break;
-			default:
-				$this->result->addSetting($key, $val);
-		}
-	}
-	
-	protected function _process_details($packets) {
-		$buf = new Buffer($packets[0]);
-		
-		// Make sure the data is formatted properly
-		if($buf->lookAhead(5) != "\x00\x43\x4F\x52\x59") {
-			$this->debug("Data for ".__METHOD__." does not have the proper header. Header: ".$buf->lookAhead(5));
-			return false;
-		}
+        // Now verify the end of the data is correct
+        if ($buf->readLast() !== "\x00") {
+            $this->debug("Data for ".__METHOD__." does not have the proper ending. Ending: ".$buf->readLast());
+            return false;
+        }
 
-		// Now verify the end of the data is correct
-		if($buf->readLast() !== "\x00") {
-			$this->debug("Data for ".__METHOD__." does not have the proper ending. Ending: ".$buf->readLast());
-			return false;
-		}
+        // Skip the header
+        $buf->skip(5);
+        
+        // Loop thru all of the settings and add them
+        while ($buf->getLength()) {
+            $key = $buf->readString();
+            $val = $buf->readString();
 
-		// Skip the header
-		$buf->skip(5);
-		
-		// Loop thru all of the settings and add them
-		while ($buf->getLength()) {
-			$key = $buf->readString();
-			$val = $buf->readString();
+            // Check to make sure there is a valid pair
+            if (strlen($key) > 0) {
+                $this->_put_var($key, $this->filterInt($val));
+            }
+        }
+    }
+    
+    protected function _process_players($packets)
+    {
+        $buf = new Buffer($packets[0]);
+        
+        // Make sure the data is formatted properly
+        if ($buf->lookAhead(6) != "\x00\x43\x4F\x52\x59\x00") {
+            $this->debug("Data for ".__METHOD__." does not have the proper header. Header: ".$buf->lookAhead(6));
+            return false;
+        }
 
-			// Check to make sure there is a valid pair
-			if(strlen($key) > 0) {
-				$this->_put_var($key, $this->filterInt($val));
-			}
-		}
+        // Now verify the end of the data is correct
+        if ($buf->readLast() !== "\x00") {
+            $this->debug("Data for ".__METHOD__." does not have the proper ending. Ending: ".$buf->readLast());
+            return false;
+        }
 
-	}
-	
-	protected function _process_players($packets) {
-		$buf = new Buffer($packets[0]);
-		
-		// Make sure the data is formatted properly
-		if($buf->lookAhead(6) != "\x00\x43\x4F\x52\x59\x00") {
-			$this->debug("Data for ".__METHOD__." does not have the proper header. Header: ".$buf->lookAhead(6));
-			return false;
-		}
+        // Skip the header
+        $buf->skip(6);
 
-		// Now verify the end of the data is correct
-		if($buf->readLast() !== "\x00") {
-			$this->debug("Data for ".__METHOD__." does not have the proper ending. Ending: ".$buf->readLast());
-			return false;
-		}
+        $res = true;
+        
+        // Players are first
+        $res = $res && $this->_parse_playerteam('players', $buf);
 
-		// Skip the header
-		$buf->skip(6);
+        // Teams are next
+        $res = $res && $this->_parse_playerteam('teams', $buf);
+        
+        return $res;
+    }
+    
+    protected function _parse_playerteam($type, Buffer &$buf)
+    {
+        $count = $buf->readInt8();
+        if ($type === 'players') {
+            $this->result->addGeneral('num_players', $count);
+        }
 
-		$res = true;
-		
-		// Players are first
-		$res = $res && $this->_parse_playerteam('players', $buf);
+        // Variable names
+        $varnames = array();
+        $team_id = 1;
 
-		// Teams are next
-		$res = $res && $this->_parse_playerteam('teams', $buf);
-		
-		return $res;
-	}
-	
-	protected function _parse_playerteam($type, Buffer &$buf) {
-		$count = $buf->readInt8();
-		if ($type === 'players')
-			$this->result->addGeneral('num_players', $count);
+        // Loop until we run out of length
+        while ($buf->getLength()) {
+            $field = $buf->readString();
+            if ($type === 'players') {
+                if (substr($field, -1) !== "_") {
+                    $this->debug("Arrays are not consistent");
+                    return false;
+                }
+                $field = substr($field, 0, -1);
+            } elseif ($type === 'teams') {
+                if (substr($field, -2) !== "_t") {
+                    $this->debug("Arrays are not consistent");
+                    return false;
+                }
+                $field = substr($field, 0, -2);
+            }
+            $varnames[] = $field;
 
-		// Variable names
-		$varnames = array();
-		$team_id = 1;
+            if ($buf->lookAhead() === "\x00") {
+                $buf->skip();
+                break;
+            }
+        }
 
-		// Loop until we run out of length
-		while ($buf->getLength()) {
-			$field = $buf->readString();
-			if ($type === 'players') {
-				if (substr($field, -1) !== "_") {
-					$this->debug("Arrays are not consistent");
-					return false;
-				}
-				$field = substr($field, 0, -1);
-			} else
-			if ($type === 'teams') {
-				if (substr($field, -2) !== "_t") {
-					$this->debug("Arrays are not consistent");
-					return false;
-				}
-				$field = substr($field, 0, -2);
-			}
-			$varnames[] = $field;
+        // Check if there are any value entries
+        if ($buf->lookAhead() == "\x00") {
+            $buf->skip();
+            return;
+        }
+        
+        $ignore = false;
+        if ($buf->getLength() > 4) {
+            if ($type === 'players') {
+                if (!in_array('player', $varnames) || !in_array('score', $varnames)) {
+                    $this->debug("Bad varnames array");
+                    $ignore = true;
+                }
+            } elseif ($type === 'teams') {
+                if (!in_array('team', $varnames)) {
+                    $this->debug("Bad varnames array");
+                    $ignore = true;
+                }
+            }
+        }
 
-			if ($buf->lookAhead() === "\x00") {
-				$buf->skip();
-				break;
-			}
-		}
+        // Get the values
+        while ($buf->getLength() > 4) {
+            $more = array();
+            foreach ($varnames as $varname) {
+                $more[$varname] = $this->filterInt($buf->readString());
+            }
+            
+            if (!$ignore) {
+                if ($type === 'players') {
+                    $name = trim(iconv("ISO-8859-1//IGNORE", "utf-8", $more['player'])); // some chars like (c) should be converted to utf8
+                    $score = $more['score'];
+                    
+                    $teamid = null;
+                    if (isset($more['team']) && $more['team'] !== '') {
+                        $teamid = $more['team'];
+                    }
+                    
+                    unset($more['player'], $more['score'], $more['team']);
+                    
+                    $this->result->addPlayer($name, $score, $teamid, $more);
+                } elseif ($type === 'teams') {
+                    $name = $more['team'];
+                    unset($more['team']);
+                    
+                    $this->result->addTeam($team_id, $name, $more);
+                    $team_id++;
+                }
+            }
 
-		// Check if there are any value entries
-		if ($buf->lookAhead() == "\x00") {
-			$buf->skip();
-			return;
-		}
-		
-		$ignore = false;
-		if ($buf->getLength() > 4) {
-			if ($type === 'players') {
-				if (!in_array('player', $varnames) || !in_array('score', $varnames)) {
-					$this->debug("Bad varnames array");
-					$ignore = true;
-				}
-			} else
-			if ($type === 'teams') {
-				if (!in_array('team', $varnames)) {
-					$this->debug("Bad varnames array");
-					$ignore = true;
-				}
-			}
-		}
-
-		// Get the values
-		while ($buf->getLength() > 4) {
-			$more = array();
-			foreach ($varnames as $varname) {
-				$more[$varname] = $this->filterInt($buf->readString());
-			}
-			
-			if (!$ignore) {
-				if ($type === 'players') {
-					$name = trim(iconv("ISO-8859-1//IGNORE", "utf-8", $more['player'])); // some chars like (c) should be converted to utf8
-					$score = $more['score'];
-					
-					$teamid = null;
-					if (isset($more['team']) && $more['team'] !== '')
-						$teamid = $more['team'];
-					
-					unset($more['player'], $more['score'], $more['team']);
-					
-					$this->result->addPlayer($name, $score, $teamid, $more);
-				} else
-				if ($type === 'teams') {
-					$name = $more['team'];
-					unset($more['team']);
-					
-					$this->result->addTeam($team_id, $name, $more);
-					$team_id++;
-				}
-			}
-
-			if ($buf->lookAhead() === "\x00") {
-				$buf->skip();
-				break;
-			}
-		}
-		
-		return true;
-	}
+            if ($buf->lookAhead() === "\x00") {
+                $buf->skip();
+                break;
+            }
+        }
+        
+        return true;
+    }
 }

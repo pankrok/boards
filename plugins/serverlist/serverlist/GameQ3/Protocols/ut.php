@@ -18,12 +18,13 @@
 
 
 namespace GameQ3\protocols;
- 
-class Ut extends \GameQ3\Protocols\Gamespy {
-	protected $name = "ut";
-	protected $name_long = "Unreal Tournament";
 
-	protected $query_port = 7778;
-	protected $connect_port = 7777;
-	protected $ports_type = self::PT_DIFFERENT_COMPUTABLE;
+class Ut extends \GameQ3\Protocols\Gamespy
+{
+    protected $name = "ut";
+    protected $name_long = "Unreal Tournament";
+
+    protected $query_port = 7778;
+    protected $connect_port = 7777;
+    protected $ports_type = self::PT_DIFFERENT_COMPUTABLE;
 }

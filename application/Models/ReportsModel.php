@@ -8,13 +8,12 @@ class ReportsModel extends Model
 {
     protected $table = 'reports';
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'post_id',
-			'reason_id',
-			'user_id',
-			'comment',
-			'closed',
+            'post_id',
+            'reason_id',
+            'user_id',
+            'comment',
+            'closed',
         ];
-    
 }

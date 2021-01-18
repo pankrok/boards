@@ -7,12 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class LikeitModel extends Model
 {
     protected $table = 'likeit';
-	
     
-    protected $fillable = 
+    
+    protected $fillable =
         [
-			'user_id',
-			'post_id',
+            'user_id',
+            'post_id',
         ];
-    
 }

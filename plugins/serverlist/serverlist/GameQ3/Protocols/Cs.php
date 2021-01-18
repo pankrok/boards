@@ -17,26 +17,29 @@
  */
 
 namespace Plugins\ServerList\serverlist\GameQ3\Protocols;
- 
-class Cs extends Source {
-	protected $name = "cs";
-	protected $name_long = "Counter-Strike 1.6";
+
+class Cs extends Source
+{
+    protected $name = "cs";
+    protected $name_long = "Counter-Strike 1.6";
 
 
-	protected function _process_rules($packets) {
-		// CS 1.6 sends A2S_INFO in new source format, but rules in old format. Durty workaround for this.
+    protected function _process_rules($packets)
+    {
+        // CS 1.6 sends A2S_INFO in new source format, but rules in old format. Durty workaround for this.
 
-		$os = $this->source_engine;
-		$this->source_engine = false;
+        $os = $this->source_engine;
+        $this->source_engine = false;
 
-		$packet = $this->_preparePackets($packets);
+        $packet = $this->_preparePackets($packets);
 
-		$this->source_engine = $os;
-		
+        $this->source_engine = $os;
+        
 
-		if (!$packet) return false;
-		
-		$this->_parse_rules($packet);
-
-	}
+        if (!$packet) {
+            return false;
+        }
+        
+        $this->_parse_rules($packet);
+    }
 }

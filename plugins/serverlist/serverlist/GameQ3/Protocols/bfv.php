@@ -18,52 +18,53 @@
 
 
 namespace GameQ3\protocols;
- 
-class Bfv extends \GameQ3\Protocols\Gamespy2 {
-	protected $name = "bfv";
-	protected $name_long = "Battlefield Vietnam";
 
-	protected $query_port = 23000;
-	protected $connect_port = 14567;
-	protected $ports_type = self::PT_DIFFERENT_NONCOMPUTABLE_VARIABLE;
-	
-	protected function _put_var($key, $val) {
-		switch($key) {
-			case 'hostname':
-				$this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
-				break;
-			case 'mapname':
-				$this->result->addGeneral('map', $val);
-				break;
-			case 'gamever':
-				$this->result->addGeneral('version', $val);
-				break;
-			case 'gametype':
-				$this->result->addGeneral('mode', $val);
-				break;
-			case 'numplayers':
-				$this->result->addGeneral('num_players', $val);
-				break;
-			case 'maxplayers':
-				$this->result->addGeneral('max_players', $val);
-				break;
-			case 'reservedslots':
-				$this->result->addGeneral('private_players', $val);
-				$this->result->addSetting($key, $val);
-				break;
-			case 'password':
-				$this->result->addGeneral('password', $val == 1);
-				break;
-			case 'sv_punkbuster':
-				$this->result->addGeneral('secure', $val == 1);
-				break;
-			case 'hostport':
-				$this->setConnectPort($val);
-				$this->result->addSetting($key, $val);
-				break;
-			default:
-				$this->result->addSetting($key, $val);
-		}
-	}
+class Bfv extends \GameQ3\Protocols\Gamespy2
+{
+    protected $name = "bfv";
+    protected $name_long = "Battlefield Vietnam";
 
+    protected $query_port = 23000;
+    protected $connect_port = 14567;
+    protected $ports_type = self::PT_DIFFERENT_NONCOMPUTABLE_VARIABLE;
+    
+    protected function _put_var($key, $val)
+    {
+        switch ($key) {
+            case 'hostname':
+                $this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
+                break;
+            case 'mapname':
+                $this->result->addGeneral('map', $val);
+                break;
+            case 'gamever':
+                $this->result->addGeneral('version', $val);
+                break;
+            case 'gametype':
+                $this->result->addGeneral('mode', $val);
+                break;
+            case 'numplayers':
+                $this->result->addGeneral('num_players', $val);
+                break;
+            case 'maxplayers':
+                $this->result->addGeneral('max_players', $val);
+                break;
+            case 'reservedslots':
+                $this->result->addGeneral('private_players', $val);
+                $this->result->addSetting($key, $val);
+                break;
+            case 'password':
+                $this->result->addGeneral('password', $val == 1);
+                break;
+            case 'sv_punkbuster':
+                $this->result->addGeneral('secure', $val == 1);
+                break;
+            case 'hostport':
+                $this->setConnectPort($val);
+                $this->result->addSetting($key, $val);
+                break;
+            default:
+                $this->result->addSetting($key, $val);
+        }
+    }
 }

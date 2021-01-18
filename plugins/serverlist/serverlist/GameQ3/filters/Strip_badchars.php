@@ -19,20 +19,19 @@
  */
  
 namespace Plugins\ServerList\GameQ3\filters;
- 
-class Strip_badchars {
 
-	public static function filter(&$data, $args) {
+class Strip_badchars
+{
+    public static function filter(&$data, $args)
+    {
+        array_walk_recursive($data, function (&$val, $key) {
+            if (is_string($val)) {
+                $val = trim($val);
 
-		array_walk_recursive($data, function(&$val, $key) {
-			if (is_string($val)) {
-				$val = trim($val);
-
-				// http://stackoverflow.com/a/1401716
-				// http://stackoverflow.com/a/13695364
-				$val = htmlspecialchars_decode(htmlspecialchars($val, \ENT_SUBSTITUTE, 'UTF-8'));
-			}
-		});
-
-	}
+                // http://stackoverflow.com/a/1401716
+                // http://stackoverflow.com/a/13695364
+                $val = htmlspecialchars_decode(htmlspecialchars($val, \ENT_SUBSTITUTE, 'UTF-8'));
+            }
+        });
+    }
 }

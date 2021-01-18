@@ -19,23 +19,24 @@
 
 namespace GameQ3\protocols;
 
-
 // Players array is unusable, as it consists of "hidden"-0 rows for each player.
 
-class Rust extends \GameQ3\Protocols\Source {
-	protected $name = "rust";
-	protected $name_long = "Rust";
+class Rust extends \GameQ3\Protocols\Source
+{
+    protected $name = "rust";
+    protected $name_long = "Rust";
 
-	protected $query_port = 28016;
-	protected $connect_port = 28015;
-	protected $ports_type = self::PT_DIFFERENT_COMPUTABLE;
+    protected $query_port = 28016;
+    protected $connect_port = 28015;
+    protected $ports_type = self::PT_DIFFERENT_COMPUTABLE;
 
-	public function init() {
-		$this->forceRequested('settings', false);
-		
-		$this->forceRequested('players', false);
-		$this->result->setIgnore('players', true);
+    public function init()
+    {
+        $this->forceRequested('settings', false);
+        
+        $this->forceRequested('players', false);
+        $this->result->setIgnore('players', true);
 
-		parent::init();
-	}
+        parent::init();
+    }
 }

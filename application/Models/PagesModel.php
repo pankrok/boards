@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class PagesModel extends Model
 {
     protected $table = 'pages';
-	
-	 protected $fillable = 
-					[
-						'content',
-						'name',
-						'active'
-					];
+    
+    protected $fillable =
+                    [
+                        'content',
+                        'name',
+                        'active'
+                    ];
 }

@@ -16,26 +16,22 @@ use Slim\Psr7\Response;
 
 class EventMiddleware extends Middleware
 {
-	
-	public function __invoke (Request $request, RequestHandler $handler) {
-			
-		$routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
-		$route = $routeContext->getRoute();
-		if (empty($route)) {
-			throw new HttpNotFoundException($request);
-		}
-		$name = $route->getName();
-		if(substr($name, 0, 5) !== 'admin')
-		{		
-			$this->container->get('event')->addGlobalEvent('global.event');
-			$this->container->get('event')->addGlobalEvent($name);		
-		}
-		else
-		{
-			global $admin;
-			$admin = true;
-		}
-		
-		return $handler->handle($request);
-	}
+    public function __invoke(Request $request, RequestHandler $handler)
+    {
+        $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
+        if (empty($route)) {
+            throw new HttpNotFoundException($request);
+        }
+        $name = $route->getName();
+        if (substr($name, 0, 5) !== 'admin') {
+            $this->container->get('event')->addGlobalEvent('global.event');
+            $this->container->get('event')->addGlobalEvent($name);
+        } else {
+            global $admin;
+            $admin = true;
+        }
+        
+        return $handler->handle($request);
+    }
 }

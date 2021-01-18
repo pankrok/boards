@@ -8,9 +8,8 @@ class ReportReasonsModel extends Model
 {
     protected $table = 'report_reasons';
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'reason'
+            'reason'
         ];
-    
 }

@@ -3,20 +3,21 @@
 declare(strict_types = 1);
 
 namespace Application\Core\Modules\ErrorController;
+
 use Slim\Interfaces\ErrorRendererInterface;
 
 class ErrorMessageController implements ErrorRendererInterface
 {
     public function __invoke(\Throwable $e, bool $displayErrorDetails): string
     {
-		$data = file_get_contents(MAIN_DIR . '/public/pages/error.html');
-		$displayErrorDetails ? $style = 'body{padding:1em;} *{padding:0px;margin:3px;}' : $style = file_get_contents(MAIN_DIR . '/public/pages/style.css');
-		$displayErrorDetails ? $html = self::renderExceptionFragment($e) : $html = '';
-		$message = sprintf($data, $style, $e->getMessage(), $e->getCode(), $html);
-		return $message;
+        $data = file_get_contents(MAIN_DIR . '/public/pages/error.html');
+        $displayErrorDetails ? $style = 'body{padding:1em;} *{padding:0px;margin:3px;}' : $style = file_get_contents(MAIN_DIR . '/public/pages/style.css');
+        $displayErrorDetails ? $html = self::renderExceptionFragment($e) : $html = '';
+        $message = sprintf($data, $style, $e->getMessage(), $e->getCode(), $html);
+        return $message;
     }
-	
-	private function renderExceptionFragment(\Throwable $exception): string
+    
+    private function renderExceptionFragment(\Throwable $exception): string
     {
         $html = sprintf('<p class="output"><strong>Type:</strong> %s</p>', get_class($exception));
 

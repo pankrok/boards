@@ -9,14 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 class CostumBoxModel extends Model
 {
     protected $table = 'costum_boxes';
-	public $timestamps = false;
+    public $timestamps = false;
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'translate',
-			'name_prefix',
+            'translate',
+            'name_prefix',
             'name',
             'html',
         ];
-    
 }

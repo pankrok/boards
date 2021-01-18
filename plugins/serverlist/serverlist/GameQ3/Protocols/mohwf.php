@@ -19,56 +19,56 @@
  */
 
 namespace GameQ3\protocols;
- 
-class Mohwf extends \GameQ3\Protocols\Bf3 {
-	protected $name = 'mohwf';
-	protected $name_long = "Medal of Honor Warfighter";
 
-	
-	protected function _process_status($packets) {
-		$words = $this->_preparePackets($packets);
-		
-		$this->result->addGeneral('hostname', $words[1]);
-		$this->result->addGeneral('num_players', $this->filterInt($words[2]));
-		$this->result->addGeneral('max_players', $this->filterInt($words[3]));
-		$this->result->addGeneral('mode', $words[4]);
-		$this->result->addGeneral('map', $words[5]);
+class Mohwf extends \GameQ3\Protocols\Bf3
+{
+    protected $name = 'mohwf';
+    protected $name_long = "Medal of Honor Warfighter";
 
-		$this->result->addSetting('rounds_played', $words[6]);
-		$this->result->addSetting('rounds_total', $words[7]);
+    
+    protected function _process_status($packets)
+    {
+        $words = $this->_preparePackets($packets);
+        
+        $this->result->addGeneral('hostname', $words[1]);
+        $this->result->addGeneral('num_players', $this->filterInt($words[2]));
+        $this->result->addGeneral('max_players', $this->filterInt($words[3]));
+        $this->result->addGeneral('mode', $words[4]);
+        $this->result->addGeneral('map', $words[5]);
 
-		// Figure out the number of teams
-		$num_teams = intval($words[8]);
+        $this->result->addSetting('rounds_played', $words[6]);
+        $this->result->addSetting('rounds_total', $words[7]);
 
-		// Set the current index
-		$index_current = 9;
+        // Figure out the number of teams
+        $num_teams = intval($words[8]);
 
-		// Loop for the number of teams found, increment along the way
-		for($id=1; $id<=$num_teams; $id++) {
-			// We have tickets, but no team name. great...
-			$this->result->addTeam($id, $id, array('tickets' => $this->filterInt($words[$index_current])));
+        // Set the current index
+        $index_current = 9;
 
-			$index_current++;
-		}
+        // Loop for the number of teams found, increment along the way
+        for ($id=1; $id<=$num_teams; $id++) {
+            // We have tickets, but no team name. great...
+            $this->result->addTeam($id, $id, array('tickets' => $this->filterInt($words[$index_current])));
 
-		// Get and set the rest of the data points.
-		$this->result->addSetting('target_score', $words[$index_current]);
-		// it seems $words[$index_current + 1] is always empty
-		$this->result->addSetting('ranked', $words[$index_current + 2] === 'true' ? 1 : 0);
-		$this->result->addGeneral('secure', $words[$index_current + 3] === 'true');
-		$this->result->addGeneral('password', $words[$index_current + 4] === 'true');
-		$this->result->addSetting('uptime', $words[$index_current + 5]);
-		$this->result->addSetting('round_time', $words[$index_current + 6]);
+            $index_current++;
+        }
 
-		// The next 3 are empty in MOHWF, kept incase they start to work some day
-		// ip_port  $words[$index_current + 7]
-		$this->result->addSetting('punkbuster_version', $words[$index_current + 8]);
-		$this->result->addSetting('join_queue', $words[$index_current + 9] === 'true' ? 1 : 0);
-		
-		$this->result->addSetting('region', $words[$index_current + 10]);
-		$this->result->addSetting('pingsite', $words[$index_current + 11]);
-		$this->result->addSetting('country', $words[$index_current + 12]);
+        // Get and set the rest of the data points.
+        $this->result->addSetting('target_score', $words[$index_current]);
+        // it seems $words[$index_current + 1] is always empty
+        $this->result->addSetting('ranked', $words[$index_current + 2] === 'true' ? 1 : 0);
+        $this->result->addGeneral('secure', $words[$index_current + 3] === 'true');
+        $this->result->addGeneral('password', $words[$index_current + 4] === 'true');
+        $this->result->addSetting('uptime', $words[$index_current + 5]);
+        $this->result->addSetting('round_time', $words[$index_current + 6]);
 
-
-	}
+        // The next 3 are empty in MOHWF, kept incase they start to work some day
+        // ip_port  $words[$index_current + 7]
+        $this->result->addSetting('punkbuster_version', $words[$index_current + 8]);
+        $this->result->addSetting('join_queue', $words[$index_current + 9] === 'true' ? 1 : 0);
+        
+        $this->result->addSetting('region', $words[$index_current + 10]);
+        $this->result->addSetting('pingsite', $words[$index_current + 11]);
+        $this->result->addSetting('country', $words[$index_current + 12]);
+    }
 }

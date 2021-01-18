@@ -8,11 +8,10 @@ class CategoryModel extends Model
 {
     protected $table = 'categories';
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'name',
-			'category_order',
-			'active'
+            'name',
+            'category_order',
+            'active'
         ];
-    
 }

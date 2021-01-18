@@ -16,12 +16,13 @@ use Slim\Psr7\Response;
 
 class MessageMiddleware extends Middleware
 {
-	
-	public function __invoke (Request $request, RequestHandler $handler) {
-		
-		if(isset($_SESSION['errors'])) $this->container->get('view')->getEnvironment()->addGlobal('errors', $_SESSION['errors']);
+    public function __invoke(Request $request, RequestHandler $handler)
+    {
+        if (isset($_SESSION['errors'])) {
+            $this->container->get('view')->getEnvironment()->addGlobal('errors', $_SESSION['errors']);
+        }
         unset($_SESSION['errors']);
-		
-		return $handler->handle($request);
-	}
+        
+        return $handler->handle($request);
+    }
 }

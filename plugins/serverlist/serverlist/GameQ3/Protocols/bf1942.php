@@ -18,63 +18,65 @@
 
 
 namespace GameQ3\protocols;
- 
-class Bf1942 extends \GameQ3\Protocols\Gamespy {
-	protected $name = "bf1942";
-	protected $name_long = "Battlefield 1942";
 
-	protected $query_port = 23000;
-	protected $connect_port = 14567;
-	protected $ports_type = self::PT_DIFFERENT_NONCOMPUTABLE_VARIABLE;
-	
-	
-	protected function _put_var($key, $val) {
-		switch($key) {
-			case 'hostname':
-				$this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
-				break;
-			// case 'maptitle':
-			case 'mapname':
-				$this->result->addGeneral('map', $val);
-				break;
-			case 'gamever':
-				$this->result->addGeneral('version', $val);
-				break;
-			case 'gametype':
-				$this->result->addGeneral('mode', $val);
-				break;
-			case 'numplayers':
-				$this->result->addGeneral('num_players', $val);
-				break;
-			case 'maxplayers':
-				$this->result->addGeneral('max_players', $val);
-				break;
-			case 'reservedslots':
-				$this->result->addGeneral('private_players', $val);
-				break;
-			case 'password':
-				$this->result->addGeneral('password', $val == 1);
-				break;
-			case 'sv_punkbuster':
-				$this->result->addGeneral('secure', $val == 1);
-				$this->result->addSetting($key, $val);
-				break;
-			case 'tickets1':
-				$this->teams[1] = array();
-				$this->teams[1]['tickets'] = $val;
-				$this->result->addSetting($key, $val);
-				break;
-			case 'tickets2':
-				$this->teams[2] = array();
-				$this->teams[2]['tickets'] = $val;
-				$this->result->addSetting($key, $val);
-				break;
-			case 'hostport':
-				$this->setConnectPort($val);
-				$this->result->addSetting($key, $val);
-				break;
-			default:
-				$this->result->addSetting($key, $val);
-		}
-	}
+class Bf1942 extends \GameQ3\Protocols\Gamespy
+{
+    protected $name = "bf1942";
+    protected $name_long = "Battlefield 1942";
+
+    protected $query_port = 23000;
+    protected $connect_port = 14567;
+    protected $ports_type = self::PT_DIFFERENT_NONCOMPUTABLE_VARIABLE;
+    
+    
+    protected function _put_var($key, $val)
+    {
+        switch ($key) {
+            case 'hostname':
+                $this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
+                break;
+            // case 'maptitle':
+            case 'mapname':
+                $this->result->addGeneral('map', $val);
+                break;
+            case 'gamever':
+                $this->result->addGeneral('version', $val);
+                break;
+            case 'gametype':
+                $this->result->addGeneral('mode', $val);
+                break;
+            case 'numplayers':
+                $this->result->addGeneral('num_players', $val);
+                break;
+            case 'maxplayers':
+                $this->result->addGeneral('max_players', $val);
+                break;
+            case 'reservedslots':
+                $this->result->addGeneral('private_players', $val);
+                break;
+            case 'password':
+                $this->result->addGeneral('password', $val == 1);
+                break;
+            case 'sv_punkbuster':
+                $this->result->addGeneral('secure', $val == 1);
+                $this->result->addSetting($key, $val);
+                break;
+            case 'tickets1':
+                $this->teams[1] = array();
+                $this->teams[1]['tickets'] = $val;
+                $this->result->addSetting($key, $val);
+                break;
+            case 'tickets2':
+                $this->teams[2] = array();
+                $this->teams[2]['tickets'] = $val;
+                $this->result->addSetting($key, $val);
+                break;
+            case 'hostport':
+                $this->setConnectPort($val);
+                $this->result->addSetting($key, $val);
+                break;
+            default:
+                $this->result->addSetting($key, $val);
+        }
+    }
 }

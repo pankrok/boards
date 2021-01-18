@@ -9,15 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 class SkinsBoxesModel extends Model
 {
     protected $table = 'skins_boxes';
-	public $timestamps = false;
-	
-	 protected $fillable = 
-					[
-						'skin_id',
-						'box_id',
-						'box_order',
-						'side',
-						'hide_on_mobile',
-						'active'
-					];
+    public $timestamps = false;
+    
+    protected $fillable =
+                    [
+                        'skin_id',
+                        'box_id',
+                        'box_order',
+                        'side',
+                        'hide_on_mobile',
+                        'active'
+                    ];
 }

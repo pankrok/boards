@@ -10,13 +10,12 @@ class SkinsModel extends Model
 {
     protected $table = 'skins';
     
-    protected $fillable = 
+    protected $fillable =
         [
             'name',
-			'dirname',
+            'dirname',
             'author',
-			'version',
-			'active'
+            'version',
+            'active'
         ];
-    
 }

@@ -8,11 +8,10 @@ class GroupsModel extends Model
 {
     protected $table = 'groups';
     
-    protected $fillable = 
+    protected $fillable =
         [
             'username_html',
             'grupe_name',
-			'grupe_level',
+            'grupe_level',
         ];
-    
 }

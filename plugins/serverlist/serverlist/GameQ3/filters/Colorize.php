@@ -19,37 +19,38 @@
  */
  
 namespace Plugins\ServerList\GameQ3\filters;
- 
-class Colorize {
- 
-	// add html support
-	public static function filter(&$data, $args) {
 
-		switch($data['info']['protocol']) {
-			case 'quake2':
-			case 'quake3':
-			case 'doom3':
-				array_walk_recursive($data, "\\GameQ3\\filters\\Colorize::strip", array('t' => 'quake'));
-				break;
+class Colorize
+{
+ 
+    // add html support
+    public static function filter(&$data, $args)
+    {
+        switch ($data['info']['protocol']) {
+            case 'quake2':
+            case 'quake3':
+            case 'doom3':
+                array_walk_recursive($data, "\\GameQ3\\filters\\Colorize::strip", array('t' => 'quake'));
+                break;
 
-			case 'unreal2':
-			case 'ut3':
-			case 'gamespy3':  //not sure if gamespy3 supports ut colors but won't hurt
-			case 'gamespy2':
-				array_walk_recursive($data, "\\GameQ3\\filters\\Colorize::strip", array('t' => 'ut'));
-				break;
-			case 'lfs':
-				array_walk_recursive($data, "\\GameQ3\\filters\\Colorize::strip", array('t' => 'lfs'));
-				break;
-			default:
-				break;
-		}
-	}
-	
-	/*
-	
-	PORTION OF BAD-FORMATTED SHITCODE
-	
+            case 'unreal2':
+            case 'ut3':
+            case 'gamespy3':  //not sure if gamespy3 supports ut colors but won't hurt
+            case 'gamespy2':
+                array_walk_recursive($data, "\\GameQ3\\filters\\Colorize::strip", array('t' => 'ut'));
+                break;
+            case 'lfs':
+                array_walk_recursive($data, "\\GameQ3\\filters\\Colorize::strip", array('t' => 'lfs'));
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /*
+
+    PORTION OF BAD-FORMATTED SHITCODE
+
   function lgsl_parse_color($string, $type)
   {
     switch($type)
@@ -111,22 +112,23 @@ class Colorize {
     }
     return $string;
   }
-	
-	*/
-	
-	public static function strip(&$string, $key, $opts) {
-		if (is_string($string)) {
-			switch($opts['t']) {
-				case 'quake':
-					$string = preg_replace('#(\^.)#', '', $string);
-					break;
-				case 'ut':
-					$string = preg_replace('/\x1b.../', '', $string);
-					break;
-				case 'lfs':
-					$string = preg_replace('/<[^>]*>/i', '', $string);
-					break;
-			}
-		}
-	}
+
+    */
+    
+    public static function strip(&$string, $key, $opts)
+    {
+        if (is_string($string)) {
+            switch ($opts['t']) {
+                case 'quake':
+                    $string = preg_replace('#(\^.)#', '', $string);
+                    break;
+                case 'ut':
+                    $string = preg_replace('/\x1b.../', '', $string);
+                    break;
+                case 'lfs':
+                    $string = preg_replace('/<[^>]*>/i', '', $string);
+                    break;
+            }
+        }
+    }
 }

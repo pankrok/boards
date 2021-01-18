@@ -18,8 +18,9 @@
 
 
 namespace GameQ3\protocols;
- 
-class Ns2 extends \GameQ3\Protocols\Source {
-	protected $name = "ns2";
-	protected $name_long = "Natural Selection 2";
+
+class Ns2 extends \GameQ3\Protocols\Source
+{
+    protected $name = "ns2";
+    protected $name_long = "Natural Selection 2";
 }

@@ -18,8 +18,9 @@
 
 
 namespace GameQ3\protocols;
- 
-class Csgo extends \GameQ3\Protocols\Source {
-	protected $name = "csgo";
-	protected $name_long = "Counter-Strike: Global Offensive";
+
+class Csgo extends \GameQ3\Protocols\Source
+{
+    protected $name = "csgo";
+    protected $name_long = "Counter-Strike: Global Offensive";
 }

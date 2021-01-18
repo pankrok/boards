@@ -11,24 +11,19 @@ use Application\Models\PostsModel;
 
 class StatisticController extends Controller
 {
-
-	public function getStats()
-	{
-	
-		$data['users_count'] 	= UserModel::count();
-		$data['plots_count'] 	= PlotsModel::count();
-		$data['posts_count'] 	= PostsModel::count();
-		$user = UserModel::orderBy('created_at', 'DESC')->first() ?? null;
-											
-		if(isset($user))
-		{
-			$user->name_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];
-			$user = '<a href="' . self::base_url() . '/user/' . $this->urlMaker->toUrl($user->username) . '/' . $user->id .'">' . $user->name_html . '</a>';
-		}
-		$data['last_user'] = $user;
-		
-		return $data;
-		
-	}
-	
+    public function getStats()
+    {
+        $data['users_count'] 	= UserModel::count();
+        $data['plots_count'] 	= PlotsModel::count();
+        $data['posts_count'] 	= PostsModel::count();
+        $user = UserModel::orderBy('created_at', 'DESC')->first() ?? null;
+                                            
+        if (isset($user)) {
+            $user->name_html = $this->group->getGroupDate($user->main_group, $user->username)['username'];
+            $user = '<a href="' . self::base_url() . '/user/' . $this->urlMaker->toUrl($user->username) . '/' . $user->id .'">' . $user->name_html . '</a>';
+        }
+        $data['last_user'] = $user;
+        
+        return $data;
+    }
 }

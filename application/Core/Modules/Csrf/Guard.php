@@ -478,5 +478,4 @@ class Guard implements MiddlewareInterface
     {
         return $this->keyPair[$this->getTokenValueKey()] ?? null;
     }
-  
 }

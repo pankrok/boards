@@ -18,41 +18,43 @@
 
 
 namespace GameQ3\protocols;
- 
-class Arma extends \GameQ3\Protocols\Gamespy2 {
-	protected $name = "arma";
-	protected $name_long = "Armed Assault";
 
-	protected $query_port = 2302;
-	protected $ports_type = self::PT_SAME;
-	
-	/// TODO: teamids are not teams at all. It is something like rank. Find this out.
+class Arma extends \GameQ3\Protocols\Gamespy2
+{
+    protected $name = "arma";
+    protected $name_long = "Armed Assault";
 
-	protected function _put_var($key, $val) {
-		switch($key) {
-			case 'hostname':
-				$this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
-				break;
-			case 'mission':
-				$this->result->addGeneral('map', $val);
-				break;
-			case 'gamever':
-				$this->result->addGeneral('version', $val);
-				break;
-			case 'gametype':
-				$this->result->addGeneral('mode', $val);
-				break;
-			case 'numplayers':
-				$this->result->addGeneral('num_players', $val);
-				break;
-			case 'maxplayers':
-				$this->result->addGeneral('max_players', $val);
-				break;
-			case 'password':
-				$this->result->addGeneral('password', $val == 1);
-				break;
-			default:
-				$this->result->addSetting($key, $val);
-		}
-	}
+    protected $query_port = 2302;
+    protected $ports_type = self::PT_SAME;
+    
+    /// TODO: teamids are not teams at all. It is something like rank. Find this out.
+
+    protected function _put_var($key, $val)
+    {
+        switch ($key) {
+            case 'hostname':
+                $this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
+                break;
+            case 'mission':
+                $this->result->addGeneral('map', $val);
+                break;
+            case 'gamever':
+                $this->result->addGeneral('version', $val);
+                break;
+            case 'gametype':
+                $this->result->addGeneral('mode', $val);
+                break;
+            case 'numplayers':
+                $this->result->addGeneral('num_players', $val);
+                break;
+            case 'maxplayers':
+                $this->result->addGeneral('max_players', $val);
+                break;
+            case 'password':
+                $this->result->addGeneral('password', $val == 1);
+                break;
+            default:
+                $this->result->addSetting($key, $val);
+        }
+    }
 }

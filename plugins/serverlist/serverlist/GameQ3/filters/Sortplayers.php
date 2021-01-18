@@ -19,83 +19,86 @@
  */
  
 namespace Plugins\ServerList\GameQ3\filters;
+
+class Sortplayers
+{
+    const DEFAULT_ORDER = 'asc';
  
-class Sortplayers {
+    public static function filter(&$data, $args)
+    {
+        if (empty($data['players'])) {
+            return;
+        }
 
-	const DEFAULT_ORDER = 'asc';
- 
-	public static function filter(&$data, $args) {
-		if (empty($data['players']))
-			return;
-
-		$sortkeys = array(
-			array('key' => 'name', 'order' => 'asc')
-		);
-		if (isset($args['sortkeys'])) {
-			$sortkeys = $args['sortkeys'];
-		} else 
-		if (isset($args['sortkey'])) {
-			$sortkeys = array('key' => $args['sortkey'], 'order' => isset($args['order']) ? $args['order'] : self::DEFAULT_ORDER);
-		}
+        $sortkeys = array(
+            array('key' => 'name', 'order' => 'asc')
+        );
+        if (isset($args['sortkeys'])) {
+            $sortkeys = $args['sortkeys'];
+        } elseif (isset($args['sortkey'])) {
+            $sortkeys = array('key' => $args['sortkey'], 'order' => isset($args['order']) ? $args['order'] : self::DEFAULT_ORDER);
+        }
 
 
-		$s = array();
-		foreach($sortkeys as $k) {
-			$r = new \stdClass();
+        $s = array();
+        foreach ($sortkeys as $k) {
+            $r = new \stdClass();
 
-			if (!isset($k['key']))
-				continue;
+            if (!isset($k['key'])) {
+                continue;
+            }
 
-			$r->key = $k['key'];
+            $r->key = $k['key'];
 
-			if (!isset($k['order']))
-				$k['order'] = self::DEFAULT_ORDER;
+            if (!isset($k['order'])) {
+                $k['order'] = self::DEFAULT_ORDER;
+            }
 
-			$k['order'] = ($k['order'] == 'asc') || ($k['order'] == \SORT_ASC);
+            $k['order'] = ($k['order'] == 'asc') || ($k['order'] == \SORT_ASC);
 
-			$r->order = $k['order'];
+            $r->order = $k['order'];
 
-			$s []= $r;
-		}
-		$sortkeys = $s;
-		unset($s);
-		
-		uasort($data['players'], function($a, $b) use($sortkeys) {
+            $s []= $r;
+        }
+        $sortkeys = $s;
+        unset($s);
+        
+        uasort($data['players'], function ($a, $b) use ($sortkeys) {
+            foreach ($sortkeys as $k) {
+                if (isset($a[$k->key]) && isset($b[$k->key]) && !is_array($a[$k->key]) && !is_array($b[$k->key])) {
+                    $ca = $a[$k->key];
+                    $cb = $b[$k->key];
+                } elseif (isset($a['other'][$k->key]) && isset($b['other'][$k->key]) && !is_array($a['other'][$k->key]) && !is_array($b['other'][$k->key])) {
+                    $ca = $a['other'][$k->key];
+                    $cb = $b['other'][$k->key];
+                } else {
+                    continue;
+                }
 
-			foreach($sortkeys as $k) {
-				if (isset($a[$k->key]) && isset($b[$k->key]) && !is_array($a[$k->key]) && !is_array($b[$k->key])) {
-					$ca = $a[$k->key];
-					$cb = $b[$k->key];
-				} else
-				if (isset($a['other'][$k->key]) && isset($b['other'][$k->key]) && !is_array($a['other'][$k->key]) && !is_array($b['other'][$k->key])) {
-					$ca = $a['other'][$k->key];
-					$cb = $b['other'][$k->key];
-				} else {
-					continue;
-				}
+                if (is_string($ca) || is_string($cb)) {
+                    $res = strcasecmp("" . $ca, "" . $cb);
 
-				if (is_string($ca) || is_string($cb)) {
-					$res = strcasecmp("" . $ca, "" . $cb);
+                    if ($res == 0) {
+                        continue;
+                    }
 
-					if ($res == 0)
-						continue;
+                    $res = $res < 0;
+                } else {
+                    if ($ca === $cb) {
+                        continue;
+                    }
 
-					$res = $res < 0;
-				} else {
-					if ($ca === $cb)
-						continue;
+                    $res = $ca < $cb;
+                }
 
-					$res = $ca < $cb;
-				}
+                if (!$k->order) {
+                    $res = !$res;
+                }
 
-				if (!$k->order)
-					$res = !$res;
+                return ($res ? -1 : 1);
+            }
 
-				return ($res ? -1 : 1);
-			}
-
-			return 0;
-		});
-	}
-	
+            return 0;
+        });
+    }
 }

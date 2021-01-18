@@ -23,8 +23,8 @@ namespace GameQ3\protocols;
  * Sometimes BF4 sends last players packet after ~100ms from previous, leading to "length OOB exception". Make sure to set higher timeouts in this case. For example, 300ms: $gq->setOption('read_got_timeout', 300);
  */
  
-class Bf4 extends \GameQ3\Protocols\Bf3 {
-	protected $name = "bf4";
-	protected $name_long = "Battlefield 4";
-
+class Bf4 extends \GameQ3\Protocols\Bf3
+{
+    protected $name = "bf4";
+    protected $name_long = "Battlefield 4";
 }

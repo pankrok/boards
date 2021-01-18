@@ -10,14 +10,13 @@ class ServerListModel extends Model
 {
     protected $table = 'serverlist';
     
-    protected $fillable = 
+    protected $fillable =
         [
             'name',
-			'game',
-			'ip',
+            'game',
+            'ip',
             'port',
-			'admin'
-			
+            'admin'
+            
         ];
-    
 }

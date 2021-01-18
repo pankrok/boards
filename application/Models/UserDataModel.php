@@ -7,18 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class UserDataModel extends Model
 {
     protected $table = 'userdata';
-	public $timestamps = false;
+    public $timestamps = false;
     
-    protected $fillable = 
+    protected $fillable =
         [
             'user_id',
             'name',
             'surname',
-			'rank',
-			'sex',
-			'location',
-			'website',
-			'bday'
-		];
-		
+            'rank',
+            'sex',
+            'location',
+            'website',
+            'bday'
+        ];
 }

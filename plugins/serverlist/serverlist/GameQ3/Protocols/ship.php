@@ -18,31 +18,34 @@
 
 
 namespace GameQ3\protocols;
- 
+
 use GameQ3\Buffer;
 
-class Ship extends \GameQ3\Protocols\Source {
-	protected $name = "ship";
-	protected $name_long = "The Ship";
+class Ship extends \GameQ3\Protocols\Source
+{
+    protected $name = "ship";
+    protected $name_long = "The Ship";
 
-	protected function _parseDetailsExtension(Buffer &$buf, $appid) {
-		if ($appid == 2400) {
-			// mode
-			$m = $buf->readInt8();
-			switch ($m) {
-				case 0: $ms = "Hunt"; break;
-				case 1: $ms = "Elimination"; break;
-				case 2: $ms = "Duel"; break;
-				case 3: $ms = "Deathmatch"; break;
-				case 4: $ms = "VIP Team"; break;
-				case 5: $ms = "Team Elimination"; break;
-				default: $ms = false;
-			}
-			if ($ms)
-				$this->result->addGeneral('mode', $ms);
-				
-			$this->result->addSetting('the_ship_witnesses', $buf->readInt8());
-			$this->result->addSetting('the_ship_duration', $buf->readInt8());
-		}
-	}
+    protected function _parseDetailsExtension(Buffer &$buf, $appid)
+    {
+        if ($appid == 2400) {
+            // mode
+            $m = $buf->readInt8();
+            switch ($m) {
+                case 0: $ms = "Hunt"; break;
+                case 1: $ms = "Elimination"; break;
+                case 2: $ms = "Duel"; break;
+                case 3: $ms = "Deathmatch"; break;
+                case 4: $ms = "VIP Team"; break;
+                case 5: $ms = "Team Elimination"; break;
+                default: $ms = false;
+            }
+            if ($ms) {
+                $this->result->addGeneral('mode', $ms);
+            }
+                
+            $this->result->addSetting('the_ship_witnesses', $buf->readInt8());
+            $this->result->addSetting('the_ship_duration', $buf->readInt8());
+        }
+    }
 }

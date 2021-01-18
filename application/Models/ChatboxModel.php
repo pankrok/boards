@@ -10,10 +10,9 @@ class ChatboxModel extends Model
 {
     protected $table = 'chatbox';
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'user_id',
-			'content'
+            'user_id',
+            'content'
         ];
-    
 }

@@ -26,96 +26,100 @@ namespace GameQ3\protocols;
  
  // https://github.com/TehGimp/KerbalMultiPlayer/blob/c4890648b9919938bb171ede6e83562c4aa47537/KLFServer/Server.cs#L1019
 
-class kerbalmultiplayer extends \GameQ3\Protocols {
-	protected $protocol = 'kerbalmultiplayer';
-	protected $name = 'kerbalmultiplayer';
-	protected $name_long = "Kerbal Space Program - Multiplayer";
-	
-	protected $url = "/";
+class kerbalmultiplayer extends \GameQ3\Protocols
+{
+    protected $protocol = 'kerbalmultiplayer';
+    protected $name = 'kerbalmultiplayer';
+    protected $name_long = "Kerbal Space Program - Multiplayer";
+    
+    protected $url = "/";
 
-	protected $query_port = 8080;
-	protected $connect_port = 2076;
-	protected $ports_type = self::PT_DIFFERENT_NONCOMPUTABLE_VARIABLE;
+    protected $query_port = 8080;
+    protected $connect_port = 2076;
+    protected $ports_type = self::PT_DIFFERENT_NONCOMPUTABLE_VARIABLE;
 
-	protected function _put_var($key, $val) {
-		switch($key) {
-			case 'Version':
-				$this->result->addGeneral('version', $val);
-				break;
+    protected function _put_var($key, $val)
+    {
+        switch ($key) {
+            case 'Version':
+                $this->result->addGeneral('version', $val);
+                break;
 
-			case 'Port':
-				$this->result->addSetting($key, $val);
-				$this->setConnectPort($val);
-				break;
+            case 'Port':
+                $this->result->addSetting($key, $val);
+                $this->setConnectPort($val);
+                break;
 
-			case 'Num Players':
-				$pa = explode('/', $val, 2);
-				if (!isset($pa[1])) {
-					$this->debug("Bad Num Players row value: " . $val);
-					break;
-				}
+            case 'Num Players':
+                $pa = explode('/', $val, 2);
+                if (!isset($pa[1])) {
+                    $this->debug("Bad Num Players row value: " . $val);
+                    break;
+                }
 
-				$n = intval(trim($pa[0]));
-				$m = intval(trim($pa[1]));
+                $n = intval(trim($pa[0]));
+                $m = intval(trim($pa[1]));
 
-				$this->result->addGeneral('num_players', $n);
-				$this->result->addGeneral('max_players', $m);
-				break;
+                $this->result->addGeneral('num_players', $n);
+                $this->result->addGeneral('max_players', $m);
+                break;
 
-			case 'Players':
-				$pa = explode(',', $val);
+            case 'Players':
+                $pa = explode(',', $val);
 
-				foreach ($pa as $pname) {
-					$pname = trim($pname);
+                foreach ($pa as $pname) {
+                    $pname = trim($pname);
 
-					$this->result->addPlayer($pname);
-				}
-				break;
+                    $this->result->addPlayer($pname);
+                }
+                break;
 
-			case 'Information':
-				$this->result->addGeneral('hostname', $val);
-				break;
+            case 'Information':
+                $this->result->addGeneral('hostname', $val);
+                break;
 
-			// the rest is just settings
-			default:
-				$this->result->addSetting($key, $val);
-		}
-	}
-	
-	public function init() {
-		$this->queue('status', 'http', $this->url);
-	}
+            // the rest is just settings
+            default:
+                $this->result->addSetting($key, $val);
+        }
+    }
+    
+    public function init()
+    {
+        $this->queue('status', 'http', $this->url);
+    }
 
-	protected function processRequests($qid, $requests) {
-		if ($qid === 'status') {
-			return $this->_process_status($requests['responses']);
-		}
-	}
-	
-	protected function _process_status($packets) {
-		$data = $packets[0];
-		unset($packets);
+    protected function processRequests($qid, $requests)
+    {
+        if ($qid === 'status') {
+            return $this->_process_status($requests['responses']);
+        }
+    }
+    
+    protected function _process_status($packets)
+    {
+        $data = $packets[0];
+        unset($packets);
 
-		$data = trim($data);
+        $data = trim($data);
 
-		$data_a = explode("\n", $data);
+        $data_a = explode("\n", $data);
 
-		foreach($data_a as $row) {
-			$kv = explode(':', $row, 2);
+        foreach ($data_a as $row) {
+            $kv = explode(':', $row, 2);
 
-			if (!isset($kv[1])) {
-				$this->debug("Skipped row without colon: " . $row);
-				continue;
-			}
+            if (!isset($kv[1])) {
+                $this->debug("Skipped row without colon: " . $row);
+                continue;
+            }
 
-			$k = trim($kv[0]);
+            $k = trim($kv[0]);
 
-			if (strpos($k, ">") !== false || strpos($k, "<") !== false) {
-				$this->debug("Key seems to contain HTML tag - skipped");
-				continue;
-			}
-			$this->_put_var($k, trim($kv[1]));
-		}
-	}
-	
+            if (strpos($k, ">") !== false || strpos($k, "<") !== false) {
+                $this->debug("Key seems to contain HTML tag - skipped");
+                continue;
+            }
+            $this->_put_var($k, trim($kv[1]));
+        }
+    }
 }

@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'Announcements' => 'Ogłoszenia'
+    'Announcements' => 'Ogłoszenia'
 ];

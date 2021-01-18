@@ -18,39 +18,41 @@
 
 namespace GameQ3\protocols;
 
-class Arma3 extends \GameQ3\Protocols\Gamespy2 {
-	protected $name = "arma3";
-	protected $name_long = "Armed Assault 3";
+class Arma3 extends \GameQ3\Protocols\Gamespy2
+{
+    protected $name = "arma3";
+    protected $name_long = "Armed Assault 3";
 
-	protected $query_port = 2302;
-	protected $ports_type = self::PT_SAME;
+    protected $query_port = 2302;
+    protected $ports_type = self::PT_SAME;
 
-	protected function _put_var($key, $val) {
-		switch($key) {
-			case 'hostname':
-				$this->result->addGeneral('hostname', $val);
-				break;
-			case 'mission':
-				$this->result->addGeneral('map', $val);
-				$this->result->addSetting($key, $val);
-				break;
-			case 'gamever':
-				$this->result->addGeneral('version', $val);
-				break;
-			case 'gametype':
-				$this->result->addGeneral('mode', $val);
-				break;
-			case 'numplayers':
-				$this->result->addGeneral('num_players', $val);
-				break;
-			case 'maxplayers':
-				$this->result->addGeneral('max_players', $val);
-				break;
-			case 'password':
-				$this->result->addGeneral('password', $val == 1);
-				break;
-			default:
-				$this->result->addSetting($key, $val);
-		}
-	}
+    protected function _put_var($key, $val)
+    {
+        switch ($key) {
+            case 'hostname':
+                $this->result->addGeneral('hostname', $val);
+                break;
+            case 'mission':
+                $this->result->addGeneral('map', $val);
+                $this->result->addSetting($key, $val);
+                break;
+            case 'gamever':
+                $this->result->addGeneral('version', $val);
+                break;
+            case 'gametype':
+                $this->result->addGeneral('mode', $val);
+                break;
+            case 'numplayers':
+                $this->result->addGeneral('num_players', $val);
+                break;
+            case 'maxplayers':
+                $this->result->addGeneral('max_players', $val);
+                break;
+            case 'password':
+                $this->result->addGeneral('password', $val == 1);
+                break;
+            default:
+                $this->result->addSetting($key, $val);
+        }
+    }
 }

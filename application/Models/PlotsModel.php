@@ -8,19 +8,18 @@ class PlotsModel extends Model
 {
     protected $table = 'plots';
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'plot_name',
-			'plot_tags',
-			'board_id',
-			'author_id',
-			'plot_active',
-			'pinned',
-			'pinned_order',
-			'locked',
-			'hidden',
-			'views',
-	
-        ];
+            'plot_name',
+            'plot_tags',
+            'board_id',
+            'author_id',
+            'plot_active',
+            'pinned',
+            'pinned_order',
+            'locked',
+            'hidden',
+            'views',
     
+        ];
 }

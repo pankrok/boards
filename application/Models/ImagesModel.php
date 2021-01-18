@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class ImagesModel extends Model
 {
     protected $table = 'images';
-	public $timestamps = false;
+    public $timestamps = false;
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'original',
-			'_38',
-			'_85',
-			'_150',		
+            'original',
+            '_38',
+            '_85',
+            '_150',
         ];
-    
 }

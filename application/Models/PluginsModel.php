@@ -8,12 +8,11 @@ class PluginsModel extends Model
 {
     protected $table = 'plugins';
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'plugin_name',
-			'active',
-			'install',
-			'version'		
+            'plugin_name',
+            'active',
+            'install',
+            'version'
         ];
-
 }

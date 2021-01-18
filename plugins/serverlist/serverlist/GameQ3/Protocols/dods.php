@@ -18,8 +18,9 @@
 
 
 namespace GameQ3\protocols;
- 
-class Dods extends \GameQ3\Protocols\Source {
-	protected $name = "dods";
-	protected $name_long = "Day of Defeat: Source";
+
+class Dods extends \GameQ3\Protocols\Source
+{
+    protected $name = "dods";
+    protected $name_long = "Day of Defeat: Source";
 }

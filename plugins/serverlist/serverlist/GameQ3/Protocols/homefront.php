@@ -18,8 +18,9 @@
 
 
 namespace GameQ3\protocols;
- 
-class Homefront extends \GameQ3\Protocols\Source {
-	protected $name = "homefront";
-	protected $name_long = "Homefront";
+
+class Homefront extends \GameQ3\Protocols\Source
+{
+    protected $name = "homefront";
+    protected $name_long = "Homefront";
 }

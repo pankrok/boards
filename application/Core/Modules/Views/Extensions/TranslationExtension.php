@@ -8,38 +8,34 @@ use Twig\TwigFunction;
 
 class TranslationExtension extends AbstractExtension
 {
-	
-	protected $translator;
-	
-	public function __construct(Translator $translator)
-	{
-		$this->translator = $translator;
-	}
-	
-	public function getFunctions()
-	{
-		return 	[
-			new TwigFunction('trans', [$this, 'trans']),
-			new TwigFunction('locale', [$this, 'locale'])
-		];
-		
-	}
-	
-	public function trans($key)
-	{
-		$result = substr($key, 0, 6);
-	
-		if($result == 'admin.' || $result == 'plugin') 
-			return $this->translator->trans($key);
+    protected $translator;
+    
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+    
+    public function getFunctions()
+    {
+        return 	[
+            new TwigFunction('trans', [$this, 'trans']),
+            new TwigFunction('locale', [$this, 'locale'])
+        ];
+    }
+    
+    public function trans($key)
+    {
+        $result = substr($key, 0, 6);
+    
+        if ($result == 'admin.' || $result == 'plugin') {
+            return $this->translator->trans($key);
+        }
 
-		return $this->translator->trans('lang.'.$key);
-		
-		
-	}
-	
-	public function locale()
-	{
-		return $this->translator->getLocale();
-	}
-	
+        return $this->translator->trans('lang.'.$key);
+    }
+    
+    public function locale()
+    {
+        return $this->translator->getLocale();
+    }
 }

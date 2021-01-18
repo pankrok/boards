@@ -31,9 +31,8 @@ $app->setBasePath((function () {
     return '';
 })());
 
-$container->set('getBasePath', function() use($app)
-{
-	return $app->getBasePath();
+$container->set('getBasePath', function () use ($app) {
+    return $app->getBasePath();
 });
 
 
@@ -47,25 +46,25 @@ $container->set('db_settings', function ($container) {
 });
 
 $routeParser = $app->getRouteCollector()->getRouteParser();
-$container->set('router', function($container) use ($routeParser) {
-	return $routeParser;
+$container->set('router', function ($container) use ($routeParser) {
+    return $routeParser;
 });
 
-$container->set('purifier', function() {
-	return  new HTMLPurifier();
+$container->set('purifier', function () {
+    return  new HTMLPurifier();
 });
 
-$container->set('mailer', function() {
-	return  new Application\Core\Modules\Mailer\MailCore();
+$container->set('mailer', function () {
+    return  new Application\Core\Modules\Mailer\MailCore();
 });
 
-$container->set('cache', function($container) {
-	$cacheSettings = $container->get('settings')['cache'];
-	return new Application\Core\Modules\Cache\CacheCore($cacheSettings);
+$container->set('cache', function ($container) {
+    $cacheSettings = $container->get('settings')['cache'];
+    return new Application\Core\Modules\Cache\CacheCore($cacheSettings);
 });
 
-$container->set('images', function($container) {
-	return new Application\Core\Modules\Images\Resizer($container->get('settings')['images']['path']);
+$container->set('images', function ($container) {
+    return new Application\Core\Modules\Images\Resizer($container->get('settings')['images']['path']);
 });
 
 $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -74,125 +73,123 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 $container->set('db', function ($container) use ($capsule) {
-    return $capsule;  
+    return $capsule;
 });
 
 $container->set('translator', function ($container) {
-	$fallback = $container->get('settings')['translations']['fallback'];
-	$loader = new \Illuminate\Translation\FileLoader(
-		new \Illuminate\Filesystem\Filesystem(), MAIN_DIR . '/environment/Translations'
-	);
-	$translator = new \Illuminate\Translation\Translator($loader, $_SESSION['lang'] ?? $fallback);
-	$translator->setFallback($fallback);
-	return $translator;
+    $fallback = $container->get('settings')['translations']['fallback'];
+    $loader = new \Illuminate\Translation\FileLoader(
+        new \Illuminate\Filesystem\Filesystem(),
+        MAIN_DIR . '/environment/Translations'
+    );
+    $translator = new \Illuminate\Translation\Translator($loader, $_SESSION['lang'] ?? $fallback);
+    $translator->setFallback($fallback);
+    return $translator;
 });
 
-$container->set('urlMaker', function(){	
-	return new \Application\Core\Modules\ToUrl\ToUrl();	
+$container->set('urlMaker', function () {
+    return new \Application\Core\Modules\ToUrl\ToUrl();
 });
 
-$container->set('flash', function($container) {
-	return new \Slim\Flash\Messages;
+$container->set('flash', function ($container) {
+    return new \Slim\Flash\Messages;
 });
 
-$container->set('UnreadController', function($container) {
-	return new \Application\Modules\Board\UnreadController($container);	
+$container->set('UnreadController', function ($container) {
+    return new \Application\Modules\Board\UnreadController($container);
 });
 
-$container->set('view', function($container){
-
-	$assets = $container->get('getBasePath') . '/public';
-	
-	$twigSettings = $container->get('settings')['twig'];	
-	$skin = $_SESSION['skin'] ?? $twigSettings['skin'];	
-		
-	
-    $view = new \Slim\Views\Twig(MAIN_DIR . '/skins/'. $skin . '/tpl',[
+$container->set('view', function ($container) {
+    $assets = $container->get('getBasePath') . '/public';
+    
+    $twigSettings = $container->get('settings')['twig'];
+    $skin = $_SESSION['skin'] ?? $twigSettings['skin'];
+        
+    
+    $view = new \Slim\Views\Twig(MAIN_DIR . '/skins/'. $skin . '/tpl', [
         'cache' => (bool)$twigSettings['cache'] ? MAIN_DIR . '/skins/'. $skin . '/cache/twig' : false,
         'debug' => (bool)$twigSettings['debug'],
     ]);
     
     $router = $container->get('router');
-	if($twigSettings['debug']) $view->addExtension(new \Twig\Extension\DebugExtension());
-	$view->addExtension(new \Twig\Extension\StringLoaderExtension());
-	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
-	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
-	$view->addExtension(new Application\Core\Modules\Views\Extensions\OnlineExtension($container->get('OnlineController')));
-	$view->addExtension(new Application\Core\Modules\Views\Extensions\UnreadExtension($container->get('UnreadController')));
+    if ($twigSettings['debug']) {
+        $view->addExtension(new \Twig\Extension\DebugExtension());
+    }
+    $view->addExtension(new \Twig\Extension\StringLoaderExtension());
+    $view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
+    $view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
+    $view->addExtension(new Application\Core\Modules\Views\Extensions\OnlineExtension($container->get('OnlineController')));
+    $view->addExtension(new Application\Core\Modules\Views\Extensions\UnreadExtension($container->get('UnreadController')));
 
-	if(file_exists(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'))
-	{
-		$skinAssets = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'), true);
-		
-		$view->getEnvironment()->addGlobal('css', $skinAssets['css']);
-		$view->getEnvironment()->addGlobal('js', $skinAssets['js']);
-	}
-	
+    if (file_exists(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json')) {
+        $skinAssets = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'), true);
+        
+        $view->getEnvironment()->addGlobal('css', $skinAssets['css']);
+        $view->getEnvironment()->addGlobal('js', $skinAssets['js']);
+    }
+    
 
-	
-    $view->getEnvironment()->addGlobal('auth', [ 
+    
+    $view->getEnvironment()->addGlobal('auth', [
        'check' => $container->get('auth')->check(),
        'user' => $container->get('auth')->user(),
-	   'admin' => $container->get('auth')->checkAdmin()
+       'admin' => $container->get('auth')->checkAdmin()
     ]);
-	
-	$view->getEnvironment()->addGlobal('menus', Application\Modules\Board\MenuController::getMenu());	
-	
-	if(file_exists(MAIN_DIR . '/environment/Config/lock'))
-	{
-		$lock = 1;
-	}
-	else
-	{
-		$lock = $container->get('settings')['board']['boards_off'];
-	}
-	
-	$view->getEnvironment()->addGlobal('boards_off', $lock);
-	$view->getEnvironment()->addGlobal('main_title', $container->get('settings')['board']['main_page_name']);
-	
-	$view->getEnvironment()->addGlobal('assets', $assets);
-	$view->getEnvironment()->addGlobal('skin_assets', $skinAssets);
-	
+    
+    $view->getEnvironment()->addGlobal('menus', Application\Modules\Board\MenuController::getMenu());
+    
+    if (file_exists(MAIN_DIR . '/environment/Config/lock')) {
+        $lock = 1;
+    } else {
+        $lock = $container->get('settings')['board']['boards_off'];
+    }
+    
+    $view->getEnvironment()->addGlobal('boards_off', $lock);
+    $view->getEnvironment()->addGlobal('main_title', $container->get('settings')['board']['main_page_name']);
+    
+    $view->getEnvironment()->addGlobal('assets', $assets);
+    $view->getEnvironment()->addGlobal('skin_assets', $skinAssets);
+    
     $view->getEnvironment()->addGlobal('flash', $container->get('flash'));
-	$view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
-	
+    $view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
+    
     return $view;
 });
 
-$container->set('adminView', function($container){
-	
-	$twigSettings = $container->get('settings')['admin'];
+$container->set('adminView', function ($container) {
+    $twigSettings = $container->get('settings')['admin'];
     $view = new \Slim\Views\Twig(
-		[
-			MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',
-			MAIN_DIR.'/plugins'
-		],
-		[
-			'cache' => false,
-			'debug' => true, // remove debug!
-		]);
+        [
+            MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',
+            MAIN_DIR.'/plugins'
+        ],
+        [
+            'cache' => false,
+            'debug' => true, // remove debug!
+        ]
+    );
     $view->addExtension(new \Twig\Extension\DebugExtension()); // remove debug!
-	
+    
     $router = $container->get('router');
-	
+    
 
-	$view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
-	$view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
-	
-	
-	$filter = new \Twig\TwigFilter('base64_decode', function ($string) {
-		return base64_decode($string);
-	});
+    $view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
+    $view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
+    
+    
+    $filter = new \Twig\TwigFilter('base64_decode', function ($string) {
+        return base64_decode($string);
+    });
 
-	$lock = file_exists(MAIN_DIR . '/environment/Config/lock');
-	$view->getEnvironment()->addGlobal('lock', $lock);
-	$view->getEnvironment()->addFilter($filter);	
-	$view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);
+    $lock = file_exists(MAIN_DIR . '/environment/Config/lock');
+    $view->getEnvironment()->addGlobal('lock', $lock);
+    $view->getEnvironment()->addFilter($filter);
+    $view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);
     $view->getEnvironment()->addGlobal('admin', $container->get('auth')->checkAdmin());
-	$view->getEnvironment()->addGlobal('board_link', $_SERVER['HTTP_HOST']);
+    $view->getEnvironment()->addGlobal('board_link', $_SERVER['HTTP_HOST']);
     $view->getEnvironment()->addGlobal('flash', $container->get('flash'));
-	$view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
-	
+    $view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
+    
     return $view;
 });
 
@@ -201,7 +198,7 @@ $container->set('auth', function ($container) {
 });
 
 $container->set('validator', function () {
-  return new Application\Core\Modules\Validation\Validator;  
+    return new Application\Core\Modules\Validation\Validator;
 });
 
 $container->set('csrf', function ($container) {
@@ -213,16 +210,16 @@ $container->set('csrf', function ($container) {
     return $guard;
 });
 
-$container->set('captcha', function($container) use ($routeParser) {
-	return new LordDashMe\SimpleCaptcha\Captcha();
+$container->set('captcha', function ($container) use ($routeParser) {
+    return new LordDashMe\SimpleCaptcha\Captcha();
 });
 
-$container->set('event', function($container) {
-	return new Application\Core\Modules\Plugins\PluginController($container);
+$container->set('event', function ($container) {
+    return new Application\Core\Modules\Plugins\PluginController($container);
 });
 
-$container->set('group', function() {
-	return new Application\Modules\User\GroupController();
+$container->set('group', function () {
+    return new Application\Modules\User\GroupController();
 });
 
 $middleware = require 'Middleware.php';
@@ -234,6 +231,3 @@ $modules($app);
 v::with('Application\\Core\\Modules\\Validation\\Rules\\');
 
 require 'Routes.php';
-
-
-

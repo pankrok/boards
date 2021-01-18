@@ -22,42 +22,47 @@ namespace GameQ3\protocols;
 
 // http://wiki.vg/Server_List_Ping#1.6
 
-class Minecraft16 extends \GameQ3\Protocols\Minecraft {
+class Minecraft16 extends \GameQ3\Protocols\Minecraft
+{
+    protected $protocol_version = "\x4a";
 
-	protected $protocol_version = "\x4a";
+    protected $packets = null;
+    
+    protected $protocol = 'minecraft16';
+    protected $name = 'minecraft';
+    protected $name_long = "Minecraft 1.6";
+    
+    protected function _toShort($i)
+    {
+        return pack('n*', $i);
+    }
 
-	protected $packets = null;
-	
-	protected $protocol = 'minecraft16';
-	protected $name = 'minecraft';
-	protected $name_long = "Minecraft 1.6";
-	
-	protected function _toShort($i) {
-		return pack('n*', $i);
-	}
+    protected function _toInt($i)
+    {
+        return pack('N*', $i);
+    }
 
-	protected function _toInt($i) {
-		return pack('N*', $i);
-	}
+    protected function _networkString($str)
+    {
+        return iconv('ISO-8859-1//IGNORE', 'UCS-2LE', $str);
+    }
 
-	protected function _networkString($str) {
-		return iconv('ISO-8859-1//IGNORE', 'UCS-2LE', $str);
-	}
+    protected function _buildStatus($hostname, $port)
+    {
+        $packet = "\xFE\x01\xFA";
+        $packet .= $this->_toShort(11);
+        $packet .= $this->_networkString("MC|PingHost");
+        $packet .= $this->_toShort(7 + 2 * strlen($hostname));
+        $packet .= $this->protocol_version;
+        $packet .= $this->_toShort(strlen($hostname));
+        $packet .= $this->_networkString($hostname);
+        $packet .= $this->_toInt($port);
 
-	protected function _buildStatus($hostname, $port) {
-		$packet = "\xFE\x01\xFA";
-		$packet .= $this->_toShort(11);
-		$packet .= $this->_networkString("MC|PingHost");
-		$packet .= $this->_toShort(7 + 2 * strlen($hostname));
-		$packet .= $this->protocol_version;
-		$packet .= $this->_toShort(strlen($hostname));
-		$packet .= $this->_networkString($hostname);
-		$packet .= $this->_toInt($port);
+        return $packet;
+    }
 
-		return $packet;
-	}
-
-	public function init() {
-		$this->queue('status', 'tcp', $this->_buildStatus($this->query_addr, $this->query_port), array('response_count' => 1, 'close' => true));
-	}
+    public function init()
+    {
+        $this->queue('status', 'tcp', $this->_buildStatus($this->query_addr, $this->query_port), array('response_count' => 1, 'close' => true));
+    }
 }

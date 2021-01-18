@@ -16,21 +16,21 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 class Middleware
 {
     
-	/**
-	* The copy of application container
-	*
-	* @var object
-	**/
-	
-	protected $container;
+    /**
+    * The copy of application container
+    *
+    * @var object
+    **/
     
-	/**
+    protected $container;
+    
+    /**
     * Default constructor of all controllers
     *
     * @param object of main container $config
     * @return void
     **/
-	
+    
     public function __construct($container)
     {
         $this->container = $container;

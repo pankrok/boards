@@ -18,43 +18,44 @@
 
 
 namespace GameQ3\protocols;
- 
-class Fear extends \GameQ3\Protocols\Gamespy2 {
-	protected $name = "fear";
-	protected $name_long = "F.E.A.R.";
 
-	protected $query_port = 27888;
-	protected $ports_type = self::PT_SAME;
-	
-	protected function _put_var($key, $val) {
-		switch($key) {
-			case 'hostname':
-				$this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
-				break;
-			case 'mapname':
-				$this->result->addGeneral('map', $val);
-				break;
-			case 'gamever':
-				$this->result->addGeneral('version', $val);
-				break;
-			case 'gametype':
-				$this->result->addGeneral('mode', $val);
-				break;
-			case 'numplayers':
-				$this->result->addGeneral('num_players', $val);
-				break;
-			case 'maxplayers':
-				$this->result->addGeneral('max_players', $val);
-				break;
-			case 'password':
-				$this->result->addGeneral('password', $val == 1);
-				break;
-			case 'punkbuster':
-				$this->result->addGeneral('secure', $val == 1);
-				break;
-			default:
-				$this->result->addSetting($key, $val);
-		}
-	}
+class Fear extends \GameQ3\Protocols\Gamespy2
+{
+    protected $name = "fear";
+    protected $name_long = "F.E.A.R.";
 
+    protected $query_port = 27888;
+    protected $ports_type = self::PT_SAME;
+    
+    protected function _put_var($key, $val)
+    {
+        switch ($key) {
+            case 'hostname':
+                $this->result->addGeneral('hostname', iconv("ISO-8859-1//IGNORE", "utf-8", $val));
+                break;
+            case 'mapname':
+                $this->result->addGeneral('map', $val);
+                break;
+            case 'gamever':
+                $this->result->addGeneral('version', $val);
+                break;
+            case 'gametype':
+                $this->result->addGeneral('mode', $val);
+                break;
+            case 'numplayers':
+                $this->result->addGeneral('num_players', $val);
+                break;
+            case 'maxplayers':
+                $this->result->addGeneral('max_players', $val);
+                break;
+            case 'password':
+                $this->result->addGeneral('password', $val == 1);
+                break;
+            case 'punkbuster':
+                $this->result->addGeneral('secure', $val == 1);
+                break;
+            default:
+                $this->result->addSetting($key, $val);
+        }
+    }
 }

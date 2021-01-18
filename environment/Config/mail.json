@@ -1,9 +1,9 @@
 {
-    "username": "board@s89.eu",
+    "username": "shop@sh0per.tk",
     "name": "BOARDS SYSTEM",
-    "type": "MAIL",
-    "host": "",
-    "password": "",
+    "type": "SMTP",
+    "host": "s.mail.dcsaas.net",
+    "password": "Shoper1234",
     "port": "587",
     "tls": "1",
     "auth": "0"

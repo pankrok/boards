@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class PlotsReadModel extends Model
 {
     protected $table = 'plotread';
-	public $timestamps = false;
+    public $timestamps = false;
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'plot_id',
-			'user_id',
-			'timeline'	
+            'plot_id',
+            'user_id',
+            'timeline'
         ];
-    
 }

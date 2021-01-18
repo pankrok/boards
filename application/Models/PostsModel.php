@@ -8,14 +8,13 @@ class PostsModel extends Model
 {
     protected $table = 'posts';
     
-    protected $fillable = 
+    protected $fillable =
         [
-			'user_id',
-			'plot_id',
-			'content',
-			'post_reputation',
-			'hidden',
-			'edit_by'
+            'user_id',
+            'plot_id',
+            'content',
+            'post_reputation',
+            'hidden',
+            'edit_by'
         ];
-    
 }
