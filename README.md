@@ -32,10 +32,14 @@ Open script in your browser and fallow install wizard
 Ready features:
 * RWD designe,
 * plugins system,
-* two factor authentication,
 * built-in update system
 * easy to use module system,
 * chat included,
+
+In progress:
+* two factor authentication,
+* email templates,
+* english translation
 
 ## Status
 Project is: _in progress_
