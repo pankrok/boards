@@ -35,9 +35,10 @@ Ready features:
 * built-in update system
 * easy to use module system,
 * chat included,
+* two factor authentication,
 
 In progress:
-* two factor authentication,
+
 * email templates,
 * english translation
 
