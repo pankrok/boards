@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jan 15, 2021 at 08:02 AM
+-- Generation Time: Jan 29, 2021 at 12:26 PM
 -- Server version: 10.1.47-MariaDB-0+deb9u1
 -- PHP Version: 7.4.13
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `bdev`
+-- Database: `boards_dev`
 --
 
 -- --------------------------------------------------------
@@ -65,7 +65,7 @@ INSERT INTO `brd_boxes` (`id`, `costum_id`, `costum`, `engine`) VALUES
 (1, 1, 0, 'userdata'),
 (2, 2, 0, 'statistics'),
 (3, 3, 1, 'custom'),
-(19, 20, 1, 'custom');
+(20, 21, 1, 'custom');
 
 -- --------------------------------------------------------
 
@@ -120,7 +120,7 @@ INSERT INTO `brd_costum_boxes` (`id`, `translate`, `name_prefix`, `name`, `html`
 (1, 0, 'system', 'userdata', NULL, '2021-01-14 13:23:52', '0000-00-00 00:00:00'),
 (2, 0, 'system', 'statistics', NULL, '2021-01-14 13:24:16', '0000-00-00 00:00:00'),
 (3, 1, '<i class=\"fa fa-bullhorn\"></i>', 'Announcements', 0x3c64697620636c6173733d226974656d5f6d61696e223e090909090d0a093c703e536f6d6520717569636b206578616d706c65207465787420746f206275696c64206f6e207468652063617264207469746c6520616e64206d616b65207570207468652062756c6b206f66207468652063617264277320636f6e74656e742e3c2f703e0d0a3c2f6469763e, '2020-11-23 10:33:28', '0000-00-00 00:00:00'),
-(20, 0, '', 'Example', 0x4578616d706c6520706c7567696e206d6f64756c65, '2021-01-14 16:58:25', '0000-00-00 00:00:00');
+(21, 0, '', 'Example', 0x4578616d706c6520706c7567696e206d6f64756c65, '2021-01-22 08:58:58', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -177,6 +177,20 @@ CREATE TABLE `brd_likeit` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `brd_mailbox`
+--
+
+CREATE TABLE `brd_mailbox` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `mailbox` varchar(15) NOT NULL,
+  `message_id` int(11) NOT NULL,
+  `unread` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `brd_menu`
 --
 
@@ -188,6 +202,22 @@ CREATE TABLE `brd_menu` (
   `url_order` int(11) NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `brd_message`
+--
+
+CREATE TABLE `brd_message` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) DEFAULT NULL,
+  `recipient_id` int(11) DEFAULT NULL,
+  `topic` varchar(255) NOT NULL,
+  `body` blob NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -287,6 +317,18 @@ CREATE TABLE `brd_posts` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `brd_secret`
+--
+
+CREATE TABLE `brd_secret` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `secret` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `brd_serverlist`
 --
 
@@ -349,7 +391,7 @@ INSERT INTO `brd_skins_boxes` (`id`, `skin_id`, `box_id`, `side`, `box_order`, `
 (1, 1, 1, 'right', 0, 0, '{\"home\":1}'),
 (2, 1, 2, 'right', 1, 0, '{\"home\":1}'),
 (3, 1, 3, 'top', 6, 0, '{\"home\":1,\"category.getCategory\":1,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":1,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":1}'),
-(23, 1, 19, 'top', 0, 0, '{\"home\":1,\"category.getCategory\":0,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":0,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":0}');
+(24, 1, 20, 'top', 0, 0, '{\"home\":1,\"category.getCategory\":0,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":0,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":0}');
 
 -- --------------------------------------------------------
 
@@ -410,6 +452,7 @@ CREATE TABLE `brd_users` (
   `banned` tinyint(1) NOT NULL DEFAULT '0',
   `priv_notes` varchar(2048) NOT NULL,
   `lostpw` varchar(255) NOT NULL,
+  `tfa` tinyint(1) NOT NULL DEFAULT '0',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -473,10 +516,26 @@ ALTER TABLE `brd_likeit`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `brd_mailbox`
+--
+ALTER TABLE `brd_mailbox`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `message_id` (`message_id`);
+
+--
 -- Indexes for table `brd_menu`
 --
 ALTER TABLE `brd_menu`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `brd_message`
+--
+ALTER TABLE `brd_message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `users` (`recipient_id`,`sender_id`),
+  ADD KEY `sender_id` (`sender_id`);
 
 --
 -- Indexes for table `brd_pages`
@@ -515,6 +574,13 @@ ALTER TABLE `brd_posts`
   ADD KEY `plot_id` (`plot_id`),
   ADD KEY `brd_posts_ibfk_2` (`user_id`),
   ADD KEY `edit_by` (`edit_by`);
+
+--
+-- Indexes for table `brd_secret`
+--
+ALTER TABLE `brd_secret`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`) USING BTREE;
 
 --
 -- Indexes for table `brd_serverlist`
@@ -566,7 +632,7 @@ ALTER TABLE `brd_boards`
 -- AUTO_INCREMENT for table `brd_boxes`
 --
 ALTER TABLE `brd_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `brd_categories`
@@ -584,7 +650,7 @@ ALTER TABLE `brd_chatbox`
 -- AUTO_INCREMENT for table `brd_costum_boxes`
 --
 ALTER TABLE `brd_costum_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `brd_groups`
@@ -605,9 +671,21 @@ ALTER TABLE `brd_likeit`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `brd_mailbox`
+--
+ALTER TABLE `brd_mailbox`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `brd_menu`
 --
 ALTER TABLE `brd_menu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `brd_message`
+--
+ALTER TABLE `brd_message`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -641,6 +719,12 @@ ALTER TABLE `brd_posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `brd_secret`
+--
+ALTER TABLE `brd_secret`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `brd_serverlist`
 --
 ALTER TABLE `brd_serverlist`
@@ -656,7 +740,7 @@ ALTER TABLE `brd_skins`
 -- AUTO_INCREMENT for table `brd_skins_boxes`
 --
 ALTER TABLE `brd_skins_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `brd_userdata`
@@ -700,6 +784,20 @@ ALTER TABLE `brd_likeit`
   ADD CONSTRAINT `brd_likeit_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Constraints for table `brd_mailbox`
+--
+ALTER TABLE `brd_mailbox`
+  ADD CONSTRAINT `brd_mailbox_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `brd_mailbox_ibfk_2` FOREIGN KEY (`message_id`) REFERENCES `brd_message` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `brd_message`
+--
+ALTER TABLE `brd_message`
+  ADD CONSTRAINT `brd_message_ibfk_1` FOREIGN KEY (`recipient_id`) REFERENCES `brd_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `brd_message_ibfk_2` FOREIGN KEY (`sender_id`) REFERENCES `brd_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
 -- Constraints for table `brd_plotread`
 --
 ALTER TABLE `brd_plotread`
@@ -720,6 +818,12 @@ ALTER TABLE `brd_posts`
   ADD CONSTRAINT `brd_posts_ibfk_1` FOREIGN KEY (`plot_id`) REFERENCES `brd_plots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `brd_posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `brd_posts_ibfk_3` FOREIGN KEY (`edit_by`) REFERENCES `brd_users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `brd_secret`
+--
+ALTER TABLE `brd_secret`
+  ADD CONSTRAINT `brd_secret_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `brd_skins_boxes`

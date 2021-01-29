@@ -119,7 +119,7 @@ class BreadcrumbsMiddleware extends Middleware
             } else {
                 $breadcrumbs[0] = ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor($name, $route->getArguments()),
-                                'name' => $this->container->get('translator')->trans('lang.'.$name)
+                                'name' => $this->container->get('translator')->get('lang.'.$name)
                                 ];
             }
             $cache->store($routeName.'-breadcrumbs', $breadcrumbs, 0);

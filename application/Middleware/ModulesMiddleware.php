@@ -50,7 +50,7 @@ class ModulesMiddleware extends Middleware
                         if ($active) {
                             unset($boxes[$position][$k]['active']);
                             if ($v['translate']) {
-                                $boxes[$position][$k]['name'] = $this->container->get('translator')->trans('lang.'.$v['name']);
+                                $boxes[$position][$k]['name'] = $this->container->get('translator')->get('lang.'.$v['name']);
                             }
                         } else {
                             unset($boxes[$position][$k]);

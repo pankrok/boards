@@ -40,7 +40,7 @@ class AdminModuleController extends Controller
 				{
 					if($v['translate'])
 					{
-						$boxes[$position][$k]['name'] = $this->container->get('translator')->trans('lang.'.$v['name']);				
+						$boxes[$position][$k]['name'] = $this->container->get('translator')->get('lang.'.$v['name']);				
 					}
 				}
 				else

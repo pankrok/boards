@@ -81,7 +81,7 @@ class PluginGlobalEventController extends Event
     
     public function translate($string)
     {
-        return $this->translator->trans('plugin.'.$string);
+        return $this->translator->get('plugin.'.$string);
     }
     
     public function cache()

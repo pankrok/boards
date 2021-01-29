@@ -1,0 +1,71 @@
+<div class="card panel-default">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-sm-12 col-md p-1">
+                <p class="mx-2 my-0">{{ trans('sender') }}: <i>{{ users.from }}</i></p>
+                <p class="mx-2 my-0">{{ trans('to') }}: <i>{{ users.to }}</i></p>
+                <h2 class="fs-30b mx-2">{{ trans('topic')}}: {{ message.topic }}</h2>              
+            </div>
+
+                <div class="col-md-auto my-auto p-1">
+                <form class="form-inline float-right" action="{{ path_for('mailbox.move') }}" method="post">
+                <input type="hidden" name="folder" value="{{ box }}">
+                <input type="hidden" name="id" value="{{ message.id }}">
+                     <div class="form-group my-auto">
+                        <select class="form-control" id="moveToFolder" name="newFolder">
+                          <option value="inbox">{{ trans('inbox') }}</option>
+                          <option value="outbox">{{ trans('outbox') }}</option>
+                          <option value="spam">{{ trans('spam') }}</option>
+                          <option value="trash">{{ trans('trash') }}</option>
+                        </select>
+                     </div>
+                    <button type="submit" class="btn btn-outline-info float-right mx-2">{{ trans('move') }}</button>
+                </form>
+                </div>
+                <div class="col-md-auto my-auto p-1">
+                <form class="m-auto" action="{{ path_for('mailbox', {'folder':'new-message'}) }}" method="post">
+                <button type="submit" class="btn btn-outline-info float-right">{{ trans('reply') }}</button>
+                <input type="hidden" name="created_at" value="{{ message.created_at }}">
+                <input type="hidden" name="topic" value="RE: {{ message.topic }}">
+                {% if box == 'outbox' %}
+                <input type="hidden" name="recipient" value="{{ users.to }}">
+                {% else %}
+                <input type="hidden" name="recipient" value="{{ users.from }}">
+                {% endif %}
+                <input type="hidden" name="body" value="{{ message.body }}">
+                </form>
+                </div>
+                 <div class="col-md-auto my-auto p-1">
+                    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#trashModal">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                 </div>
+            </div>
+
+    </div>
+    <div class="card-body">  
+        {{ message.body |raw }}
+    </div>
+</div>
+
+<div class="modal fade" id="trashModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ trans('delete message') }}?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <form class="form-inline mx-auto" action="{{ path_for('mailbox.delete') }}" method="post">
+         <input type="hidden" name="id" value="{{ message.id }}">
+         <input type="hidden" name="folder" value="{{ box }}">
+         <button type="submit" class="btn btn-outline-danger mx-auto">
+                        <i class="fas fa-trash"></i> {{ trans('delete') }}
+                    </button>
+         </form>
+      </div>
+    </div>
+  </div>
+</div>

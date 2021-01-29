@@ -48,14 +48,14 @@ class AdminSettingsController extends Controller
         $message = '';
         if (isset($body['objects'])) {
             $this->cache->clearCache();
-            $message .= $this->translator->trans('admin.object cache removed');
+            $message .= $this->translator->get('admin.object cache removed');
         }
         if (isset($body['skins'])) {
             $this->cache->cleanAllSkinsCache();
             if (isset($body['objects'])) {
                 $message .= ', ';
             }
-            $message .=  $this->translator->trans('admin.skins cache removed');
+            $message .=  $this->translator->get('admin.skins cache removed');
         }
         if (isset($body['skins']) || isset($body['objects'])) {
             $this->flash->addMessage('info', $message);

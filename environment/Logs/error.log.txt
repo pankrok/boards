@@ -1,0 +1,110 @@
+[2021-01-29 12:28:53] front-error.ERROR: 
+404 Not Found
+Type: Slim\Exception\HttpNotFoundException
+Code: 404
+Message: Not found.
+File: C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php
+Line: 91
+Trace: #0 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php(58): Slim\Middleware\RoutingMiddleware->performRouting(Object(Slim\Psr7\Request))
+#1 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#2 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#3 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#4 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#5 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#6 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#7 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#8 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(81): class@anonymous->handle(Object(Slim\Psr7\Request))
+#9 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(215): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#10 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(199): Slim\App->handle(Object(Slim\Psr7\Request))
+#11 C:\xampp\htdocs\bb\index.php(16): Slim\App->run()
+#12 {main}
+Tips: To display error details in HTTP response set "displayErrorDetails" to true in the ErrorHandler constructor.
+ [] []
+[2021-01-29 12:28:56] front-error.ERROR: 
+404 Not Found
+Type: Slim\Exception\HttpNotFoundException
+Code: 404
+Message: Not found.
+File: C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php
+Line: 91
+Trace: #0 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php(58): Slim\Middleware\RoutingMiddleware->performRouting(Object(Slim\Psr7\Request))
+#1 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#2 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#3 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#4 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#5 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#6 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#7 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#8 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(81): class@anonymous->handle(Object(Slim\Psr7\Request))
+#9 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(215): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#10 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(199): Slim\App->handle(Object(Slim\Psr7\Request))
+#11 C:\xampp\htdocs\bb\index.php(16): Slim\App->run()
+#12 {main}
+Tips: To display error details in HTTP response set "displayErrorDetails" to true in the ErrorHandler constructor.
+ [] []
+[2021-01-29 12:29:08] front-error.ERROR: 
+404 Not Found
+Type: Slim\Exception\HttpNotFoundException
+Code: 404
+Message: Not found.
+File: C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php
+Line: 91
+Trace: #0 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php(58): Slim\Middleware\RoutingMiddleware->performRouting(Object(Slim\Psr7\Request))
+#1 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#2 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#3 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#4 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#5 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#6 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#7 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#8 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(81): class@anonymous->handle(Object(Slim\Psr7\Request))
+#9 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(215): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#10 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(199): Slim\App->handle(Object(Slim\Psr7\Request))
+#11 C:\xampp\htdocs\bb\index.php(16): Slim\App->run()
+#12 {main}
+Tips: To display error details in HTTP response set "displayErrorDetails" to true in the ErrorHandler constructor.
+ [] []
+[2021-01-29 12:29:22] front-error.ERROR: 
+404 Not Found
+Type: Slim\Exception\HttpNotFoundException
+Code: 404
+Message: Not found.
+File: C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php
+Line: 91
+Trace: #0 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php(58): Slim\Middleware\RoutingMiddleware->performRouting(Object(Slim\Psr7\Request))
+#1 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#2 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#3 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#4 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#5 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#6 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#7 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#8 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(81): class@anonymous->handle(Object(Slim\Psr7\Request))
+#9 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(215): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#10 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(199): Slim\App->handle(Object(Slim\Psr7\Request))
+#11 C:\xampp\htdocs\bb\index.php(16): Slim\App->run()
+#12 {main}
+Tips: To display error details in HTTP response set "displayErrorDetails" to true in the ErrorHandler constructor.
+ [] []
+[2021-01-29 12:33:34] front-error.ERROR: 
+404 Not Found
+Type: Slim\Exception\HttpNotFoundException
+Code: 404
+Message: Not found.
+File: C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php
+Line: 91
+Trace: #0 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\RoutingMiddleware.php(58): Slim\Middleware\RoutingMiddleware->performRouting(Object(Slim\Psr7\Request))
+#1 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\RoutingMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#2 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#3 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#4 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#5 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#6 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\Middleware\ErrorMiddleware.php(107): class@anonymous->handle(Object(Slim\Psr7\Request))
+#7 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(147): Slim\Middleware\ErrorMiddleware->process(Object(Slim\Psr7\Request), Object(class@anonymous))
+#8 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\MiddlewareDispatcher.php(81): class@anonymous->handle(Object(Slim\Psr7\Request))
+#9 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(215): Slim\MiddlewareDispatcher->handle(Object(Slim\Psr7\Request))
+#10 C:\xampp\htdocs\bb\libraries\slim\slim\Slim\App.php(199): Slim\App->handle(Object(Slim\Psr7\Request))
+#11 C:\xampp\htdocs\bb\index.php(16): Slim\App->run()
+#12 {main}
+Tips: To display error details in HTTP response set "displayErrorDetails" to true in the ErrorHandler constructor.
+ [] []

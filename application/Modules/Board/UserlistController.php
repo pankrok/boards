@@ -22,7 +22,7 @@ class UserlistController extends Controller
         
         $this->view->getEnvironment()->addGlobal('users', $data['users']);
         $this->view->getEnvironment()->addGlobal('paginator', $data['paginator']);
-        $this->view->getEnvironment()->addGlobal('title', $this->translator->trans('lang.userlist'));
+        $this->view->getEnvironment()->addGlobal('title', $this->translator->get('lang.userlist'));
         
         return $this->view->render($response, 'userlist.twig');
         ;

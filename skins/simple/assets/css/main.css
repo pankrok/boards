@@ -69,7 +69,7 @@ a .fc-b, .fc-b{
 	color: green; 
 }
 
-.edit-btn
+#captcha-ref-btn, .edit-btn
 {
 	cursor: pointer !important;
 }
@@ -84,6 +84,10 @@ a .fc-b, .fc-b{
 .stat-av{
 	max-width: 150px;
 	
+}
+
+.navbar-light {
+	background-color: #f8f9fa;
 }
 
 .post-av{
@@ -414,7 +418,10 @@ h1, h3 {
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-no-suggestion { padding: 2px 5px;}
 .autocomplete-selected { background: #F0F0F0; }
+[data-theme=dark] .autocomplete-suggestions { background: #000 !important; }
+[data-theme=dark] .autocomplete-selected { background: #343a40; }
 .autocomplete-suggestions strong { font-weight: bold; color: #000; }
+[data-theme=dark] .autocomplete-suggestions strong, [data-theme=dark] .autocomplete-group  { color: #fff; }
 .autocomplete-group { padding: 2px 5px; font-weight: bold; font-size: 16px; color: #000; display: block; border-bottom: 1px solid border-bottom-color: rgb(128, 189, 255); }
 
 

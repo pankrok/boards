@@ -219,7 +219,7 @@ class PlotController extends Controller
             $this->cache->delete($name);
             $this->BoardController->boardCleanCache($plot->board_id);
         } else {
-            $data['response'] = $this->translator->trans('lang.you have to been logged in');
+            $data['response'] = $this->translator->get('lang.you have to been logged in');
         }
         
         $response->getBody()->write(json_encode($data));
@@ -281,13 +281,13 @@ class PlotController extends Controller
                 $this->BoardController->boardCleanCache($board->id);
             } else {
                 $data['warn'] = '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-								  <strong>'.$this->translator->trans('lang.post or topic cannot be empty').'</strong>
+								  <strong>'.$this->translator->get('lang.post or topic cannot be empty').'</strong>
 								  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								  </button>
 								</div>';
                 
-                $this->translator->trans('lang.post or topic is empty');
+                $this->translator->get('lang.post or topic is empty');
             }
             
             $user = null;
@@ -311,7 +311,7 @@ class PlotController extends Controller
             'post_id' => intval($postID),
             'reson_id' => intval($reasonID),
         ]);
-        $report ? $report = $this->translator->trans('lang.post has been reported to administration') : $this->translator->trans('lang.something went wrong');
+        $report ? $report = $this->translator->get('lang.post has been reported to administration') : $this->translator->get('lang.something went wrong');
         $data['report'] = ' <div id="overlay" style="display: none;""><div id="text" class=" alert alert-info fade show" role="alert">
 								  <strong>'.$report.'</strong>
 								</div></div>';
@@ -337,7 +337,7 @@ class PlotController extends Controller
             
             if ($post->user_id == $_SESSION['user']) {
                 $data['likeit'] = ' <div id="overlay" style="display: none;"><div id="text" class="alert alert-danger fade show" role="alert">
-								  <strong>'.$this->translator->trans('lang.you cant like your own post').'</strong>
+								  <strong>'.$this->translator->get('lang.you cant like your own post').'</strong>
 								</div></div>';
                 $response->getBody()->write(json_encode($data));
                 return $response->withHeader('Content-Type', 'application/json')
@@ -359,14 +359,14 @@ class PlotController extends Controller
             ]);
             
             $data['likeit'] = ' <div id="overlay" style="display: none;"><div id="text" class="alert alert-success fade show" role="alert">
-								  <strong>'.$this->translator->trans('lang.reputation added').'</strong>
+								  <strong>'.$this->translator->get('lang.reputation added').'</strong>
 								</div></div>';
             
             $this->cache->setName('board.getPlot');
             $this->cache->delete($request->getParsedBody()['url']);
         } else {
             $data['likeit'] = ' <div id="overlay" style="display: none;""><div id="text" class=" alert alert-danger fade show" role="alert">
-								  <strong>'.$this->translator->trans('lang.you add reputation to this post').'</strong>
+								  <strong>'.$this->translator->get('lang.you add reputation to this post').'</strong>
 								</div></div>';
         }
             
@@ -427,7 +427,7 @@ class PlotController extends Controller
         $plot->save();
         $body['lock'] ? $lock = 'locked' : $lock = 'ulocked';
         
-        $this->flash->addMessage('success', $this->translator->trans('Plot '.$lock.' success!'));
+        $this->flash->addMessage('success', $this->translator->get('Plot '.$lock.' success!'));
         return $response
           ->withHeader('Location', $this->router->urlFor('board.getPlot', ['plot_id'=>$body['id'], 'plot' => $this->urlMaker->toUrl($plot->plot_name)]))
           ->withStatus(302);

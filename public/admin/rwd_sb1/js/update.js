@@ -1,7 +1,7 @@
 $(function() {
 	
 		$.ajax({
-			url: path, 
+			url: pathCheckUpdate, 
 			success: function(result){
 				
 				result = JSON.parse(result);	
@@ -72,7 +72,7 @@ function update()
 					
 					setTimeout(function () {
 						update();
-					}, 1000);
+					}, 5000);
 				}
 			}});
 }

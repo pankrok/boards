@@ -14,11 +14,12 @@ use PHPMailer\PHPMailer\Exception;
 class MailCore
 {
     protected $mailer;
+    protected $twig;
     
-    public function __construct()
+    public function __construct($twig)
     {
         $config = json_decode(file_get_contents(MAIN_DIR . '/environment/Config/mail.json'), true);
-
+        $this->twig = $twig;
         $this->mailer = new PHPMailer(true);
         try {
             if ($config['type'] == 'SMTP') {
@@ -46,5 +47,24 @@ class MailCore
     public function getMailer()
     {
         return $this->mailer;
+    }
+    
+    public function send(string $addres, string $username, string $subject,  string $template, array $variables) : bool
+    {
+        try {
+            $html = file_get_contents(MAIN_DIR."/public/mails/html_$template.twig");
+            $txt =  file_get_contents(MAIN_DIR."/public/mails/txt_$template.twig");
+            $this->mailer->addAddress($addres, $username);
+            // Content
+            $this->mailer->isHTML(true);
+            $this->mailer->Subject = $subject;
+            $this->mailer->Body    = $this->twig->fetchFromString($html, $variables);
+            $this->mailer->AltBody = $this->twig->fetchFromString($txt, $variables);
+
+            $this->mailer->send();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }   
     }
 }

@@ -5,6 +5,7 @@ namespace Application\Modules\User;
 use Application\Models\UserModel;
 use Application\Models\UserDataModel;
 use Application\Models\PostsModel;
+use Application\Models\SecretModel;
 use Application\Models\ImagesModel;
 use Application\Core\Controller;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -51,7 +52,13 @@ class UserPanelController extends Controller
     public function getProfile($request, $response, $arg)
     {
         if (is_numeric($arg['uid'])) {
-            if (isset($_SESSION['user']) && $arg['uid'] == $_SESSION['user']) {
+            if (isset($_SESSION['user']) && $arg['uid'] == $_SESSION['user']) {         
+                if (isset($_SESSION['set-tfa'])) {
+                    $_SESSION['set-tfa'] = null;
+                    unset($_SESSION['set-tfa']); 
+                    $this->view->getEnvironment()->addGlobal('card', 'tfa');
+                }
+                
                 $canEdit = true;
             } else {
                 $canEdit = false;
@@ -61,6 +68,10 @@ class UserPanelController extends Controller
                             ->select('users.*', 'images._150')
                             ->find($arg['uid']);
             
+			if(!isset($data)){
+				throw new \Slim\Exception\HttpNotFoundException($request);
+			}
+			
             $posts = PostsModel::orderBy('created_at', 'desc')
                                 ->leftJoin('plots', 'posts.plot_id', '=', 'plots.id')
                                 ->select('posts.*', 'plots.plot_name')
@@ -76,7 +87,7 @@ class UserPanelController extends Controller
             $data['name_html'] = $html['username'];
             $data['group_name'] = $html['group'];
             
-            $title = $this->translator->trans('lang.user') . ': ' .$data->username;
+            $title = $this->translator->get('lang.user') . ': ' .$data->username;
             $this->view->getEnvironment()->addGlobal('posts', $posts);
             $this->view->getEnvironment()->addGlobal('profile', $data);
             $this->view->getEnvironment()->addGlobal('can_edit', $canEdit);
@@ -85,6 +96,15 @@ class UserPanelController extends Controller
             
             $additionalData = self::getUserdata($arg['uid']);
     
+            if ($data['tfa'] === 1) {
+                
+                $secret = SecretModel::where('user_id', $data['id'])->first()->secret;
+                $qc = '<img src="' . $this->tfa->google->getQRCodeImageAsDataUri($data->username, $secret) . '">';
+                $this->view->getEnvironment()->addGlobal('sec', [
+                    'secret' => $secret,
+                    'qc' => $qc                    
+                    ]);
+            }
             if (isset($additionalData)) {
                 $this->view->getEnvironment()->addGlobal('additional', $additionalData);
             }
@@ -130,6 +150,30 @@ class UserPanelController extends Controller
             $user->save();
         }
         return $response;
+    }
+    
+    public function setTwoFactor($request, $response)
+    {
+        $user = UserModel::where('id', $request->getParsedBody()['id'])->first();
+
+        if (isset($request->getParsedBody()['tfaChecbox'])) {
+            $user->tfa = true;
+            SecretModel::create([
+                'user_id' => $user->id,
+                'secret' =>  $this->tfa->google->createSecret()
+            ]);
+        } else {
+            $user->tfa = false;
+            SecretModel::where('user_id', $user->id)->delete();
+        }
+        $user->save();
+        $_SESSION['set-tfa'] = true;
+        return $response
+                ->withHeader('Location', $this->router->urlFor('user.profile', [
+                    'username' => $this->urlMaker->toUrl($user->username),
+                    'uid' => $user->id
+                ]))
+                ->withStatus(302);
     }
     
     public function postChangeData($request, $response)

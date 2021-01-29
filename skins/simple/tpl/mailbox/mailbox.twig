@@ -1,0 +1,16 @@
+<div class="card panel-default">
+    <div class="card-header">{{ trans(folder) }}</div>
+    <div class="card-body">
+        
+        <div class="list-group">
+                {% for message in messages %}
+                {% if message.unread %}<strong>{% endif %}
+                <a href="{{ path_for('mailbox.message', {'folder':folder, 'id': message.id}) }}" class="list-group-item">{{ message.topic }}
+                 {% if message.unread %}<span class="badge badge-pill badge-success mx-1">{{ trans('new') }}</span>{% endif %}
+                <div class="float-right"><i>{{ message.created_at }}</i></div></a>
+                {% if message.unread %}</strong>{% endif %}
+                {% endfor %}
+        </div>
+        
+    </div>
+</div>

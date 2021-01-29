@@ -54,8 +54,8 @@ $container->set('purifier', function () {
     return  new HTMLPurifier();
 });
 
-$container->set('mailer', function () {
-    return  new Application\Core\Modules\Mailer\MailCore();
+$container->set('mailer', function ($container) {
+    return  new Application\Core\Modules\Mailer\MailCore($container->get('view'));
 });
 
 $container->set('cache', function ($container) {
@@ -99,6 +99,14 @@ $container->set('UnreadController', function ($container) {
     return new \Application\Modules\Board\UnreadController($container);
 });
 
+$container->set('tfa', function ($container) {
+    $name = $container->get('settings')['board']['main_page_name'];
+    $tfa = new \stdClass();
+    $tfa->google = new RobThree\Auth\TwoFactorAuth( $name, 6, 30, 'sha1' );
+    $tfa->mail   = new RobThree\Auth\TwoFactorAuth( $name, 6, 300, 'sha1' );
+    return $tfa;
+});
+
 $container->set('view', function ($container) {
     $assets = $container->get('getBasePath') . '/public';
     
@@ -129,7 +137,7 @@ $container->set('view', function ($container) {
     }
     
 
-    
+    $view->getEnvironment()->addGlobal('unread', $container->get('MessageController')->countUnreadMessages());
     $view->getEnvironment()->addGlobal('auth', [
        'check' => $container->get('auth')->check(),
        'user' => $container->get('auth')->user(),
@@ -165,25 +173,21 @@ $container->set('adminView', function ($container) {
         ],
         [
             'cache' => false,
-            'debug' => true, // remove debug!
+            'debug' => false,
         ]
-    );
-    $view->addExtension(new \Twig\Extension\DebugExtension()); // remove debug!
+    ); 
     
     $router = $container->get('router');
-    
-
     $view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
     $view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
-    
-    
+      
     $filter = new \Twig\TwigFilter('base64_decode', function ($string) {
         return base64_decode($string);
     });
 
     $lock = file_exists(MAIN_DIR . '/environment/Config/lock');
-    $view->getEnvironment()->addGlobal('lock', $lock);
     $view->getEnvironment()->addFilter($filter);
+    $view->getEnvironment()->addGlobal('lock', $lock);
     $view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);
     $view->getEnvironment()->addGlobal('admin', $container->get('auth')->checkAdmin());
     $view->getEnvironment()->addGlobal('board_link', $_SERVER['HTTP_HOST']);
@@ -194,7 +198,7 @@ $container->set('adminView', function ($container) {
 });
 
 $container->set('auth', function ($container) {
-    return new Application\Core\Modules\Auth\Auth;
+    return new Application\Core\Modules\Auth\Auth($container->get('tfa'));
 });
 
 $container->set('validator', function () {
@@ -217,6 +221,7 @@ $container->set('captcha', function ($container) use ($routeParser) {
 $container->set('event', function ($container) {
     return new Application\Core\Modules\Plugins\PluginController($container);
 });
+
 
 $container->set('group', function () {
     return new Application\Modules\User\GroupController();

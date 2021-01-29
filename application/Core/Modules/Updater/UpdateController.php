@@ -37,20 +37,44 @@ class UpdateController extends Controller
         echo $return;
         return $response;
     }
-        
+    
+    public function checkUpdateAjax($request, $response)
+    {
+        echo self::checkUpdate();
+        return $response;
+    }
+    
+    public function unlock($request, $response, $arg)
+    {
+        if (isset($arg['lock']) && file_exists($this->ServiceProvider->get('lock'))) {
+            unlink($this->ServiceProvider->get('lock'));
+            echo 1;
+        } else {
+            echo 0;
+        }
+        return $response;
+    }
+    
     private function checkUpdate()
     {
-        $this->log->info('checking for updates.');
+        $this->log->debug('checking for updates.');
+        
+        $query = [
+            'version' => $this->ServiceProvider->get('version'),
+        ];
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->ServiceProvider->url('checkUpdate'));
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_AUTOREFERER, false);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($query));
         curl_setopt($ch, CURLOPT_HEADER, 0);
         $result = curl_exec($ch);
 
-        $this->log->info('Boards version is: '. $this->ServiceProvider->get('version'));
-        $this->log->info('Update version is: '. $result);
+        $this->log->debug('Boards version is: '. $this->ServiceProvider->get('version'));
+        $this->log->debug('Update version is: '. $result);
 
         file_put_contents($this->ServiceProvider->get('update_list'), $result);
         $result = json_decode($result, true);
@@ -84,21 +108,21 @@ class UpdateController extends Controller
             $status = json_decode(file_get_contents($this->ServiceProvider->get('update_status')), true);
 
             foreach ($status as $k => $v) {
-                if ($v['start'] == 0) {
+                if ($v['start'] === 0 && $v['updated'] === 0 && $v['lock'] === 0) {
                     $controller = $k.'Controller';
                     $this->$controller->start();
                     break;
                 }
-                if ($v['updated'] == 0 && $v['lock'] == 0) {
+                if ($v['start'] === 1 && $v['updated'] === 0 && $v['lock'] === 0) {
                     $controller = $k.'Controller';
                     $this->$controller->start();
                     break;
                 }
-                if ($v['updated'] == 0 && $v['lock'] == 1) {
+                if ($v['start'] === 1 && $v['updated'] === 0 && $v['lock'] === 1) {
                     break;
                 }
             }
-            if (end($status)['updated']) {
+            if (end($status)['updated'] === 1 || empty(end($status))) {
                 $status = self::endUpdate();
             }
         }
@@ -118,13 +142,13 @@ class UpdateController extends Controller
     
     private function getPackage()
     {
-        $this->log->info('downloading update package');
+        $this->log->debug('downloading update package');
         $version = json_decode(file_get_contents($this->ServiceProvider->get('update_list')), true)[0]['version'];
         
         $output_filename = $this->ServiceProvider->get('update_dir')."$version.tar.gz";
-        $this->log->info($output_filename);
+        $this->log->debug($output_filename);
         $host = $this->ServiceProvider->url("packages/update/$version.tar.gz");
-        $this->log->info($host);
+        $this->log->debug($host);
         if (!file_exists($output_filename)) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $host);
@@ -141,7 +165,7 @@ class UpdateController extends Controller
         if (file_exists($output_filename) && !file_exists(substr($output_filename, 0, -3))) {
             $p = new \PharData($output_filename);
             $p->decompress();
-            $this->log->info("Boards $version file ungz");
+            $this->log->debug("Boards $version file ungz");
         }
         $output_filename = substr($output_filename, 0, -3);
         
@@ -152,7 +176,7 @@ class UpdateController extends Controller
                 mkdir(MAIN_DIR . '/environment/Update/tmp', 0777, true);
             }
             $phar->extractTo(MAIN_DIR . '/environment/Update/tmp');
-            $this->log->info("Boards $version file untar");
+            $this->log->debug("Boards $version file untar");
             unlink($output_filename);
         }
     }
@@ -163,9 +187,25 @@ class UpdateController extends Controller
         $files = json_decode(file_get_contents($this->ServiceProvider->get('files_ini')), true);
         $version = json_decode(file_get_contents($this->ServiceProvider->get('update_list')), true)[0]['version'];
         foreach ($files as $k => $v) {
-            $this->log->info('delete backup file: ' . $v['path'] . $k . '.php.back');
-            if (file_exists(MAIN_DIR . $v['path'] . $k . '.php.back')) {
-                unlink(MAIN_DIR . $v['path'] . $k . '.php.back');
+            $this->log->debug('delete files backup file: '. $k . '.back');
+            if (file_exists(MAIN_DIR  . $k . '.back')) {
+                unlink(MAIN_DIR  . $k . '.back');
+            }
+        }
+        
+        $files = json_decode(file_get_contents($this->ServiceProvider->get('lib_ini')), true);
+        foreach ($files as $k => $v) {
+            $this->log->debug('delete libs backup file: '. $k . '.back');
+            if (file_exists(MAIN_DIR  . $k . '.back')) {
+                unlink(MAIN_DIR  . $k . '.back');
+            }
+        }
+        
+        $files = json_decode(file_get_contents($this->ServiceProvider->get('skin_ini')), true);   
+        foreach ($files as $k => $v) {
+            $this->log->debug('delete skins backup file: '. $k . '.back');
+            if (file_exists(MAIN_DIR  . $k . '.back')) {
+                unlink(MAIN_DIR  . $k . '.back');
             }
         }
         
@@ -185,7 +225,14 @@ class UpdateController extends Controller
         $data = json_encode($settings, JSON_PRETTY_PRINT);
         file_put_contents($this->ServiceProvider->get('settings'), $data);
         
-        self::deleteDir($this->ServiceProvider->get('tmp'));
+        $this->log->info('cleaning tmp directory');
+        try {
+            self::deleteDir($this->ServiceProvider->get('tmp'));
+        } catch (\Exception $e) {
+            $this->log->error('tmp directory error: ' . $e->getMessage());    
+        }
+        $this->log->info('cleaning cache');
+        $this->cache->clearCache();
         unlink($this->ServiceProvider->get('lock'));
         $this->log->info('Boards update success');
         
@@ -211,17 +258,22 @@ class UpdateController extends Controller
         if (!is_dir($dirPath)) {
             throw new InvalidArgumentException("$dirPath must be a directory");
         }
+        
         if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
             $dirPath .= '/';
         }
-        $files = glob($dirPath . '*', GLOB_MARK);
+        
+        $files = array_diff(scandir($dirPath), ['.', '..']);
         foreach ($files as $file) {
-            if (is_dir($file)) {
-                self::deleteDir($file);
+         
+            if(is_dir("$dirPath/$file")) {
+                self::deleteDir("$dirPath/$file");
             } else {
-                unlink($file);
+                unlink("$dirPath/$file");
             }
+
         }
+        
         rmdir($dirPath);
     }
 }

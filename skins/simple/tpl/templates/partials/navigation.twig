@@ -1,6 +1,7 @@
 <!-- navigation -->
-    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top px-lg-5">
-      <span class="navbar-brand mb-0 h1"><i><a href="{{ path_for('home') }}">BOARDS Script</a></i></span>{% if boards_off and auth.admin > 0 %}
+    <nav class="navbar navbar-expand-md navbar-light fixed-top px-lg-5">
+      <span class="navbar-brand mb-0 h1"><i><a href="{{ path_for('home') }}">BOARDS Script</a></i></span>
+{% if boards_off and auth.admin > 0 %}
 <div class="position-fixed"><span class="badge badge-pill badge-info">Podglą nieaktywnego forum</span></div>
 {% endif %}
 
@@ -27,7 +28,14 @@
          <span class="m-auto"><i class="fas fa-moon"></i></span>
         </a>
       </li>
+      
       {% if auth.check %}
+      <li class="nav-item my-auto mx-sm-0 mx-md-4 " >
+        <a href="{{ path_for('mailbox',{'folder':'inbox'}) }}">{% if unread %}<span class="badge badge-pill badge-success fs-12 position-absolute ml-3">{{ unread }}</span> {% endif %}
+        <i class="fas fa-envelope fa-lg mx-auto"></i>
+        
+        </a>
+      </li>
       <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle dropdown" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ auth.user.username }} </a>
             <div class="dropdown-menu dropdown-menu-right" style="position:absolute; margin-left: 15px" aria-labelledby="dropdown01">

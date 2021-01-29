@@ -51,11 +51,13 @@ class PluginController
         $this->pluginLoader = new PluginLoaderController($container->get('cache'), $container->get('settings')['twig']['skin']);
         self::$tplDir = $container->get('settings')['twig']['skin'];
         
-        if (is_array($this->pluginLoader->getPluginsList())) {
-            foreach ($this->pluginLoader->getPluginsList() as $val) {
-                if (($val['active'] || isset($GLOBALS['admin'])) && class_exists('Plugins\\'.$val['plugin_name'].'\\'.$val['plugin_name'])) {
-                    $pluginName = 'Plugins\\'. (string)$val['plugin_name'] .'\\'.(string)$val['plugin_name'];
-                    $this->dispacher->addSubscriber(new $pluginName());
+        if ($container->get('settings')['plugins']['active'] === 1) {   
+            if (is_array($this->pluginLoader->getPluginsList())) {
+                foreach ($this->pluginLoader->getPluginsList() as $val) {
+                    if (($val['active'] || isset($GLOBALS['admin'])) && class_exists('Plugins\\'.$val['plugin_name'].'\\'.$val['plugin_name'])) {
+                        $pluginName = 'Plugins\\'. (string)$val['plugin_name'] .'\\'.(string)$val['plugin_name'];
+                        $this->dispacher->addSubscriber(new $pluginName());
+                    }
                 }
             }
         }
@@ -151,7 +153,7 @@ class PluginController
     public static function createTable($table, $query)
     {
         $db = require(MAIN_DIR . '/environment/Config/db_settings.php');
-        $txt = 'CREATE TABLE `'.$db['database'].'`.`'. $db['prefix']. $table .'` ( '.$query.') ENGINE = InnoDB;';
+        $txt = 'CREATE TABLE IF NOT EXISTS `'.$db['database'].'`.`'. $db['prefix']. $table .'` ( '.$query.') ENGINE = InnoDB;';
 
         $return = DB::statement($txt);
         return $return;

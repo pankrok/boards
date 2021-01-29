@@ -28,10 +28,10 @@ class TranslationExtension extends AbstractExtension
         $result = substr($key, 0, 6);
     
         if ($result == 'admin.' || $result == 'plugin') {
-            return $this->translator->trans($key);
+            return $this->translator->get($key);
         }
 
-        return $this->translator->trans('lang.'.$key);
+        return $this->translator->get('lang.'.$key);
     }
     
     public function locale()

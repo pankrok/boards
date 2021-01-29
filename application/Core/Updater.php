@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 ini_set('display_errors', 'on');
-DEFINE('MAIN_DIR', __DIR__ . '/../..');
+DEFINE('MAIN_DIR', substr(__DIR__, 0, -17));
 DEFINE('BOARDS', 'BOARDS');
 
 use DI\Container;
@@ -57,6 +57,11 @@ $container->set('db_settings', function ($container) {
     return  require(MAIN_DIR . '/environment/Config/db_settings.php');
 });
 
+$container->set('cache', function ($container) {
+    $cacheSettings = $container->get('settings')['cache'];
+    return new Application\Core\Modules\Cache\CacheCore($cacheSettings);
+});
+
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container->get('db_settings'));
 $capsule->setAsGlobal();
@@ -86,8 +91,20 @@ $container->set('UpdateController', function ($container) {
 $container->set('FileUpdateController', function ($container) {
     return new Application\Core\Modules\Updater\FileUpdateController($container);
 });
+
+$container->set('LibrariesUpdateController', function ($container) {
+    return new Application\Core\Modules\Updater\LibrariesUpdateController($container);
+});
+
+$container->set('DatabaseUpdateController', function ($container) {
+    return new Application\Core\Modules\Updater\DatabaseUpdateController($container);
+});
+
+$container->set('SkinsUpdateController', function ($container) {
+    return new Application\Core\Modules\Updater\SkinsUpdateController($container);
+});
        
 $app->get('/updater[/{start}]', 'UpdateController:manager');
-$app->get('/updater/files/update', 'FileUpdateController:manager');
+$app->get('/updater/console/unlock', 'FileUpdateController:unlock');
 
 $app->run();

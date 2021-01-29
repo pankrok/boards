@@ -26,12 +26,12 @@ class OnlineController extends Controller
         
         if (!$online = $this->cache->receive('id')) {
             $online = [];
-            $data = UserModel::where('last_active', '>', date("Y-m-d H:i:s", time()-60*60*5))->select('id')->get()->toArray();
+            $data = UserModel::where('last_active', '>', date("Y-m-d H:i:s", time()-60*15))->select('id')->get()->toArray();
             foreach ($data as $v) {
                 $online[$v['id']] = true;
             }
             
-            $this->cache->store('id', $online, 60*60*5);
+            $this->cache->store('id', $online, 60*15);
         }
         $this->cache->setName($oldCacheName);
         return $online;
@@ -45,7 +45,7 @@ class OnlineController extends Controller
         
         if (!$onlineList = $this->cache->receive('list')) {
             $online = [];
-            $data = UserModel::where('last_active', '>', date("Y-m-d H:i:s", time()-60*60*5))->select('id', 'username', 'main_group')->get()->toArray();
+            $data = UserModel::where('last_active', '>', date("Y-m-d H:i:s", time()-60*15))->select('id', 'username', 'main_group')->get()->toArray();
             foreach ($data as $k => $v) {
                 $urlName = $this->urlMaker->toUrl($v['username']);
                 $onlineList[$k] = [
@@ -54,7 +54,7 @@ class OnlineController extends Controller
                     ];
             }
             
-            $this->cache->store('list', $onlineList, 60*60*5);
+            $this->cache->store('list', $onlineList, 60*15);
         }
         $this->cache->setName($oldCacheName);
         return $onlineList;

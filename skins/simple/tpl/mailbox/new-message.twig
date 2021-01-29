@@ -1,0 +1,27 @@
+<div class="card panel-default">
+    <div class="card-header">{{ trans('new message') }}</div>
+    <form action="{{ path_for('mailbox.send') }}" method="post">
+    <div class="card-body">    
+            <div class="form-group">
+                <input id="autocomplete-dynamic-users" name="recipient" type="text" class="form-control" id="recipient" aria-describedby="{{ trans('recipient') }}" placeholder="{{ trans('recipient') }}" value="{{ reply.recipient }}">			
+            </div> 
+            <div class="form-group">
+                <input name="topic" type="text" class="form-control" id="topic" placeholder="{{ trans('topic') }}" value="{{ reply.topic }}">
+              </div>
+            <div class="form-group">
+            <textarea name="body" class="form-control" id="mailEditor">
+            
+            {% if reply.body %}
+                  <br /><p>| ---</p>
+                  <p>| {{ reply.created_at }} {{ reply.recipient }}:</p>
+                  {{ reply.body|raw }}
+            {% endif %}
+            </textarea>
+          </div>
+       
+    </div>
+    <div class="card-footer">
+    <button type="submit" class="btn btn-outline-success float-right mb-2">{{ trans('send') }}</button>
+    </div>
+     </form>
+</div>

@@ -1,6 +1,6 @@
 RewriteEngine On
 
-RewriteRule ^updater application/Core/Updater.php [QSA,L]
+RewriteRule ^updater updater.php [QSA,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]

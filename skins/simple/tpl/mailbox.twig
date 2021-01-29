@@ -1,0 +1,69 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+<div class="row">
+{% include 'templates/partials/modules.twig' %}
+<div class="col-lg order-sm-2 order-1"> 
+{% if auth.check %}
+    <div class="row">
+    
+        <div class="col-sm-12 col-md-3 mb-2">
+            <div class="card">
+              <div class="list-group">
+                <a href="{{ path_for('mailbox', {'folder':'new-message'}) }}" class="list-group-item d-flex justify-content-between align-items-center">{{ trans('new message') }}</a>
+                <a href="{{ path_for('mailbox', {'folder':'inbox'}) }}" class="list-group-item d-flex justify-content-between align-items-center">{{ trans('inbox') }} 
+                {% if unread %}<span class="badge badge-secondary badge-pill">{{ unread }}</span>{% endif %}</a>
+                <a href="{{ path_for('mailbox', {'folder':'outbox'}) }}" class="list-group-item d-flex justify-content-between align-items-center">{{ trans('outbox') }}</a>
+                <a href="{{ path_for('mailbox', {'folder':'spam'}) }}" class="list-group-item d-flex justify-content-between align-items-center">{{ trans('spam') }}</a>
+                <a href="{{ path_for('mailbox', {'folder':'trash'}) }}" class="list-group-item d-flex justify-content-between align-items-center">{{ trans('trash') }}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-9">
+     
+            {% if folder == 'new-message' %}
+                {% include 'mailbox/new-message.twig' %}
+            {% elseif folder == 'message' %}    
+                {% include 'mailbox/read-message.twig' %}
+            {% else %}
+                {% include 'mailbox/mailbox.twig' %}
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="row justify-content-md-center p-5">
+        <div class="card">
+          <div class="card-header">
+            {{ trans('mailbox') }}
+          </div>
+          <div class="card-body">
+            <p class="card-text">{{ trans('mailbox is only for legged users') }}.</p>
+            <a href="{{ path_for('auth.signin') }}" class="btn btn-primary float-right">{{ trans('sign in') }}</a>
+          </div>
+        </div>
+  
+    </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block endcontent %}
+{% if folder == 'new-message' %}
+<script>
+    var urlFor = "{{ path_for('auth.hint') }}";
+</script>
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script>
+var editor = new Jodit('#mailEditor', {
+    autofocus: true,
+	height: "280",
+	allowResizeX: false,
+    allowResizeY: true
+});
+</script>
+<script type="text/javascript" src="{{ base_url() }}/public/scripts/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="{{ base_url() }}/public/scripts/userAutocomplete.js"></script>
+{% endif %}
+{% endblock %}

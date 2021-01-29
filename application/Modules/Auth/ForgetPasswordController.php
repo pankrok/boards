@@ -25,23 +25,17 @@ class ForgetPasswordController extends Controller
         $user->lostpw = $hash;
         $user->save();
         $path = $this->router->urlFor('auth.change.pass', ['id' => $user->id, 'hash' => $hash]);
+        $subject = 'Forget Password ' . $this->settings["board"]["main_page_name"];
+        $variables = [
+            'path' =>  $path,
+            'username' =>  $user->username,
+        ];
         
         
-        $mail = $this->mailer->getMailer();
-        $mail->addAddress($user->email, $user->username);
-
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = 'Forget Password ' . $this->settings["board"]["main_page_name"];
-        $mail->Body    = 'Click here: ' . $path;
-        ;
-        $mail->AltBody = 'Click here: ' . $path;
-        ;
-
-        if ($mail->send()) {
+        if ($this->mailer->send($user->email, $user->username, $subject, 'lostpw', $variables)) {
             $this->flash->addMessage('success', 'Mail send to your address!');
         }
-        // send mail;
+
         return $response
             ->withHeader('Location', $this->router->urlFor('home'))
             ->withStatus(302);
@@ -67,15 +61,14 @@ class ForgetPasswordController extends Controller
         ]);
 
         if ($validation->faild()) {
-            ///
+            $this->flash->addMessage('danger', 'Something went wrong!');
+        }else{
+            $user = UserModel::find($body['id']);
+            $user->password = password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT);
+            $user->lost_pw = '';
+            $user->save();
+            $this->flash->addMessage('success', 'Password changed.');
         }
-        
-        $user = UserModel::find($body['id']);
-        $user->password = password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT);
-        $user->lost_pw = '';
-        $user->save();
-        $this->flash->addMessage('success', 'Password changed.');
-        
         
         return $response->withHeader('Location', $this->router->urlFor('home'))
             ->withStatus(302);

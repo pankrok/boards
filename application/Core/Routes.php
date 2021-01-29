@@ -30,6 +30,7 @@ $app->group('/plot', function (RouteCollectorProxy $plot) {
 #sign
 $app->group('/auth', function (RouteCollectorProxy $auth) {
     $auth->get('/signin', 'AuthController:getSignIn')->setName('auth.signin');
+    $auth->get('/signin/tfa[/{mail}]', 'AuthController:twoFactorAuth')->setName('auth.signin.tfa');
     $auth->post('/signin', 'AuthController:postSignIn')->setName('auth.post.signin');
     $auth->get('/signup', 'AuthController:getSignUp')->setName('auth.signup');
     $auth->post('/signup', 'AuthController:postSignUp')->setName('auth.post.signup');
@@ -49,15 +50,25 @@ $app->group('/chatbox', function (RouteCollectorProxy $chatbox) {
 });
 #user
 $app->group('/user', function (RouteCollectorProxy $user) {
+    $user->post('/manage/tfa', 'UserPanelController:setTwoFactor')->setName('user.tfa');
     $user->get('[/{username}/{uid}]', 'UserPanelController:getProfile')->setName('user.profile');
     $user->post('[/{username}/{uid}]', 'UserPanelController:postProfilePicture')->setName('user.postPicture');
     $user->post('/changedata', 'UserPanelController:postChangeData')->setName('user.postChangeData');
+    
 });
 #userlist
 $app->get('/userlist[/{page}]', 'UserlistController:getList')->setName('userlist');
 
+#mailbox
+$app->group('/mailbox', function (RouteCollectorProxy $mailbox) {
+   $mailbox->map(['GET', 'POST'], '/{folder}', 'MessageController:index')->setname('mailbox'); 
+   $mailbox->get('/{folder}/message/{id}', 'MessageController:getMessage')->setname('mailbox.message'); 
+   $mailbox->post('/send/message', 'MessageController:sendMessage')->setname('mailbox.send'); 
+   $mailbox->post('/delete/message', 'MessageController:deleteMessage')->setname('mailbox.delete'); 
+   $mailbox->post('/move/moveMessage', 'MessageController:moveMessage')->setname('mailbox.move'); 
+});
+
 #skin chang
-#userlist
 $app->get('/setskin/{skin}', 'SkinController:change')->setName('changeskin');
 
 
@@ -68,6 +79,7 @@ $app->get('/setskin/{skin}', 'SkinController:change')->setName('changeskin');
 $adm = $container->get('settings')['core']['admin'];
 $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
     $admin->get('[/]', 'AdminHomeController:index')->setName('admin.home');
+    $admin->get('/auth/tfa[/{mail}]', 'AdminHomeController:tfa')->setName('admin.home.tfa');
 
     $admin->get('/reload/plugins', 'AdminHomeController:pluginReload')->setName('admin.reload.plugins'); // reload plugins
     $admin->get('/active', 'AdminHomeController:plugin');

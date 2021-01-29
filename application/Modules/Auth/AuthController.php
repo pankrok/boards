@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Application\Modules\Auth;
 
 use Application\Models\UserModel;
+use Application\Models\SecretModel;
 use Application\Core\Controller;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Respect\Validation\Validator as v;
@@ -50,24 +51,29 @@ class AuthController extends Controller
     
     
     /**
-      * Validate data from sign in form, set session for success login
-      *
-      * @param object $request
+    * Validate data from sign in form, set session for success login
+    *
+    * @param object $request
     * @param object $response
-      * @return object
-      **/
+    * @return object
+    **/
   
     public function postSignIn($request, $response)
     {
         $validation = $this->validator->validate($request, [
         'login' =>   v::notEmpty()->email()
         ]);
-        
-        if ($validation->faild()) {
+         
+        if ($validation->faild() && isset($request->getParsedBody()['tfa'])) {
+            $auth = $this->auth->attempt(
+            ['username', $request->getParsedBody()['login']],
+            null,
+            $request->getParsedBody()['tfa']);
+        } elseif ($validation->faild() && !isset($request->getParsedBody()['tfa'])) {
             $auth = $this->auth->attempt(
                 ['username', $request->getParsedBody()['login']],
                 $request->getParsedBody()['password']
-            );
+            );       
         } else {
             $auth = $this->auth->attempt(
                 ['email', $request->getParsedBody()['login']],
@@ -93,8 +99,20 @@ class AuthController extends Controller
             $this->flash->addMessage('danger', 'You are banned!');
 
             return $response
-        ->withHeader('Location', $this->router->urlFor('auth.signin'))
+            ->withHeader('Location', $this->router->urlFor('auth.signin'))
+            ->withStatus(302);
+        }
+        
+        if (isset($request->getParsedBody()['admin']) && $auth === 'tfa') {
+            return $response
+        ->withHeader('Location', $this->router->urlFor('admin.home.tfa'))
         ->withStatus(302);
+        }
+        
+        if ($auth === 'tfa') {
+            return $response
+            ->withHeader('Location', $this->router->urlFor('auth.signin.tfa'))
+            ->withStatus(302);
         }
         
         if (isset($request->getParsedBody()['admin'])) {
@@ -108,7 +126,37 @@ class AuthController extends Controller
         ->withHeader('Location', $this->router->urlFor('home'))
         ->withStatus(302);
     }
-
+    
+    /**
+    * Render Sign in 2fa page
+    *
+    * @param object $request
+    * @param object $response
+    * @return object
+    **/
+    
+    public function twoFactorAuth($request, $response, $arg)
+    {    
+        if(isset($_SESSION['tfa'])){
+            $secret = SecretModel::where('user_id', $_SESSION['tfa'])->first()->secret;
+            $user = UserModel::find($_SESSION['tfa']);
+        }
+        if(!isset($arg['mail'])){
+            $this->tfa->google->getCode($secret);
+        }else{
+            $code = $this->tfa->mail->getCode($secret);
+            $this->mailer->send(
+                $user['email'],
+                $user['username'],
+                $this->translator->get('lang.Two factor code from') . $this->settings['board']['main_page_name'],
+                '2fa',
+                ['code' => $code]
+            );
+        }
+        $this->view->getEnvironment()->addGlobal('username', $user['username']);
+        return $this->view->render($response, 'auth/2fa.twig');
+    }
+    
     /**
     * Render Sign up page
     *
@@ -145,7 +193,13 @@ class AuthController extends Controller
         $data = $_SESSION["captcha"];
         $_SESSION["captcha"] = null;
         $captcha = (md5($request->getParsedBody()['board_captcha']) !== $data);
-        
+        $passlenght = strlen($request->getParsedBody()['password']);
+        if (32 < $passlenght || $passlenght < 8) {
+            $this->flash->addMessage('danger', 'Password must be bettwen 8 and and 32 characters');
+            return $response
+            ->withHeader('Location', $this->router->urlFor('auth.signup'))
+            ->withStatus(302);
+        }
         
         $validation = $this->validator->validate($request, [
             'username'         => v::notEmpty(),

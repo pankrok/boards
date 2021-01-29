@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Application\Core\Modules\Auth;
 
 use Application\Models\UserModel;
+use Application\Models\SecretModel;
 
  /**
  * Authentication class
@@ -15,6 +16,14 @@ use Application\Models\UserModel;
 
 class Auth
 {
+    
+    protected $tfa;
+    
+    public function __construct($tfa)
+    {
+        $this->tfa = $tfa;
+    }
+    
     /**
     * check is user exist in database
     * @return boolen
@@ -69,7 +78,7 @@ class Auth
       * @return boolen
       **/
   
-    public function attempt($login, $password)
+    public function attempt($login, $password, $tfa = null)
     {
         if ($login[0] == 'email') {
             $user = UserModel::where('email', $login[1])->first();
@@ -84,10 +93,29 @@ class Auth
         if ($user->banned) {
             return 'banned';
         }
-    
-        if (password_verify($password, $user->password)) {
+
+        if (isset($tfa)) {
+            $secret = SecretModel::where('user_id', $user->id)->first();
+            if($this->tfa->google->verifyCode($secret->secret, $tfa) 
+            || $this->tfa->mail->verifyCode($secret->secret, $tfa)){
+        
+                    $_SESSION['user'] = $user->id;
+                    $_SESSION['tfa'] = null;
+                    unset($_SESSION['tfa']);
+                    return true;
+            } else {
+                return false;
+            }
+        }
+
+        if (password_verify($password, $user->password) && !$user->tfa) {
             $_SESSION['user'] = $user->id;
             return true;
+        }
+        
+        if (password_verify($password, $user->password) && $user->tfa) {
+            $_SESSION['tfa'] = $user->id;
+            return 'tfa';
         }
         
         return false;

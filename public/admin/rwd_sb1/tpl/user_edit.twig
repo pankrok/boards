@@ -75,10 +75,22 @@
                       <h6 class="mb-0">Banned</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                     <select class="form-control" name="banned">
-						  <option value="1" {% if user.banned %}selected{% endif %}>YES</option>
-						  <option value="0" {% if not user.banned %}selected{% endif %}>NO</option>
-						</select>
+                    <select class="form-control" name="banned">
+						<option value="1" {% if user.banned %}selected{% endif %}>{{ trans('admin.yes') }}</option>
+						<option value="0" {% if not user.banned %}selected{% endif %}>{{ trans('admin.no') }}</option>
+					</select>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">2FA</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                    <select class="form-control" name="tfa">
+						<option value="1" {% if user.tfa %}selected{% endif %}>{{ trans('admin.yes') }}</option>
+						<option value="0" {% if not user.tfa %}selected{% endif %}>{{ trans('admin.no') }}</option>
+					</select>
                     </div>
                   </div>
                   <hr>

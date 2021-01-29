@@ -7,12 +7,18 @@ use Slim\App;
 return function (App $app) {
     $container = $app->getContainer();
     
+    #Board controllers section
+    
     $container->set('CronController', function ($container) {
         return new Application\Modules\CronJobs\CronController($container);
     });
     
     $container->set('HomeController', function ($container) {
         return new Application\Modules\Board\HomeController($container);
+    });
+    
+    $container->set('MessageController', function ($container) {
+        return new Application\Modules\Messages\MessageController($container);
     });
     
     $container->set('PageController', function ($container) {

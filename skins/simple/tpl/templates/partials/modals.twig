@@ -22,10 +22,10 @@
 				<label for="exampleInputPassword1">{{ trans('Password') }}</label>
 				<input type="password" name="password" id="password"  class="form-control {{ errors.password ? 'is-invalid' : ''}}" value="{{ old.password }}">
 			  </div>
-				<div class="form-group form-check">
-				<input type="checkbox" class="form-check-input" id="exampleCheck1">
-				<label class="form-check-label" for="exampleCheck1">{{ trans('Remember me') }}</label>
-			  </div>
+				<!-- <div class="form-group form-check"> -->
+				<!-- <input type="checkbox" class="form-check-input" id="exampleCheck1"> -->
+				<!-- <label class="form-check-label" for="exampleCheck1">{{ trans('Remember me') }}</label> -->
+			  <!-- </div> -->
 				<button type="submit" class="btn btn-light">{{ trans('Sign in') }}</button>
 				{{ csrf.field | raw }}
 			</form>

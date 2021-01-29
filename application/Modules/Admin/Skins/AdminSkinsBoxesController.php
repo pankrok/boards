@@ -77,7 +77,7 @@ class AdminSkinsBoxesController extends Controller
         
         foreach ($boxes as $k => $v) {
             if ($v['translate']) {
-                $boxes[$k]['name'] = $this->container->get('translator')->trans('module.'.$v['name']);
+                $boxes[$k]['name'] = $this->container->get('translator')->get('module.'.$v['name']);
             }
         }
         
@@ -101,7 +101,7 @@ class AdminSkinsBoxesController extends Controller
                     $active = json_decode($v['active'], true)[$name];
                     if ($active) {
                         if ($v['translate']) {
-                            $boxes[$position][$k]['name'] = $this->container->get('translator')->trans('module.'.$v['name']);
+                            $boxes[$position][$k]['name'] = $this->container->get('translator')->get('module.'.$v['name']);
                         }
                     } else {
                         unset($boxes[$position][$k]);
@@ -122,7 +122,7 @@ class AdminSkinsBoxesController extends Controller
         foreach ($pages as $k => $v) {
             $v == $current ? $active = 'active' : $active = '';
             $url = $this->router->urlFor('admin.modules.skin.get', ['route' => $v, 'id' => $id]);
-            $name = $this->translator->trans('admin.'.$v);
+            $name = $this->translator->get('admin.'.$v);
             $pages[$k] = '<li class="nav-item">
 			<a class="nav-link '. $active .'" href="'. $url .'">' . $name . '</a>
 		  </li>';
