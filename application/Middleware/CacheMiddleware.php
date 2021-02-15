@@ -21,6 +21,7 @@ class CacheMiddleware extends Middleware
         $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
         $name = $route->getName();
+        $this->container->get('adminView')->getEnvironment()->addGlobal('route_name', $name);
         
         if (explode('.', $name)[0] === 'admin' && $request->getMethod() == 'POST') {
             $this->container->get('cache')->clearCache();

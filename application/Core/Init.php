@@ -112,7 +112,9 @@ $container->set('view', function ($container) {
     
     $twigSettings = $container->get('settings')['twig'];
     $skin = $_SESSION['skin'] ?? $twigSettings['skin'];
-        
+    if (!isset($twigSettings['debug'])) {
+        $twigSettings['debug'] = false;
+    }
     
     $view = new \Slim\Views\Twig(MAIN_DIR . '/skins/'. $skin . '/tpl', [
         'cache' => (bool)$twigSettings['cache'] ? MAIN_DIR . '/skins/'. $skin . '/cache/twig' : false,
@@ -151,7 +153,7 @@ $container->set('view', function ($container) {
     } else {
         $lock = $container->get('settings')['board']['boards_off'];
     }
-    
+  
     $view->getEnvironment()->addGlobal('boards_off', $lock);
     $view->getEnvironment()->addGlobal('main_title', $container->get('settings')['board']['main_page_name']);
     
@@ -166,6 +168,9 @@ $container->set('view', function ($container) {
 
 $container->set('adminView', function ($container) {
     $twigSettings = $container->get('settings')['admin'];
+    if (!isset($twigSettings['debug'])) {
+        $twigSettings['debug'] = false;
+    }
     $view = new \Slim\Views\Twig(
         [
             MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',
@@ -173,14 +178,19 @@ $container->set('adminView', function ($container) {
         ],
         [
             'cache' => false,
-            'debug' => false,
+            'debug' => (bool)$twigSettings['debug'],
         ]
     ); 
     
     $router = $container->get('router');
+    
+    
     $view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
     $view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
-      
+    if ($twigSettings['debug']) {
+        $view->addExtension(new \Twig\Extension\DebugExtension());
+    }
+    
     $filter = new \Twig\TwigFilter('base64_decode', function ($string) {
         return base64_decode($string);
     });
@@ -198,7 +208,7 @@ $container->set('adminView', function ($container) {
 });
 
 $container->set('auth', function ($container) {
-    return new Application\Core\Modules\Auth\Auth($container->get('tfa'));
+    return new Application\Core\Modules\Auth\Auth($container->get('tfa'), $container->get('settings')['board']['confirm_reg']);
 });
 
 $container->set('validator', function () {

@@ -88,9 +88,10 @@ class PlotController extends Controller
             
             $plot = PlotsModel::find($arg['plot_id']);
             
-            $plot_data['plot_data'] = $data;
+            $plot_data['plot_data'] = $data->toArray();
             $plot_data['locked'] = $plot->locked;
             $plot_data['title'] = $plot->plot_name;
+            $plot_data['board_id'] = $plot->board_id;
             $plot_data['hidden'] = $plot->hidden;
             
             $boardList = BoardsModel::select('id', 'board_name')->get()->toArray();
@@ -109,6 +110,7 @@ class PlotController extends Controller
             $plot_data['plot_data'] = $cache['data'];
             $plot_data['locked'] = $cache['locked'];
             $plot_data['title'] = $cache['plot_name'];
+            $plot_data['board_id'] = $cache['board_id'];
             $plot_data['hidden'] = $cache['hidden'];
             $boardList = $cache['plotList'];
             $this->cache->deleteExpired();
@@ -140,6 +142,7 @@ class PlotController extends Controller
         if ($plot_data) {
             $this->view->getEnvironment()->addGlobal('plot', [
                                                             'posts' => $plot_data['plot_data'],
+                                                            'board_id' => $plot_data['board_id'],
                                                             'plot_id' => $arg['plot_id'],
                                                             ]);
         }
@@ -420,13 +423,25 @@ class PlotController extends Controller
     public function lockPlot($request, $response)
     {
         $body = $request->getParsedBody();
+        $hidden = ($body['hidden'] ? 1 : 0);
         $plot = PlotsModel::find($body['id']);
-        $plot->plot_name =  $this->purifier->purify($body['plot_name']);
-        $plot->locked = $body['lock'] ? 1 : 0;
-        $plot->hidden = $body['hidden'] ? 1 : 0;
-        $plot->save();
-        $body['lock'] ? $lock = 'locked' : $lock = 'ulocked';
+ 
+        if (intval($body['board_select']) !== $plot->board_id) {
+            $this->BoardController->boardCleanCache($plot->board_id);
+        }
         
+        $plot->plot_name =  $this->purifier->purify($body['plot_name']);
+        $plot->board_id = $body['board_select'];
+        $plot->locked = ($body['lock'] ? 1 : 0);
+        $plot->hidden = $hidden;
+        $plot->save();
+
+        if (isset($body['lock'])) { 
+            $lock = 'locked';
+        } else {
+            $lock = 'ulocked';
+        }
+        $this->BoardController->boardCleanCache($plot->board_id);
         $this->flash->addMessage('success', $this->translator->get('Plot '.$lock.' success!'));
         return $response
           ->withHeader('Location', $this->router->urlFor('board.getPlot', ['plot_id'=>$body['id'], 'plot' => $this->urlMaker->toUrl($plot->plot_name)]))

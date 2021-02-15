@@ -64,7 +64,10 @@ class CacheCore
             self::getDir() . md5($fname) . $this->extension,
             $content
         )) {
-            $list = unserialize(file_get_contents(MAIN_DIR . $this->mainDir . 'cache[0].cache'));
+            if (file_exists(MAIN_DIR . $this->mainDir . 'cache[0].cache')) 
+            {
+                $list = unserialize(file_get_contents(MAIN_DIR . $this->mainDir . 'cache[0].cache'));
+            }
             if (is_array($list)) {
                 $list += [
                     self::getDir() . md5($fname) => (time()+$exp)
@@ -113,7 +116,7 @@ class CacheCore
         if (is_array($list)) {
             foreach ($list as $k => $v) {
                 if ($v != 0 && $v < time()) {
-                    if (file_exists($k)) {
+                    if (file_exists($k . $this->extension)) {
                         if (!unlink($k . $this->extension)) {
                             throw new \Exception('cannot delete cache file'.$k);
                         }

@@ -118,4 +118,8 @@ return function (App $app) {
     $container->set('AdminUpdateController', function ($container) {
         return new Application\Modules\Admin\Updater\AdminUpdateController($container);
     });
+    
+    $container->set('AdminMailTemplateController', function ($container) {
+        return new Application\Modules\Admin\MailTemplate\MailTemplateController($container);
+    });
 };

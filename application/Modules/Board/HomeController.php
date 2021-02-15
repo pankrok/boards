@@ -57,7 +57,10 @@ class HomeController extends Controller
         $categories = \Application\Models\CategoryModel::where('active', 1)->orderBy('category_order', 'DESC')->get()->toArray();
         
         foreach ($categories as $k => $v) {
-            $categories[$k]['url'] = self::base_url() . '/category/' . $this->urlMaker->toUrl($v['name'])	. '/' . $v['id'];
+            $categories[$k]['url'] = $this->router->urlFor('category.getCategory', [
+                'category' => $this->urlMaker->toUrl($v['name']),
+                'category_id' =>  $v['id']
+                ]);
         }
         
         return $categories;
@@ -69,6 +72,7 @@ class HomeController extends Controller
         $handler = \Application\Models\BoardsModel::where('active', '1')->orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
         
         foreach ($handler as $k => $v) {
+            
             $lastpost = \Application\Models\PlotsModel::orderBy('updated_at', 'DESC')
                                                     ->where('board_id', '=', $v['id'])
                                                     ->leftJoin('users', 'users.id', 'plots.author_id')
@@ -77,19 +81,40 @@ class HomeController extends Controller
                                                     ->first();
             if (isset($lastpost)) {
                 $lastpost->toArray();
+
                 if ($lastpost['_38']) {
                     $lastpost['_38'] =  self::base_url() . '/public/upload/avatars/' . $lastpost['_38'];
                 } else {
                     $lastpost['_38'] = self::base_url() . '/public/img/avatar.png';
                 }
             }
+            $plots = \Application\Models\PlotsModel::where([['board_id', $v['id']], ['hidden', 0]])->get();
+            $postsNo = 0;
+            foreach ($plots as $plot) {
+                $postsNo += \Application\Models\PostsModel::where([['plot_id', $plot->id], ['hidden', 0]])->count();
+            }
+            
             $boards[$v['category_id']][$v['id']] = $v;
+            $boards[$v['category_id']][$v['id']]['plots_number'] =  $plots->count();
+            $boards[$v['category_id']][$v['id']]['posts_number'] =  $postsNo;
             $boards[$v['category_id']][$v['id']]['url'] = self::base_url() . '/board/' . $this->urlMaker->toUrl($v['board_name'])	. '/' . $v['id'];
             if (isset($lastpost)) {
+                
                 $boards[$v['category_id']][$v['id']]['last_post'] = true;
-                $boards[$v['category_id']][$v['id']]['last_post_url'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($lastpost['plot_name'])	. '/' . $lastpost['id'];
-                $boards[$v['category_id']][$v['id']]['last_post_author_url'] = self::base_url() . '/user/' . $this->urlMaker->toUrl($lastpost['username'])	. '/' . $lastpost['author_id'];
+                $boards[$v['category_id']][$v['id']]['plot_name'] = (strlen($lastpost['plot_name']) > 10) ? substr($lastpost['plot_name'], 0, 7).'...' : $lastpost['plot_name'];
+                $boards[$v['category_id']][$v['id']]['last_post_url'] = $this->router->urlFor('board.getPlot', [
+                    'plot' => $this->urlMaker->toUrl($lastpost['plot_name']),
+                    'plot_id' => $lastpost['id'],
+                    'page' => $count,
+                ]) .'#post-' . $lastpost['id'];
+                
+                $boards[$v['category_id']][$v['id']]['last_post_author_url'] = $this->router->urlFor('user.profile', [
+                    'username' => $this->urlMaker->toUrl($lastpost['username']),
+                    'uid' => $lastpost['author_id']
+                ]);
                 $boards[$v['category_id']][$v['id']]['last_post_avatar'] = $lastpost['_38'];
+            } else {
+                $boards[$v['category_id']][$v['id']]['last_post'] = false;          
             }
         }
         

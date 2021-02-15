@@ -105,7 +105,7 @@ class ToUrl
         'ო' => 'o','პ' => 'p','ჟ' => 'z','რ' => 'r','ს' => 's','ტ' => 't',
         'უ' => 'u','ფ' => 'p','ქ' => 'k','ღ' => 'g','ყ' => 'q','შ' => 's',
         'ჩ' => 'c','ც' => 't','ძ' => 'd','წ' => 't','ჭ' => 'c','ხ' => 'k',
-        'ჯ' => 'j','ჰ' => 'h', ' ' => '-' ];
+        'ჯ' => 'j','ჰ' => 'h', ' ' => '-', '?' => '', '$' => 'USD', '&' => '-and-' ];
     }
     
     public function toUrl($str)
@@ -115,6 +115,16 @@ class ToUrl
             array_values($this->transliteration),
             $str
         );
-        return $str;
+        return urlencode($str);
+    }
+    
+    public function fromUrl($str)
+    {
+        $str = str_replace(
+            array_values($this->transliteration),
+            array_keys($this->transliteration),
+            $str
+        );
+        return urlencode($str);
     }
 }

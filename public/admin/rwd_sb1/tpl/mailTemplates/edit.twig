@@ -1,0 +1,34 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+<div class="row">
+	<ul class="nav">
+	  <li class="nav-item">
+		<a class="nav-link active" href="{{ path_for('admin.mail.template.list') }}">back</a>
+	  </li>
+	</ul>
+</div><hr />
+
+<h2>{{ trans('admin.edit') }}: {{ file }}</h2>
+<form action="{{ path_for('admin.mail.template.save') }}" method="post">
+<input type="hidden" name="twig" value="{{ file }}">
+<textarea class="form-control" id="editor" rows="3" name="desc">{{ content }}</textarea>
+<button type="submit" class="btn btn-success float-right mt-3">{{ trans('admin.submit') }}</button>
+</form>
+{% endblock %}
+{% block endcontent %}
+<link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
+<script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
+<script>
+
+var editor = new Jodit('#editor', {
+	langusage: 'pl',
+    autofocus: true,
+	height: "auto",
+	allowResizeX: false,
+    allowResizeY: false,
+
+});
+
+</script>
+{% endblock %}

@@ -1,9 +1,194 @@
 {% extends 'templates/main.twig' %}
 
-
 {% block content %}
       
         <h2 class="mb-4">Dashboard</h2>
-        <p>Heres will be dashboard soon... hope so...</p>
+        <div class="card">
+          <div class="card-header">
+            {{ trans('admin.informations') }}
+          </div>
+          <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-md-6 border-right">
+                <h6>{{ trans('admin.statistics') }}</h6>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <span class="float-left">
+                        {{ trans('admin.all plots') }}    
+                        </span>
+                        <span class="float-right">
+                        <strong>{{ json_decode(info.plots)|last }}</strong>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="float-left">
+                        {{ trans('admin.all posts') }}    
+                        </span>
+                        <span class="float-right">
+                        <strong>{{ json_decode(info.posts)|last }}</strong>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="float-left">
+                        {{ trans('admin.all users') }}    
+                        </span>
+                        <span class="float-right">
+                        <strong>{{ json_decode(info.users)|last }}</strong>
+                        </span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-12 col-md-6">
+                <h6>{{ trans('admin.system information') }}</h6>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <span class="float-left">
+                        {{ trans('admin.boards version') }}
+                        </span>
+                        <span class="float-right">
+                        <strong>{{ info.version }}</strong>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="float-left">
+                        {{ trans('admin.php version') }}
+                        </span>
+                        <span class="float-right">
+                        <strong>{{ info.php_version }}</strong>
+                        </span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="float-left">
+                        {{ trans('admin.mysql version') }}
+                        </span>
+                        <span class="float-right">
+                        <strong>{{ info.mysql_version }}</strong>
+                        </span>
+                    </li>
+                  </ul>
+                </div>
+            </div>
+          </div>
+        </div>
+        
+         <div class="card mt-3 d-none d-md-block">
+          <div class="card-header">
+            {{ trans('admin.chart statistics last 30 days') }}
+          </div>
+          <div class="card-body">
+           <canvas id="myChart" class="w-100" height="400px"></canvas>
+          </div>
+        </div>
 		
+{% endblock %}
+
+{% block endcontent %}
+<script src="{{base_url() }}/public/scripts/chart.min.js"></script>
+<script>
+var ctx = document.getElementById('myChart');
+var DAYS = [];
+for($i = 30; $i > 0; $i--) {
+    DAYS[(30-$i)] = $i;
+};
+
+var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: DAYS,
+				datasets: [{
+					label: '{{ trans('admin.all plots') }} ',
+					backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)'
+                    ],
+					data: JSON.parse('{{ info.plots }}'),
+					fill: false,
+				},{
+					label: '{{ trans('admin.all posts') }} ',
+					backgroundColor: [
+                        'rgba(54, 162, 235, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)'
+                    ],
+					data: JSON.parse('{{ info.posts }}'),
+					fill: false,
+				}, {
+					label: '{{ trans('admin.all users') }} ',
+					fill: false,
+					backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)'
+                    ],
+					data: JSON.parse('{{ info.users }}'),
+				},{
+					label: '{{ trans('admin.plots per day') }} ',
+					backgroundColor: [
+                        'rgba(255,140,0, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,140,0, 1)'
+                    ],
+					data: JSON.parse('{{ info.plots_per_day }}'),
+					fill: false,
+				},{
+					label: '{{ trans('admin.posts per day') }} ',
+					backgroundColor: [
+                        'rgba(255,20,147, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,20,147, 1)'
+                    ],
+					data: JSON.parse('{{ info.posts_per_day }}'),
+					fill: false,
+				},{
+					label: '{{ trans('admin.users per day') }} ',
+					backgroundColor: [
+                        'rgba(255,255,0, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,255,0, 1)'
+                    ],
+					data: JSON.parse('{{ info.users_per_day }}'),
+					fill: false,
+				}
+                ]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: false
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: "{{ trans('admin.day') }}"
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: "{{ trans('admin.value') }}"
+						}
+					}]
+				}
+			}
+});
+
+</script>
 {% endblock %}

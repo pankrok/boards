@@ -2,9 +2,10 @@
 
 
 {% block content %}
+<h2>{{ trans('admin.admin.groups') }}</h2>
 	<ul class="nav justify-content-end">
 	  <li class="nav-item">
-		<a class="nav-link btn btn-success active" href="{{ path_for('admin.groups.add') }}">add Skin</a>
+		<a class="nav-link btn btn-success active" href="{{ path_for('admin.groups.add') }}">{{ trans('admin.add group') }}</a>
 	  </li>
 	</ul>
 <hr />
@@ -15,7 +16,7 @@
 			
 			<!-- Button trigger modal -->
 			<button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#group-{{ group.id }}">
-			  Delete
+			  {{ trans('admin.delete') }}
 			</button>
 
 			<!-- Modal -->
@@ -23,18 +24,18 @@
 			  <div class="modal-dialog" role="document">
 				<div class="modal-content">
 				  <div class="modal-header">
-					<h5 class="modal-title" id="group-{{ group.id }}-modal">Delete group: {{ group.grupe_name |raw }}</h5>
+					<h5 class="modal-title" id="group-{{ group.id }}-modal">{{ trans('admin.delete group') }}: {{ group.grupe_name |raw }}</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					  <span aria-hidden="true">&times;</span>
 					</button>
 				  </div>
 				  <div class="modal-body">
-					Are you sure you want remove permanently this group?
+					{{ trans('admin.Are you sure you want remove permanently this group') }}?
 				  </div>
 				  <div class="modal-footer">
 					<form method="post" action="{{ path_for('admin.groups.delete') }}">
 					<input type="hidden" name="id" value="{{ group.id }}">
-					<button type="submit" class="btn btn-warning">YES</button>
+					<button type="submit" class="btn btn-warning">{{ trans('admin.yes') }}</button>
 					</form>
 				  </div>
 				</div>

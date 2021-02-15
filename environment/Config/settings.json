@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "MC4xLjQ=",
+        "version": "MC4xLjU=",
         "show_version": "1",
         "log_level": "0",
         "debug": "0",
@@ -17,7 +17,8 @@
         "chatbox_h": "260"
     },
     "admin": {
-        "skin": "rwd_sb1"
+        "skin": "rwd_sb1",
+        "debug": "0"
     },
     "translations": {
         "path": "\/environment\/Translations",

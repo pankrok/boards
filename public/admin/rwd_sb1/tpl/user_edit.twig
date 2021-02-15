@@ -2,10 +2,11 @@
 
 
 {% block content %}
+<h2>{{ trans('admin.admin.user.edit') }}: {{ user.username }}</h2>
 <div class="row">
 	<ul class="nav">
 	  <li class="nav-item">
-		<a class="nav-link active" href="{{ path_for('admin.users') }}">back</a>
+		<a class="nav-link active" href="{{ path_for('admin.users') }}">{{ trans('admin.back') }}</a>
 	  </li>
 	</ul>
 </div><hr />

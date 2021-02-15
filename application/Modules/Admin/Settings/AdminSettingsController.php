@@ -6,12 +6,15 @@ namespace Application\Modules\Admin\Settings;
 
 use Application\Core\Controller as Controller;
 use Application\Core\Modules\Configuration\ConfigurationCore;
+use Application\Models\GroupsModel;
 
 class AdminSettingsController extends Controller
 {
     public function index($request, $response)
     {
         $this->adminView->getEnvironment()->addGlobal('settings', $this->settings);
+        $this->adminView->getEnvironment()->addGlobal('groups', GroupsModel::get()->toArray());
+        $this->adminView->getEnvironment()->addGlobal('show_settings', true);
         return $this->adminView->render($response, 'settings.twig');
     }
     
@@ -39,6 +42,7 @@ class AdminSettingsController extends Controller
         
         $mailCfg = json_decode(file_get_contents($dir), true);
         $this->adminView->getEnvironment()->addGlobal('mail_cfg', $mailCfg);
+        $this->adminView->getEnvironment()->addGlobal('show_settings', true);
         return $this->adminView->render($response, 'mail_settings.twig');
     }
     
@@ -60,7 +64,8 @@ class AdminSettingsController extends Controller
         if (isset($body['skins']) || isset($body['objects'])) {
             $this->flash->addMessage('info', $message);
         }
-            
+        
+        $this->adminView->getEnvironment()->addGlobal('show_settings', true);     
         return $this->adminView->render($response, 'cache.twig');
     }
 }

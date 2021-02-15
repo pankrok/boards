@@ -33,11 +33,11 @@ $app->group('/auth', function (RouteCollectorProxy $auth) {
     $auth->get('/signin/tfa[/{mail}]', 'AuthController:twoFactorAuth')->setName('auth.signin.tfa');
     $auth->post('/signin', 'AuthController:postSignIn')->setName('auth.post.signin');
     $auth->get('/signup', 'AuthController:getSignUp')->setName('auth.signup');
+    $auth->get('/confirm-account[/{code}]', 'AuthController:confirmAccount')->setName('auth.confirm');
     $auth->post('/signup', 'AuthController:postSignUp')->setName('auth.post.signup');
     $auth->get('/autlogout', 'AuthController:getSignOut')->setName('auth.signout');
     $auth->post('/hint', 'AuthController:postHintUsers')->setName('auth.hint');
     $auth->post('/ref/captcha', 'AuthController:refreshCaptcha')->setName('auth.ref.captcha');
-  
     $auth->get('/forgetpassword', 'ForgetPasswordController:index')->setName('auth.forget.pass');
     $auth->post('/forgetpassword/post', 'ForgetPasswordController:sendMail')->setName('auth.forget.pass.post');
     $auth->get('/forgetpassword/change/{id}/{hash}', 'ForgetPasswordController:chengePassword')->setName('auth.change.pass');
@@ -135,22 +135,34 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
         $adminPlug->post('/deactive', 'AdminPluginController:pluginDective')->setName('admin.plugins.deactive');
     });
   
-    $admin->get('/settings', 'AdminSettingsController:index')->setName('admin.get.settings');
-    $admin->post('/settings/save', 'AdminSettingsController:saveSettings')->setName('admin.post.settings');
-    $admin->map(['GET', 'POST'], '/mail/settings', 'AdminSettingsController:mailer')->setName('admin.mail.settings');
-    $admin->map(['GET', 'POST'], '/cleancache', 'AdminSettingsController:cleanCache')->setName('admin.cache');
-  
-    $admin->group('/menu', function (RouteCollectorProxy $adminMenu) {
-        $adminMenu->get('/list', 'AdminMenuController:index')->setName('admin.menu');
-        $adminMenu->map(['GET', 'POST'], '/manage[/{id}]', 'AdminMenuController:manageItem')->setName('admin.menu.manage');
-        $adminMenu->post('/delete', 'AdminMenuController:deleteItem')->setName('admin.menu.delete');
+    
+    $admin->group('/settings', function (RouteCollectorProxy $adminSettings) {
+        $adminSettings->get('/config', 'AdminSettingsController:index')->setName('admin.get.settings');
+        $adminSettings->post('/config/save', 'AdminSettingsController:saveSettings')->setName('admin.post.settings');
+        $adminSettings->map(['GET', 'POST'], '/mail/config', 'AdminSettingsController:mailer')->setName('admin.mail.settings');
+        $adminSettings->map(['GET', 'POST'], '/cleancache', 'AdminSettingsController:cleanCache')->setName('admin.cache');
+      
+        $adminSettings->group('/menu', function (RouteCollectorProxy $adminMenu) {
+            $adminMenu->get('/list', 'AdminMenuController:index')->setName('admin.menu');
+            $adminMenu->map(['GET', 'POST'], '/manage[/{id}]', 'AdminMenuController:manageItem')->setName('admin.menu.manage');
+            $adminMenu->post('/delete', 'AdminMenuController:deleteItem')->setName('admin.menu.delete');
+        });
+      
+        $adminSettings->group('/pages', function (RouteCollectorProxy $adminPages) {
+            $adminPages->get('/list', 'AdminPagesController:index')->setName('admin.pages');
+            $adminPages->map(['GET', 'POST'], '/manage[/{id}]', 'AdminPagesController:managePage')->setName('admin.page.edit');
+            $adminPages->post('/delete', 'AdminPagesController:deletePage')->setName('admin.page.delete');
+        });
+        
+        $adminSettings->group('/mail-templates', function (RouteCollectorProxy $adminMailTemplates) {
+            $adminMailTemplates->get('/list', 'AdminMailTemplateController:index')->setName('admin.mail.template.list');
+            $adminMailTemplates->get('/edit[/{twig}]', 'AdminMailTemplateController:editMailTemplate')->setName('admin.mail.template.edit');
+            $adminMailTemplates->post('/save', 'AdminMailTemplateController:saveMailTemplate')->setName('admin.mail.template.save');
+        });
+        
+        $adminSettings->get('/update', 'AdminUpdateController:index')->setName('admin.update');
     });
-  
-    $admin->group('/pages', function (RouteCollectorProxy $adminPages) {
-        $adminPages->get('/list', 'AdminPagesController:index')->setName('admin.pages');
-        $adminPages->map(['GET', 'POST'], '/manage[/{id}]', 'AdminPagesController:managePage')->setName('admin.page.edit');
-        $adminPages->post('/delete', 'AdminPagesController:deletePage')->setName('admin.page.delete');
-    });
+    
     $admin->group('/users', function (RouteCollectorProxy $adminUser) {
         $adminUser->get('/list[/{page}]', 'AdminUserController:index')->setName('admin.users');
         $adminUser->get('/edit/{id}', 'AdminUserController:editUser')->setName('admin.user.edit');
@@ -163,7 +175,7 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
         $adminUser->post('/group/delete', 'AdminGroupController:deleteGroup')->setName('admin.groups.delete');
     });
   
-    $admin->get('/update', 'AdminUpdateController:index')->setName('admin.update');
+    $admin->get('/update', 'AdminUpdateController:index')->setName('admin.update.deprecated');
 });
 
 if ($container->get('settings')['cache']['active']) {

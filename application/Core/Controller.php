@@ -31,13 +31,17 @@ class Controller
         ];
     }
     
-    protected function base_url()
+    protected function base_url($domainOnly = false)
     {
         if (isset($_SERVER['HTTPS'])) {
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         } else {
             $protocol = 'http';
         }
+        if ($domainOnly === true) {
+            return $protocol . "://" . $_SERVER['HTTP_HOST'];
+        }
+        
         return $protocol . "://" . $_SERVER['HTTP_HOST'] . substr($this->router->urlFor('home'), 0, -1);
     }
 }

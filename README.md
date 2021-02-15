@@ -35,10 +35,12 @@ Ready features:
 * built-in update system
 * easy to use module system,
 * chat included,
+* two factor authentication,
+* email templates with editor,
 
 In progress:
-* two factor authentication,
-* email templates,
+* ban reasons,
+* nested boards / childboards,
 * english translation
 
 ## Status

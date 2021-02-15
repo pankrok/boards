@@ -1,0 +1,12 @@
+<!-- breadcrumb -->
+<nav aria-label="breadcrumb" class="d-none d-md-block">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item {% if not breadcrumbs %}active{% endif %}"><a href="{{ path_for('admin.home') }}">Dashboard</a></li>
+	{% if breadcrumbs %}
+		{% for breadcrumb in breadcrumbs %}
+		<li class="breadcrumb-item {% if breadcrumb.last %}active{% endif %}"><a href="{% if breadcrumb.path != none %}{{ breadcrumb.path }}{% else %}#{% endif %}">{{ breadcrumb.name }}</a></li>		
+		{% endfor %}
+	{% endif %}
+  </ol>
+</nav>
+<!-- /breadcrumb -->

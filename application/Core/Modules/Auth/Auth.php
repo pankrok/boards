@@ -18,10 +18,12 @@ class Auth
 {
     
     protected $tfa;
+    protected $confirmReg;
     
-    public function __construct($tfa)
+    public function __construct($tfa, $confirmReg)
     {
         $this->tfa = $tfa;
+        $this->confirmReg = $confirmReg;
     }
     
     /**
@@ -88,6 +90,10 @@ class Auth
         }
         if (!$user) {
             return false;
+        }
+        
+        if(!$user->confirmed && $this->settings['board']['confirm_reg'] === 1) {
+            return 'not confirmed account';
         }
         
         if ($user->banned) {

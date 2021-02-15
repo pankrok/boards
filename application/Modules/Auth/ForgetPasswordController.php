@@ -24,7 +24,7 @@ class ForgetPasswordController extends Controller
         $hash = hash('sha512', microtime() . json_encode($user->username) . microtime(true));
         $user->lostpw = $hash;
         $user->save();
-        $path = $this->router->urlFor('auth.change.pass', ['id' => $user->id, 'hash' => $hash]);
+        $path = self::base_url(true) . $this->router->urlFor('auth.change.pass', ['id' => $user->id, 'hash' => $hash]);
         $subject = 'Forget Password ' . $this->settings["board"]["main_page_name"];
         $variables = [
             'path' =>  $path,

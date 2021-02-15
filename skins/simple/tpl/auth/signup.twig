@@ -82,10 +82,29 @@
 								</div>
 		
 							</div>
-							<div class="col-md-6">
-							<!-- soon -->
-			
-							</div>
+							
+                            {% if additionalFields %}
+                            
+                            <div class="col-md-12 mx-auto my-1">
+                                <div class="card m-2">
+                                    <div class="card-body">
+                                        {% for field in additionalFields %}
+                                            {% if field.add_type == 'checkbox' %}
+                                            <div class="form-group">
+                                                <label class="control control-checkbox" for="{{ field.add_name }}">{{ trans('addit.'~field.add_name) }}
+                                                    <input type="{{ field.add_type }}" class="form-check-input" id="{{ field.add_name }}" name="{{ toUrl(field.add_name) }}">
+                                                    <div class="control_indicator mt-1"></div>{% if field.description %}
+                                                    <small class="form-text text-muted">{{ trans('addit.'~field.description) }}</small>
+                                                    {% endif %}
+                                                </label>            
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
 						<div class="col-md-12 mx-auto text-center my-1">
 						<button type="submint" class="btn btn-dark">{{ trans('Sign up') }}</button>
                       

@@ -77,7 +77,9 @@ return [
     'left' => 'Lewa kolumna',
     'right' => 'Prawa kolumna',
     'back' => 'Powrót',
-    
+    'add group' => 'Dodaj grupę', 
+    'Are you sure you want remove permanently this group' => 'Czy na pewno chcesz trwale usunać tą grupę',
+    'delete group' => 'Usuń grupę',
     'is active' => 'aktywna',
     'mail config' => 'Wysyłka maili',
     'menu' => 'Linki w nagłówku',
@@ -101,6 +103,9 @@ return [
     'type' => 'Sposób wysyłki',
     'password' => 'Hasło',
     'plugin info' => 'Informacje o pluginie',
+    'confirm_reg' => 'Potwierdzenie rejestracji przez email',
+    'default_group' => 'Domyslna grupa nowych użytkowników',
+    
     
     'update' => 'Aktualizacja',
     'clean cache' => 'Wyczyść cache',
@@ -114,5 +119,33 @@ return [
     'deactive' => 'Wyłącz',
     'activate' => 'Włącz',
     'uninstall' => 'Odinstaluj',
+    
+    'admin.boards' => 'Forum',
+    'admin.get.settings' => 'Ustawienia',
+    'admin.mail.settings' => 'Ustawienia wysyłki wiadomości',
+    'admin.mail.template.list' => 'Szablony wiadomośći automatycznych',
+    'admin.update' => 'Aktualizacja',
+    'admin.users' => 'Użytkownicy',
+    'admin.user.edit' => 'Edycja użytkownika',
+    'admin.groups' => 'Grupy użytkownków',
+    'admin.skinlist' => 'Skórki',
+    'admin.plugins.get' => 'Pluginy',
+    'admin.pages' => 'Strony informacyjne',
+    
+    'informations' => 'Informacje',
+    'all plots' => 'Wszystkich tematów',
+    'plots per day' => 'Tematów dziennie',
+    'all posts' => 'Wszystkich postów',
+    'posts per day' => 'Postów dziennie',
+    'all users' => 'Wszystkich użytkowników',
+    'users per day' => 'Użytkownicy dziennie',
+    'system information' => 'Informacje o systemie',
+    'boards version' => 'Wersja forum',
+    'php version' => 'Wersja PHP',
+    'mysql version' => 'Wersja MySQL',
+    'chart statistics last 30 days' => 'Statystyki, ostatnie 30 dni',
+    'day' => 'Dzień',
+    'value' => 'Wartość',
+    
     
 ];

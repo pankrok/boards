@@ -13,16 +13,15 @@ class AdminMenuController extends Controller
 {
     public function index($request, $response)
     {
-        $menu = MenuModel::get()->toArray();
-        
+        $menu = MenuModel::get()->toArray();     
         $this->adminView->getEnvironment()->addGlobal('menu', $menu);
+        $this->adminView->getEnvironment()->addGlobal('show_settings', true);
         return $this->adminView->render($response, 'menu_controller.twig');
     }
     
     public function manageItem($request, $response, $arg)
     {
         $body = $request->getParsedBody();
-
         if (isset($arg['id'])) {
             $menu = MenuModel::find($arg['id']);
             $this->adminView->getEnvironment()->addGlobal('menu', $menu);
@@ -35,6 +34,7 @@ class AdminMenuController extends Controller
                     $links[$k]['url'] = $this->router->urlFor('page', ['id' => $v['id']]);
                 }
             }
+            
             $this->adminView->getEnvironment()->addGlobal('links', $links);
         }
         
@@ -60,7 +60,7 @@ class AdminMenuController extends Controller
                 ->withStatus(302);
         }
         
-        
+        $this->adminView->getEnvironment()->addGlobal('show_settings', true);
         return $this->adminView->render($response, 'menu_edit.twig');
     }
     

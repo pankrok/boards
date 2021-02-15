@@ -43,7 +43,7 @@ class BoardController extends Controller
         return $this->view->render($response, 'board.twig');
     }
     
-    protected function getBoardData($arg)
+    public function getBoardData($arg)
     {
         $currentPage = (isset($arg['page']) ? $arg['page'] : 1);
             
@@ -59,7 +59,7 @@ class BoardController extends Controller
                     ['board_id', '=', $arg['board_id']]])
                 ->join('users', 'users.id', '=', 'plots.author_id')
                 ->select('plots.*', 'users.username', 'users.main_group')
-                ->orderBy('created_at', 'DESC')
+                ->orderBy('updated_at', 'DESC')
                 ->skip(($paginator->getCurrentPage() - 1)*$paginator->getItemsPerPage())
                 ->take($paginator->getItemsPerPage())
                 ->get()->toArray();
@@ -77,13 +77,24 @@ class BoardController extends Controller
             
             $data[$k]['username_html'] = $this->group->getGroupDate($v['main_group'], $v['username'])['username'];
             $data[$k]['all_posts'] = $postsCount;
-            $data[$k]['url'] = self::base_url() . '/plot/' . $this->urlMaker->toUrl($v['plot_name']) . '/' . $v['id'] .'/'. $count .'#post-' . $lastPostData['id'];
-            $data[$k]['user_url'] = self::base_url().'/user/'.  $this->urlMaker->toUrl($v['username']) .'/'. $v['author_id'];
+            $data[$k]['url'] = $this->router->urlFor('board.getPlot', [
+                'plot' => $this->urlMaker->toUrl($v['plot_name']),
+                'plot_id' => $v['id'],
+                'page' => $count,
+                ]) .'#post-' . $lastPostData['id'];
+            $data[$k]['user_url'] = $this->router->urlFor('user.profile', [
+                'username' => $this->urlMaker->toUrl($v['username']),
+                'uid' => $v['author_id']
+            ]);
             $data[$k]['last_post_date'] = $lastPostData['created_at'];
             $data[$k]['last_post_autor'] = $this->group->getGroupDate($lastPostData['main_group'], $lastPostData['username'])['username'];
-            $data[$k]['last_post_autor_url'] =  self::base_url().'/user/'.  $this->urlMaker->toUrl($lastPostData['username']) .'/'. $lastPostData['user_id'];
+            $data[$k]['last_post_autor_url'] = $this->router->urlFor('user.profile', [
+                'username' => $this->urlMaker->toUrl($lastPostData['username']),
+                'uid' => $lastPostData['user_id']
+            ]);
         }
-        $newPlot = self::base_url() . '/plot/new/create/' . $arg['board_id'];
+        $newPlot = $this->router->urlFor('board.newPlot', ['board_id' => $arg['board_id']]);
+        
         
         return [$data, $paginator, $boardName, $newPlot];
     }
@@ -99,8 +110,9 @@ class BoardController extends Controller
         for ($i = 1; $i <= $pages; $i++) {
             $this->cache->delete('/board/'.$name.'/'.$id.'/'.$i);
         }
-        $this->cache->delete('/board/'.$name.'/'.$id);
         
+        $this->cache->delete('/board/'.$name.'/'.$id);
+        $this->CategoryController->categoryCleanCache(BoardsModel::find($id)->category_id); 
         $this->cache->setName('home');
         $this->cache->delete($this->router->urlFor('home'));
     }

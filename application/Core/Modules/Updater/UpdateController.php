@@ -108,18 +108,20 @@ class UpdateController extends Controller
             $status = json_decode(file_get_contents($this->ServiceProvider->get('update_status')), true);
 
             foreach ($status as $k => $v) {
-                if ($v['start'] === 0 && $v['updated'] === 0 && $v['lock'] === 0) {
-                    $controller = $k.'Controller';
-                    $this->$controller->start();
-                    break;
-                }
-                if ($v['start'] === 1 && $v['updated'] === 0 && $v['lock'] === 0) {
-                    $controller = $k.'Controller';
-                    $this->$controller->start();
-                    break;
-                }
-                if ($v['start'] === 1 && $v['updated'] === 0 && $v['lock'] === 1) {
-                    break;
+                if (isset($v['start']) && isset($v['updated']) && isset($v['lock'])) {
+                    if ($v['start'] === 0 && $v['updated'] === 0 && $v['lock'] === 0) {
+                        $controller = $k.'Controller';
+                        $this->$controller->start();
+                        break;
+                    }
+                    if ($v['start'] === 1 && $v['updated'] === 0 && $v['lock'] === 0) {
+                        $controller = $k.'Controller';
+                        $this->$controller->start();
+                        break;
+                    }
+                    if ($v['start'] === 1 && $v['updated'] === 0 && $v['lock'] === 1) {
+                        break;
+                    }
                 }
             }
             if (end($status)['updated'] === 1 || empty(end($status))) {
@@ -186,29 +188,34 @@ class UpdateController extends Controller
         $this->log->info('clean files');
         $files = json_decode(file_get_contents($this->ServiceProvider->get('files_ini')), true);
         $version = json_decode(file_get_contents($this->ServiceProvider->get('update_list')), true)[0]['version'];
-        foreach ($files as $k => $v) {
-            $this->log->debug('delete files backup file: '. $k . '.back');
-            if (file_exists(MAIN_DIR  . $k . '.back')) {
-                unlink(MAIN_DIR  . $k . '.back');
+        if (!empty($files)) {
+            foreach ($files as $k => $v) {
+                $this->log->debug('delete files backup file: '. $k . '.back');
+                if (file_exists(MAIN_DIR  . $k . '.back')) {
+                    unlink(MAIN_DIR  . $k . '.back');
+                }
             }
         }
         
-        $files = json_decode(file_get_contents($this->ServiceProvider->get('lib_ini')), true);
-        foreach ($files as $k => $v) {
-            $this->log->debug('delete libs backup file: '. $k . '.back');
-            if (file_exists(MAIN_DIR  . $k . '.back')) {
-                unlink(MAIN_DIR  . $k . '.back');
+        $files = json_decode(file_get_contents($this->ServiceProvider->get('lib_ini')), true);  
+        if (!empty($files)) {
+            foreach ($files as $k => $v) {
+                $this->log->debug('delete libs backup file: '. $k . '.back');
+                if (file_exists(MAIN_DIR  . $k . '.back')) {
+                    unlink(MAIN_DIR  . $k . '.back');
+                }
             }
         }
         
-        $files = json_decode(file_get_contents($this->ServiceProvider->get('skin_ini')), true);   
-        foreach ($files as $k => $v) {
-            $this->log->debug('delete skins backup file: '. $k . '.back');
-            if (file_exists(MAIN_DIR  . $k . '.back')) {
-                unlink(MAIN_DIR  . $k . '.back');
+        $files = json_decode(file_get_contents($this->ServiceProvider->get('skin_ini')), true);  
+        if (!empty($files)) {        
+            foreach ($files as $k => $v) {
+                $this->log->debug('delete skins backup file: '. $k . '.back');
+                if (file_exists(MAIN_DIR  . $k . '.back')) {
+                    unlink(MAIN_DIR  . $k . '.back');
+                }
             }
         }
-        
         if (file_exists($this->ServiceProvider->get('update_dir') .'/'.$version.'.tar.gz')) {
             unlink($this->ServiceProvider->get('update_dir') .'/'.$version.'.tar.gz');
         }

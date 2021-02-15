@@ -1,0 +1,21 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+<br />
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card panel-default">
+                <div class="card-header">{{ trans('confirm account') }}</div>
+                <div class="card-body">
+                    <form action="{{ path_for('auth.confirm') }}" method="get">
+                        <div class="form-group">
+                            <input type="text" name="code" id="code" placeholder="{{ trans('verification code') }}" class="form-control" >
+                        </div>  
+                        <button type="submint" class="btn btn-dark">{{ trans('submit') }}</button>    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -19,7 +19,7 @@
 		  <input id="suid" type="hidden" value="{{ auth.user.id }}">
 		  <input id="sname" type="hidden" value="{{ auth.user.username }}">
 		  <div class="input-group-append">
-			<button class="btn btn-outline-secondary chatbox-input {% if auth.check == false %}disabled{% endif %}" type="button" id="button-chatbox"><i class="far fa-paper-plane"></i></button>
+			<button class="btn btn-outline-secondary chatbox-input {% if auth.check == false %}disabled{% endif %}" type="button" id="button-chatbox">{{ trans('send') }}  <i class="far fa-paper-plane"></i></button>
 		  </div>
 		  
 		</div>  

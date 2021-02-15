@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Application\Modules\Auth;
 
 use Application\Models\UserModel;
+use Application\Models\AdditionalFieldsModel;
+use Application\Models\UserAdditionalFieldsModel;
 use Application\Models\SecretModel;
 use Application\Core\Controller;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
@@ -95,8 +97,8 @@ class AuthController extends Controller
         ->withStatus(302);
         }
 
-        if ($auth === 'banned') {
-            $this->flash->addMessage('danger', 'You are banned!');
+        if ($auth === 'banned' || $auth === 'not confirmed account' ) {
+            $this->flash->addMessage('danger', "You are $auth!");
 
             return $response
             ->withHeader('Location', $this->router->urlFor('auth.signin'))
@@ -170,12 +172,15 @@ class AuthController extends Controller
         $this->captcha->code();
         $this->captcha->image();
         
+        $additionalFields = AdditionalFieldsModel::get()->toArray();
+
         $_SESSION['captcha'] = md5($this->captcha->getCode());
         $captcha = [
             'input' => '<input id="captchaCode" type="text"  class="form-control" name="board_captcha" value="" placeholder="Captcha code">',
             'image' => '<img class="img-fluid rounded mx-auto d-block" id="captchaImg" src="'.$this->captcha->getImage().'">'
         ];
         $this->view->getEnvironment()->addGlobal('captcha', $captcha);
+        $this->view->getEnvironment()->addGlobal('additionalFields', $additionalFields);
         
         return $this->view->render($response, 'auth/signup.twig');
     }
@@ -217,21 +222,64 @@ class AuthController extends Controller
             ->withHeader('Location', $this->router->urlFor('auth.signup'))
             ->withStatus(302);
         }
-        UserModel::create([
+        
+        $additionalFields = AdditionalFieldsModel::get()->toArray();
+        if ($additionalFields !== null) {
+            foreach ($additionalFields as $k => $field) {
+                
+                $fieldName = $this->urlMaker->toUrl($field['add_name']);
+                if ($field['add_require'] === 1 &&  $request->getParsedBody()[$fieldName] === null) {
+                    $this->flash->addMessage('danger', 'fill require fields');
+                    return $response
+                    ->withHeader('Location', $this->router->urlFor('auth.signup'))
+                    ->withStatus(302);
+                }
+                $userAdditionalFields[$field['id']] = $request->getParsedBody()[$fieldName];
+            }
+        }    
+        
+        $user = UserModel::create([
             'email' => $this->purifier->purify($request->getParsedBody()['email']),
             'username' => $this->purifier->purify($request->getParsedBody()['username']),
             'password' => password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT),
             'recommended_by' => $request->getParsedBody()['recommended'],
             'main_group' => $this->settings['board']['default_group']
         ]);
-        $this->flash->addMessage('info', 'Account created.');
-
-        $auth = $this->auth->attempt(
-            [
-
-        'username', $request->getParsedBody()['username']],
-            $request->getParsedBody()['password']
-        );
+        if ($additionalFields !== null) {
+            foreach ($userAdditionalFields as $k => $v) {
+                UserAdditionalFieldsModel::create([
+                    'user_id' => $user->id,
+                    'field_id' => $k,
+                    'add_value' => $v	
+                ]);
+            }
+        }
+        
+        if (intval($this->settings['board']['confirm_reg']) !== 1 ) {
+            $this->flash->addMessage('info', 'Account created.');
+            $auth = $this->auth->attempt(
+                ['username', $request->getParsedBody()['username']],
+                $request->getParsedBody()['password']
+            );
+            
+        } else {
+            $user->lostpw = bin2hex(random_bytes(32));
+            $url = self::base_url(true) . $this->router->urlFor('auth.confirm', ['code' => $user->lostpw]);
+            $urlCode = self::base_url(true) . $this->router->urlFor('auth.confirm');
+            $user->save();
+            $this->mailer->send(
+                $user->email, 
+                $user->username,  
+                $this->translator->get('lang.confirm account'), 
+                'reg_confirm', 
+                ['url' => $url, 'code' => $user->lostpw, 'url_code' => $urlCode, 'username' => $user->username]
+            ); 
+            $this->flash->addMessage('info', 'activation email has been send');
+            return $response
+            ->withHeader('Location', $this->router->urlFor('home'))
+            ->withStatus(302);
+        }
+        
         if (!$auth) {
             $this->flash->addMessage('danger', 'Invalid email or password');
             return $response
@@ -281,5 +329,26 @@ class AuthController extends Controller
         
         
         return $response;
+    }
+    
+    public function confirmAccount($request, $response, $arg)
+    {
+
+        if ($arg['code'] !== null || $request->getQueryParams()['code'] !== null) {
+            $code = $arg['code'] ?? $request->getQueryParams()['code'];
+            if (($user = UserModel::where('lostpw', $code)->first()) !== null) {
+                $user->confirmed = 1;
+                $user->lostpw = '';
+                $user->save();
+                
+                $this->flash->addMessage('success', 'account is activtion success, you can log in now');
+                
+                return $response
+                ->withHeader('Location', $this->router->urlFor('home'))
+                ->withStatus(302);
+            }
+            
+        }   
+        return $this->view->render($response, 'auth/confirm_account.twig');
     }
 }

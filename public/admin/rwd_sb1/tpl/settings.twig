@@ -2,7 +2,7 @@
 
 
 {% block content %}
-
+<h2>{{ trans('admin.admin.get.settings') }}</h2>
 <form action="{{ path_for('admin.post.settings') }}"  method="post">
 <div class="form-group">
    <label for="boards_off">{{ trans('admin.turn off boards') }}</label>
@@ -44,6 +44,21 @@
     </select>
   </div>
   <div class="form-group">
+    <label for="confirm_reg">{{ trans('admin.confirm_reg') }}</label>
+    <select class="form-control" id="confirm_reg" name="confirm_reg">
+		<option {% if  settings.board.confirm_reg %}selected{% endif %} value="1">{{ trans('admin.on') }}</option>
+		<option {% if not settings.board.confirm_reg %}selected{% endif %} value="0">{{ trans('admin.off') }}</option>
+    </select>
+  </div>
+   <div class="form-group">
+    <label for="default_group">{{ trans('admin.default_group') }}</label>
+    <select class="form-control" id="default_group" name="default_group">
+      {% for group in groups %}
+		<option {% if group.id == settings.board.default_group %}selected{% endif %} value="{{ group.id }}">{{ group.grupe_name|raw }}</option>
+	  {% endfor %}
+    </select>
+  </div>
+   <div class="form-group">
    <label for="plugins">{{ trans('admin.plugins') }}</label>
     <select class="form-control" id="plotPagination" name="plugins">
 		<option {% if  settings.plugins.active %}selected{% endif %} value="1">{{ trans('admin.on') }}</option>

@@ -32,6 +32,13 @@ class MessageController extends Controller
 		$body = $request->getParsedBody();
 		if(isset($body['topic']) && isset($body['body'])){
             $recipient = UserModel::where('username', $body['recipient'])->first();
+            if ($recipient === null ) {
+                $this->flash->addMessage('danger', 'recipient does not exists');
+                return  $response
+                ->withHeader('Location', $this->router->urlFor('mailbox', ['folder' => 'outbox']))
+                ->withStatus(302);
+            }
+            
             $message = MessageModel::create([
                 'recipient_id' => $recipient->id,
                 'sender_id' => $_SESSION['user'],
@@ -41,7 +48,7 @@ class MessageController extends Controller
         }else{
             $this->flash->addMessage('danger', 'You cant send massage without topic or content!');
         }
-        
+
         if(isset($message)){
             MailboxModel::create([
                 'message_id' => $message->id,
@@ -78,6 +85,8 @@ class MessageController extends Controller
                     ['user_id', $_SESSION['user']], 
                     ['message_id', $arg['id']]
                 ])->first();
+                $this->cache->setName('unread-messages');
+                $this->cache->delete('user-'.$_SESSION['user']);
                 $unread->unread = 0;
                 $unread->save();
             }

@@ -15,6 +15,7 @@ class UserModel extends Model
             'username',
             'email',
             'password',
+            'confirmed',
             'user_group',
             'additional_groups',
             'main_group',

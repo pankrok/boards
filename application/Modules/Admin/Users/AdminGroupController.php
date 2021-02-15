@@ -15,11 +15,13 @@ class AdminGroupController extends Controller
         $groups = GroupsModel::get()->toArray();
         
         $this->adminView->getEnvironment()->addGlobal('groups', $groups);
+        $this->adminView->getEnvironment()->addGlobal('show_users', true);
         return $this->adminView->render($response, 'groups/group_list.twig');
     }
     
     public function addGroup($request, $response)
     {
+        $this->adminView->getEnvironment()->addGlobal('show_users', true);
         return $this->adminView->render($response, 'groups/group_manage.twig');
     }
     
@@ -27,6 +29,7 @@ class AdminGroupController extends Controller
     {
         $group = GroupsModel::find($arg['id']);
         $this->adminView->getEnvironment()->addGlobal('group', $group);
+        $this->adminView->getEnvironment()->addGlobal('show_users', true);
         return $this->adminView->render($response, 'groups/group_manage.twig');
     }
     

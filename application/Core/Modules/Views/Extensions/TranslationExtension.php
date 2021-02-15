@@ -27,7 +27,7 @@ class TranslationExtension extends AbstractExtension
     {
         $result = substr($key, 0, 6);
     
-        if ($result == 'admin.' || $result == 'plugin') {
+        if ($result === 'admin.' || $result === 'plugin' || $result === 'addit.') {
             return $this->translator->get($key);
         }
 

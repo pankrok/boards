@@ -55,7 +55,7 @@
 							{% if board.last_post_date %}
 								<div class="row text-center fs-12 d-none d-md-block">
 									
-								<div class="col-12"><a href="{{ board.last_post_url }}">{{ board.last_post_data.plot_name }}</a> {{ trans('by') }} 
+								<div class="col-12"><a href="{{ board.last_post_url }}">{{ board.plot_name }}</a> {{ trans('by') }} 
 								<a href="{{ board.last_post_author_url }}">{{ board.last_post_author | raw }}</a></div>
 								<div class="col-12"><i class="far fa-clock"></i> {{ board.last_post_date | date("Y-m-d H:i:s") }}</div>
 								</div>

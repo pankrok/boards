@@ -4,16 +4,15 @@ namespace Application\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MailboxModel extends Model
+class UserAdditionalFieldsModel extends Model
 {
-    protected $table = 'mailbox';
+    protected $table = 'user_additional_fields';
     public $timestamps = false;
 
     protected $fillable =
         [
             'user_id',
-            'mailbox',
-			'message_id',
-            'unread'		
+            'field_id',
+			'add_value'	
         ];
 }

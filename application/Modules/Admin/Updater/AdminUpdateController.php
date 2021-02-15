@@ -11,6 +11,7 @@ class AdminUpdateController extends Controller
     public function index($request, $response)
     {
         $this->adminView->getEnvironment()->addGlobal('version', base64_decode($this->settings['core']['version']));
+        $this->adminView->getEnvironment()->addGlobal('show_settings', true);
         return $this->adminView->render($response, 'update.twig');
     }
 }

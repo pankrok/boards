@@ -32,11 +32,9 @@ class BreadcrumbsMiddleware extends Middleware
         $routeName = $routeContext->getRoutingResults()->getUri();
         
         if (!$breadcrumbs = $cache->receive($routeName.'-breadcrumbs')) {
-            if (explode('.', $name)[0] === 'admin') {
-                return $handler->handle($request);
-            }
+           
             
-            if ($name == 'page' || $name == 'category.getCategory' || $name == 'board.getBoard' || $name == 'board.getPlot' ||  $name == 'home') {
+            if ($name === 'page' || $name === 'category.getCategory' || $name === 'board.getBoard' || $name === 'board.getPlot' ||  $name === 'home') {
                 $atr['plot'] = $route->getArgument('plot_id') ?? null;
                 $atr['board'] = $route->getArgument('board_id') ?? null;
                 $atr['cat'] = $route->getArgument('category_id') ?? null;
@@ -116,6 +114,31 @@ class BreadcrumbsMiddleware extends Middleware
                             ]
                         ];
                 }
+            } elseif (explode('.', $name)[0] === 'admin') {
+                $i = 0; 
+                if (strpos($routeName, 'settings')) {
+                    $breadcrumbs[$i] = ['last' => 0,
+                                'path' => 'none',
+                                'name' => $this->container->get('translator')->get('admin.settings')
+                                ];
+                    $i++;
+                }
+                
+                if (strpos($routeName, 'users')) {
+                    $breadcrumbs[$i] = ['last' => 0,
+                                'path' => 'none',
+                                'name' => $this->container->get('translator')->get('admin.users')
+                                ];
+                    $i++;
+                }
+                
+                if ($name !== 'admin.home') {
+                    $breadcrumbs[$i] = ['last' => 1,
+                                    'path' => $this->container->get('router')->urlFor($name, $route->getArguments()),
+                                    'name' => $this->container->get('translator')->get('admin.'.$name)
+                                    ];
+                }
+                
             } else {
                 $breadcrumbs[0] = ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor($name, $route->getArguments()),
@@ -126,7 +149,11 @@ class BreadcrumbsMiddleware extends Middleware
         }
         
         $this->container->get('view')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);
-        
+        if (explode('.', $name)[0] !== 'admin') {
+             $this->container->get('view')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);    
+        } else {
+             $this->container->get('adminView')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);
+        }
         return $handler->handle($request);
     }
 }

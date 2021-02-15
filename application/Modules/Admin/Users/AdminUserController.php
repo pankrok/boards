@@ -18,6 +18,7 @@ class AdminUserController extends Controller
 
         $this->adminView->getEnvironment()->addGlobal('users', $data['users']);
         $this->adminView->getEnvironment()->addGlobal('paginator', $data['paginator']);
+        $this->adminView->getEnvironment()->addGlobal('show_users', true);
 
         return $this->adminView->render($response, 'users_list.twig');
     }
@@ -35,6 +36,7 @@ class AdminUserController extends Controller
 
         $this->adminView->getEnvironment()->addGlobal('user', $userdata);
         $this->adminView->getEnvironment()->addGlobal('groups', $groups);
+        $this->adminView->getEnvironment()->addGlobal('show_users', true);
         return $this->adminView->render($response, 'user_edit.twig');
     }
     

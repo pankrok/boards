@@ -2,8 +2,9 @@
 {% block headblock %}{% endblock %}
 {% if admin > 1 %}
 {% include 'templates/partials/nav.twig' %}	
-<div id="content" class="p-4 p-md-5 pt-5">
+<div id="content" class="px-5 py-5 py-md-2">
 {% include 'templates/partials/flash.twig' %}
+{% include 'templates/partials/breadcrumbs.twig' %}
 {% if not lock %}
 {% block content %}{% endblock %}
 {% endif %}

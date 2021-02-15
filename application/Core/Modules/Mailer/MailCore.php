@@ -5,7 +5,7 @@ namespace Application\Core\Modules\Mailer;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-
+use Application\Models\MailLogModel;
  /**
  * Mailer controller
  * @package BOARDS Forum
@@ -24,7 +24,7 @@ class MailCore
         try {
             if ($config['type'] == 'SMTP') {
                 //Server settings
-                $this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+                //$this->mailer->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
                 $this->mailer->isSMTP();                                            // Send using SMTP
                 $this->mailer->Host       = $config['host'];           	     	    // Set the SMTP server to send through
                 $this->mailer->SMTPAuth   = $config['auth'];                    	// Enable SMTP authentication
@@ -54,7 +54,7 @@ class MailCore
         try {
             $html = file_get_contents(MAIN_DIR."/public/mails/html_$template.twig");
             $txt =  file_get_contents(MAIN_DIR."/public/mails/txt_$template.twig");
-            $this->mailer->addAddress($addres, $username);
+            $this->mailer->addAddress($addres);
             // Content
             $this->mailer->isHTML(true);
             $this->mailer->Subject = $subject;
@@ -62,8 +62,25 @@ class MailCore
             $this->mailer->AltBody = $this->twig->fetchFromString($txt, $variables);
 
             $this->mailer->send();
+            MailLogModel::create([
+                'recipient' => $addres,
+                'is_send' => 1,
+                'topic' => $subject,
+                'content_txt' => $this->mailer->AltBody,
+                'content_html' => $this->mailer->Body,
+                'log' => 'OK'		
+            ]);
             return true;
         } catch (\Exception $e) {
+             MailLogModel::create([
+                'recipient' => $addres,
+                'is_send' => 0,
+                'topic' => $subject,
+                'content_txt' => $this->mailer->AltBody,
+                'content_html' => $this->mailer->Body,
+                'log' => $e->getMessage()	
+            ]);
+            
             return false;
         }   
     }

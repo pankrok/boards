@@ -8,40 +8,41 @@
 	<h1><a href="{{ path_for('admin.home') }}" class="logo">Boards ACP</a></h1>
 	<div class="m-4 text-center"><a href="{{ path_for('home') }}" target="_blank"><i class="fas fa-border-style"></i> {{ board_link }}</a></div>
 <ul class="list-unstyled components mb-5 accordion" id="BoardsMenuList">
-  <li>
+  <li {% if route_name == 'admin.home' %}class="active"{% endif %}>
 	  <a href="{{ path_for('admin.home') }}"><span class="fas fa-tachometer-alt mr-3"></span> Dashboard</a>
   </li>
-    <li>
+    <li {% if route_name == 'admin.boards' %}class="active"{% endif %}>
 	<a href="{{ path_for('admin.boards') }}"><span class="fas fa-list-alt mr-3"></span> {{ trans('admin.board') }}</a>
   </li>
   <li>
 	<a href="#" data-toggle="collapse" data-target="#collapseConfiguration" aria-expanded="true" aria-controls="collapseConfiguration"><span class="fas fa-cogs mr-3"></span> {{trans('admin.configuration') }}</a>
-	<ul id="collapseConfiguration" class="collapse" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
-		<a href="{{ path_for('admin.get.settings') }}"><span class="fas fa-cog mr-3"></span> {{trans('admin.settings') }}</a>
-		<a href="{{ path_for('admin.menu') }}"><span class="fas fa-ellipsis-h mr-3"></span> {{trans('admin.menu') }}</a>
-		<a href="{{ path_for('admin.mail.settings') }}"><span class="fas fa-envelope mr-3"></span> {{trans('admin.mail config') }}</a>
-		<a href="{{ path_for('admin.cache') }}"><span class="fas fa-database mr-3"></span> {{trans('admin.cache') }}</a>
-		<a href="{{ path_for('admin.update') }}"><span class="fas fa-arrow-circle-up mr-3"></span> {{trans('admin.update') }}</a>
+	<ul id="collapseConfiguration" class="collapse{% if show_settings %} show{% endif %}" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
+		<a {% if route_name == 'admin.get.settings' %}class="active"{% endif %} href="{{ path_for('admin.get.settings') }}"><span class="fas fa-cog mr-3"></span> {{trans('admin.settings') }}</a>
+		<a {% if route_name == 'admin.menu' %}class="active"{% endif %} href="{{ path_for('admin.menu') }}"><span class="fas fa-ellipsis-h mr-3"></span> {{trans('admin.menu') }}</a>
+		<a {% if route_name == 'admin.mail.settings' %}class="active"{% endif %} href="{{ path_for('admin.mail.settings') }}"><span class="fas fa-envelope mr-3"></span> {{trans('admin.mail config') }}</a>
+        <a {% if route_name == 'admin.mail.template.list' %}class="active"{% endif %} href="{{ path_for('admin.mail.template.list') }}"><span class="far fa-file-alt mr-3"></span> {{trans('admin.admin.mail.template.list') }}</a>
+		<a {% if route_name == 'admin.cache' %}class="active"{% endif %} href="{{ path_for('admin.cache') }}"><span class="fas fa-database mr-3"></span> {{trans('admin.cache') }}</a>
+		<a {% if route_name == 'admin.update' %}class="active"{% endif %} href="{{ path_for('admin.update') }}"><span class="fas fa-arrow-circle-up mr-3"></span> {{trans('admin.update') }}</a>
 	</ul>
 	
   </li>
   <li>
 	<a href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers"><span class="fas fa-user-friends mr-3"></span> {{trans('admin.users and groups') }}</a>
-	<ul id="collapseUsers" class="collapse" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
-		<a href="{{ path_for('admin.users') }}"><span class="fas fa-user mr-3"></span> {{ trans('admin.users') }}</a>
-		<a href="{{ path_for('admin.groups') }}"><span class="fas fa-users mr-3"></span> {{ trans('admin.groups') }}</a>
+	<ul id="collapseUsers" class="collapse{% if show_users %} show{% endif %}" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
+		<a {% if route_name == 'admin.users' %}class="active"{% endif %} href="{{ path_for('admin.users') }}"><span class="fas fa-user mr-3"></span> {{ trans('admin.users') }}</a>
+		<a {% if route_name == 'admin.groups' %}class="active"{% endif %}  href="{{ path_for('admin.groups') }}"><span class="fas fa-users mr-3"></span> {{ trans('admin.groups') }}</a>
 	</ul>
   </li>
   <li>
-	<a href="{{ path_for('admin.skinlist') }}"><span class="fas fa-paint-brush mr-3"></span> {{ trans('admin.templates') }}</a>
+	<a {% if route_name == 'admin.skinlist' %}class="active"{% endif %} href="{{ path_for('admin.skinlist') }}"><span class="fas fa-paint-brush mr-3"></span> {{ trans('admin.templates') }}</a>
   </li>
     <li>
-	<a href="{{ path_for('admin.pages') }}"><span class="fas fa-file-alt mr-3"></span> {{ trans('admin.pages') }}</a>
+	<a {% if route_name == 'admin.pages' %}class="active"{% endif %} href="{{ path_for('admin.pages') }}"><span class="fas fa-file-alt mr-3"></span> {{ trans('admin.pages') }}</a>
   </li>
   <li>
-	<a href="{{ path_for('admin.plugins.get') }}"><span class="fas fa-plug mr-3"></span> {{ trans('admin.plugins') }}</a>
+	<a {% if route_name == 'admin.plugins.get' %}class="active"{% endif %} href="{{ path_for('admin.plugins.get') }}"><span class="fas fa-plug mr-3"></span> {{ trans('admin.plugins') }}</a>
   </li>
-  <br /><br />
+  <hr>
   <li>
 	<a href="{{ path_for('auth.signout') }}"><span class="fas fa-sign-out-alt mr-3"></span> <b>{{ trans('Log out') }}</b></a>
   </li>

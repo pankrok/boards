@@ -23,7 +23,7 @@ class UrlExtension extends AbstractExtension
         return 	[
             new TwigFunction('base_url', [$this, 'base_url']),
             new TwigFunction('path_for', [$this, 'path_for']),
-    #		new TwigFunction('urlFor', [$this, 'urlFor']),
+    		new TwigFunction('json_decode', [$this, 'jsonDecode']),
             new TwigFunction('toUrl', [$this, 'toUrl'])
         ];
     }
@@ -39,9 +39,9 @@ class UrlExtension extends AbstractExtension
         return $this->router->urlFor($path, $arg);
     }
     
-    public function urlFor($arg)
+    public function jsonDecode($arg)
     {
-        return $this->router->urlFor($arg); // deprecated
+        return json_decode($arg);
     }
     
     public function toUrl($arg)
