@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "MC4xLjU=",
+        "version": "MC4xLjY",
         "show_version": "1",
         "log_level": "0",
         "debug": "0",
@@ -11,9 +11,9 @@
         "main_page_name": "BOARDS",
         "main_mail": "admin@s89.eu",
         "boards_off": 0,
-        "default_group": "3",
+        "default_group": 3,
         "unread": 30,
-        "confirm_reg": "0",
+        "confirm_reg": 1,
         "chatbox_h": "260"
     },
     "admin": {
@@ -36,7 +36,7 @@
     "twig": {
         "debug": "0",
         "cache": "1",
-        "skin": "simple"
+        "skin": "bluehaze"
     },
     "pagination": {
         "boards": "10",

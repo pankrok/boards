@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Modules\Admin\MailTemplate;
 
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 
 
 class MailTemplateController extends Controller

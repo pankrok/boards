@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Modules\Admin\Plugins;
 
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 
 use Application\Models\PluginsModel;
 

@@ -8,12 +8,15 @@
   <div class="row">
 	  <div class="col-12">
 		<span><b class="float-left"><a href="{{ shout.uurl }}">{{ shout.username_html | raw }}</a>
-		{% if auth.admin > 1 %}<span class="badge badge-warning mx-2 edit-btn" data-content-id="{{ shout.id }}" data-toggle="modal" data-target="#exampleModal">Edit</span> {% endif %}
+		{% if auth.admin > 1 or (shout.created_at|date("U") > "-1 days"|date("U") and shout.user_id == auth.user) %}
+        <span class="badge badge-warning mx-2 edit-btn shout-edit" data-content-id="{{ shout.id }}" data-toggle="modal" data-target="#chatMessageEdit">{{ trans('edit') }}</span>
+        {% endif %}
 		</b><i class="float-right fc-g">{{ shout.updated_at}}</i>
 	  </div>
 	  <div id="shout-content-{{ shout.id }}" class="col-12">
 		{{ shout.content }}
 	  </div>
+      
   </div>	  
 </div>
 </div>		

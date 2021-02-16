@@ -35,7 +35,6 @@ $container->set('getBasePath', function () use ($app) {
     return $app->getBasePath();
 });
 
-
 $container->set('settings', function ($container) {
     return json_decode(file_get_contents(MAIN_DIR . '/environment/Config/settings.json'), true);
 });
@@ -45,13 +44,26 @@ $container->set('db_settings', function ($container) {
     return  require(MAIN_DIR . '/environment/Config/db_settings.php');
 });
 
+$container->set('explorer', function ($container) {
+    return new Application\Core\Modules\Explorer\Explorer($container);
+});
+
 $routeParser = $app->getRouteCollector()->getRouteParser();
 $container->set('router', function ($container) use ($routeParser) {
     return $routeParser;
 });
 
 $container->set('purifier', function () {
-    return  new HTMLPurifier();
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('HTML.Nofollow', true);
+    $config->set('HTML.Trusted', true);
+    $config->set('Attr.EnableID', true);
+    $config->set('Attr.IDPrefix', 'boards_');
+    
+    $def = $config->getHTMLDefinition(true);
+    $def->addAttribute('a', 'rel', 'Enum#nofollow');
+    
+    return  new HTMLPurifier($config);
 });
 
 $container->set('mailer', function ($container) {
@@ -109,15 +121,15 @@ $container->set('tfa', function ($container) {
 
 $container->set('view', function ($container) {
     $assets = $container->get('getBasePath') . '/public';
-    
+    $explorer = $container->get('explorer');
     $twigSettings = $container->get('settings')['twig'];
-    $skin = $_SESSION['skin'] ?? $twigSettings['skin'];
+    $skin = $explorer->get('skins', ($_SESSION['skin'] ?? $twigSettings['skin']));
     if (!isset($twigSettings['debug'])) {
         $twigSettings['debug'] = false;
     }
     
-    $view = new \Slim\Views\Twig(MAIN_DIR . '/skins/'. $skin . '/tpl', [
-        'cache' => (bool)$twigSettings['cache'] ? MAIN_DIR . '/skins/'. $skin . '/cache/twig' : false,
+    $view = new \Slim\Views\Twig($skin . '/tpl', [
+        'cache' => (bool)$twigSettings['cache'] ? $skin . '/cache/twig' : false,
         'debug' => (bool)$twigSettings['debug'],
     ]);
     
@@ -131,8 +143,8 @@ $container->set('view', function ($container) {
     $view->addExtension(new Application\Core\Modules\Views\Extensions\OnlineExtension($container->get('OnlineController')));
     $view->addExtension(new Application\Core\Modules\Views\Extensions\UnreadExtension($container->get('UnreadController')));
 
-    if (file_exists(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json')) {
-        $skinAssets = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skin . '/cache_assets.json'), true);
+    if (file_exists($skin . '/cache_assets.json')) {
+        $skinAssets = json_decode(file_get_contents($skin . '/cache_assets.json'), true);
         
         $view->getEnvironment()->addGlobal('css', $skinAssets['css']);
         $view->getEnvironment()->addGlobal('js', $skinAssets['js']);
@@ -148,7 +160,7 @@ $container->set('view', function ($container) {
     
     $view->getEnvironment()->addGlobal('menus', Application\Modules\Board\MenuController::getMenu());
     
-    if (file_exists(MAIN_DIR . '/environment/Config/lock')) {
+    if (file_exists($explorer->get('config', 'lock'))) {
         $lock = 1;
     } else {
         $lock = $container->get('settings')['board']['boards_off'];
@@ -167,14 +179,15 @@ $container->set('view', function ($container) {
 });
 
 $container->set('adminView', function ($container) {
+    $explorer = $container->get('explorer');
     $twigSettings = $container->get('settings')['admin'];
     if (!isset($twigSettings['debug'])) {
         $twigSettings['debug'] = false;
     }
     $view = new \Slim\Views\Twig(
         [
-            MAIN_DIR . '/public/admin/'.$twigSettings['skin'].'/tpl',
-            MAIN_DIR.'/plugins'
+            $explorer->get('adminTwig', $twigSettings['skin']),
+            $explorer->get('plugins'),
         ],
         [
             'cache' => false,
@@ -195,7 +208,7 @@ $container->set('adminView', function ($container) {
         return base64_decode($string);
     });
 
-    $lock = file_exists(MAIN_DIR . '/environment/Config/lock');
+    $lock = file_exists($explorer->get('config', 'lock'));
     $view->getEnvironment()->addFilter($filter);
     $view->getEnvironment()->addGlobal('lock', $lock);
     $view->getEnvironment()->addGlobal('admin_url', $container->get('settings')['core']['admin']);

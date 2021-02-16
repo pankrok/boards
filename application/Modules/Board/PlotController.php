@@ -422,6 +422,16 @@ class PlotController extends Controller
     
     public function lockPlot($request, $response)
     {
+        if ($this->auth->checkAdmin() < 1) {
+            echo $this->explorer->showError(
+                'Unauthorized', 
+                401, 
+                'Access to this resource is denied your client has not supplied the correct authentication.'
+            );
+            die();
+        }
+        
+        
         $body = $request->getParsedBody();
         $hidden = ($body['hidden'] ? 1 : 0);
         $plot = PlotsModel::find($body['id']);

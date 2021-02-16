@@ -5,10 +5,22 @@
 <nav class="nav">
   <a class="nav-link active" href="{{ path_for('admin.menu') }}">{{ trans('admin.back') }}</a>
 </nav>
-	<h1>Menu link: {{ menu.name|raw }}</h1>
+<h1>Menu link: {{ menu.name|raw }}</h1>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="infopages-tab" data-toggle="tab" href="#infopages" role="tab" aria-controls="infopages" aria-selected="true">{{ trans('admin.menu links') }}</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="own-url-tab" data-toggle="tab" href="#own-url" role="tab" aria-controls="own-url" aria-selected="false">{{trans('admin.advance url') }}</a>
+  </li>
+</ul>
 
+	
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="infopages" role="tabpanel" aria-labelledby="infopages-tab">
+  
 	<form action="{{ path_for('admin.menu.manage') }}" method="post">
-	<div class="row">
+	<div class="row mt-2">
 	{% if not menu %}
 	<div class="col">
 	   <div class="form-group">
@@ -32,5 +44,24 @@
 	</div>	
 		 <button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
 	</form>
-	
+</div>
+
+<div class="tab-pane fade" id="own-url" role="tabpanel" aria-labelledby="own-url-tab">
+    <form action="{{ path_for('admin.menu.manage') }}" method="post">
+        <div class="row my-2">
+            <div class="col">
+                <input type="text" class="form-control" name="own_name" value="{{ menu.name }}" placeholder="{{ trans('admin.url name') }}">	
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="own_url" value="{{ menu.url }}" placeholder="{{ trans('admin.url') }}">	
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" value="{{ menu.url_order }}" name="url_order" placeholder="{{ trans('admin.order') }}">
+            </div>
+            <input type="hidden" name="id" value="{{ menu.id }}">
+    
+        </div>
+        <button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>        
+    </form>
+</div>	
 {% endblock %}

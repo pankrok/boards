@@ -33,6 +33,13 @@
               <div class="col-10 col-md-5">
                 <div class="row">
                 <div class="col-12 fs-15"><h2><a href="{{ board.url }}">{{ board.board_name }}</a></h2></div>
+                {% for  childboard in board.childboard %} 
+									<div class="col-sm col-md-4 fs-12">
+									<a href="{{ base_url()}}/board/{{ setString.toUrl(childboard.board_name) }}/{{ childboard.id }}">
+									<i class="fas fa-arrow-right"></i> {{childboard.board_name|raw}}
+									</a>
+									</div>
+									{% endfor %}
                 <div class="col-12 fs-12">{{ board.board_description | raw }}</div>
                 </div>
               </div>

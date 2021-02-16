@@ -3,8 +3,6 @@
 {% block content %}
 {{ plugin_serverlist | raw }}
 
-{{ plugin_serverlist | raw }}
-
 <div class="row">
 
 	{% include 'templates/partials/modules.twig' %}
@@ -42,8 +40,8 @@
 									<div class="col-12 fs-15"><a href="{{ board.url }}">{{ board.board_name }}</a></div>
 									{% for  childboard in board.childboard%} 
 									<div class="col-6 fs-12">
-									<a href="{{ base_url()}}/board/{{ setString.toUrl(childboard.board_name) }}/{{ childboard.id }}">
-									<i class="fas fa-arrow-right"></i> 
+									<a href="{{ childboard.url }}">
+									<i class="fas fa-arrow-right"> {{ childboard.board_name }}</i> 
 									</a>
 									</div>
 									{% endfor %}

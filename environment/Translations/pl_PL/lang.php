@@ -128,4 +128,6 @@ return [
     'Please enter the following code in your app or scan qr code' => 'Wprowadź następujący kod w swojej aplikacji lub zeskanuj kod QR',
     'Two factor code from' => 'Kod dwuetapowej weryfikacji z',
     'Password must be bettwen 8 and and 32 characters' => 'Ilość znaków w haśle musi się mieścić w przedziale 8 - 32',
+    'childboards' => 'Subfora',
+    'edit shout' => 'Edycja wiadomości na czacie.'
 ];

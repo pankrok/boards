@@ -147,5 +147,10 @@ return [
     'day' => 'Dzień',
     'value' => 'Wartość',
     
+    'select parent board' => 'Wybierz tablicę nadrzędną',
+    'menu links' => 'linki w menu',
+    'advance url' => 'zaawansowane zarządzanie linkami',
+    'url name' => 'nazwa linku',
+    'url' => 'link'
     
 ];

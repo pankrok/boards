@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Modules\Admin\Settings;
 
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 use Application\Core\Modules\Configuration\ConfigurationCore;
 use Application\Models\GroupsModel;
 

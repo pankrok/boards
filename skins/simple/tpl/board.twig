@@ -21,6 +21,55 @@
 				<div class="float-left"><h1><i class="fas fa-clipboard-list"></i> {{ board_name }}</h1></div>
 				<div class="float-right"><a href="#">Mark as read</a> | <a href="#">Subscribe this Board</a></div>
 			</div>
+            <div class="card border-light">
+            {% if childboards %}
+            
+			<div class="card-header my-2">
+				<div class="float-left"><h2>{{ trans('childboards') }}</h2></div>
+			</div>
+            <div class="card-body px-0 py-1 mx-1" id="board-1">
+                <ul class="list-group list-group-flush">
+                {% for childboard in childboards %}
+                <!-- one board -->
+                <li class="list-group-item content-bg">
+                  <div class="row w-100">
+                  <div class="col-2 col-md-1 pl-3 fc-g text-center"><i class="{% if not unread_board(childboard.id) %}text-success{% endif %} fas fa-comment fa-2x"></i></div>
+                  <div class="col-10 col-md-5">
+                    <div class="row">
+                    <div class="col-12 fs-15"><h2><a href="{{ childboard.url }}">{{ childboard.board_name }}</a></h2> 
+                    {% if childboard.board_description %}
+                    <p class="onoff float-right"><input type="checkbox" value="0" id="checbox-board-{{ childboard.id }}" data-toggle="collapse" data-target="#board-{{ childboard.id }}" aria-expanded="true" aria-controls="board-{{ childboard.id }}"><label for="checbox-board-{{ childboard.id }}"></label></p>
+                    {% endif %}
+                    </div>
+                    <div class="col-12 fs-12 collapse" id="board-{{ childboard.id }}">{{ childboard.board_description | raw }}</div>
+                    </div>
+                  </div>
+                  <div class="col-2 m-auto d-none d-md-block text-center">
+                  <span class="badge fs-15 px-4"> <i class="fas fa-comments"></i> 
+                  {{ childboard.plots_number }} / <i class="fas fa-comment-dots"></i> {{ childboard.posts_number }}</div>
+                  <div class="col-3  my-auto d-none d-md-block">
+                  </span>
+                    <div class="row text-center fs-12">
+                    {% if board.last_post_url %}
+                    <div class="col-12"><a href="{{ childboard.last_post_url }}">{{ childboard.plot_name }}</a> by 
+                    <a href="{{ last_post_author_url }}"> {{ childboard.last_post_author | raw }}</a></div>
+                    <div class="col-12"><i class="far fa-clock"></i> {{ childboard.created_at }}</div>
+                    {% else %}
+                    <div class="col-12"> - </div>
+                    {% endif %}
+                    </div>
+                    </div>
+                  </div>
+                </li>
+                <!-- /one board -->
+               {% endfor %}         
+                </ul>
+            </div>
+            
+            {% endif %}
+            <div class="card-header my-2">
+				<div class="float-left"><h2>{{ trans('plots') }}</h2></div>
+			</div>
 				<div class="card-body px-0 py-1" id="board-1">
 					<ul class="list-group list-group-flush">
 						<!-- board legend -->

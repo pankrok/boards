@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Modules\Admin\Skins;
 
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 use Application\Models\SkinsBoxesModel;
 use Application\Models\BoxModel;
 use Application\Models\CostumBoxModel;

@@ -2,21 +2,36 @@
 <div class="p-2">
 <form action="{{ path_for('admin.add.board') }}" method="post" id="addBoard">
   <div class="row">
-		<div class="form-group col-4">
+		<div class="form-group col-3">
 		<label for="SelectCategory">{{ trans('admin.select category') }}:</label>
 		<select class="form-control" id="SelectCategory" name="cat_id">
 		  {% for category in categories %}
-		  <option value="{{ category.id }}">{{ category.name }}</option>	  
+		  <option value="{{ category.id }}" {% if category.id == data.id %}selected{% endif %}>{{ category.name }}</option>	  
 		  {% endfor %}
 		</select>
 	  </div>
-	  <div class="form-group col-4">
-		<label for="boardName">{{ trans('admin.board name') }}</label>
-		<input type="text" class="form-control" id="boardName" name="name">
+     <div class="form-group col-2">
+		<label for="SelectCategory">{{ trans('admin.select parent board') }}:</label>
+		<select class="form-control" id="SelectParent" name="parent_id">
+          <option value="" selected> </option>
+		  {% for parent in parents %}
+            <option value="{{ parent.id }}">{{ parent.board_name }}</option>	  
+		  {% endfor %}
+		</select>
 	  </div>
-	  <div class="form-group col-4">
-		<label for="boardOrder">{{ trans('admin.board order') }}</label>
-		<input type="text" class="form-control" id="boardOrder" name="order">
+	  <div class="form-group col-3">
+		<label for="boardName">{{ trans('admin.board name') }}</label>
+		<input type="text" class="form-control" id="boardName" name="name" value="{{ data.board_name }}">
+	  </div>
+	  <div class="form-group col-2">
+		<label for="boardOrder">{{ trans('admin.order') }}</label>
+		<input type="text" class="form-control" id="boardOrder" name="order" value="{{ data.board_order }}">
+	  </div>
+	  <div class="control-group col-2 mt-4">
+	  <label class="control control-checkbox mt-2" for="Active">{{ trans('admin.active') }}
+		<input type="checkbox" id="Active" name="visability" checked>
+		<div class="control_indicator mt-1"></div>
+	  </label>
 	  </div>
   </div> 
   <div class="form-group">

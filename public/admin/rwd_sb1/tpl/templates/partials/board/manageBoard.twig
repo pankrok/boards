@@ -1,4 +1,4 @@
-	<!-- board -->
+	<!-- cat -->
 	<form action="{{ path_for('admin.board.order.post') }}" method="post" id="submitOrder">
 	<div class="row">
 	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right" >{{ trans('admin.submit') }}</button></div>
@@ -38,7 +38,7 @@
 					
 				</div>
 				</div>
-					<div class="card-body px-0 py-1" id="board-{{ category.cat_id }}">
+					<div class="card-body px-0 py-1" id="category-{{ category.id }}">
 						<ul class="list-group list-group-flush">
 		
 							{% for board in (boards[category.id]) %}
@@ -87,15 +87,66 @@
 								</div>
 								
 								</div>
+                                {% if board.childboards %}
+                              
+                                <ul><strong> >> {{ trans('childboards') }}</strong>
+                                    {% for childboard in board.childboards %}
+                                    <li class="list-group-item {% if myVal is even %}bg-white{% else %}bg-light{% endif %}">
+                                    <div class="row">
+                                    <div class="col-sm-auto col-md-1 my-2 order-3">
+                                         <input type="text" value="{{ childboard.board_order }}" id="Boards-{{ childboard.id }}" name="Boards-{{ childboard.id }}" class="form-control float-right">
+                                    </div>
+                                   
+                                    <div class="col-sm-auto col-md-11 order-1">
+                                        <div class="row">
+                                            <div class="col-auto fs-15 my-2">
+                                            {{ childboard.board_name }} 
+                                            </div>
+                                            <div class="col-auto fs-15 my-2">	
+                                                <a href="{{ path_for('admin.edit.board', {'id': childboard.id}) }}" class="btn btn-outline-success btn-sm fas fa-edit">edit</a>
+                                                
+                                            </div>
+                                            <div class="col-auto order-2"><a href="{{ path_for('admin.delete.board', {'element': 'board', 'id': childboard.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('admin.delete') }}</a></div>
+                                            <div class="col-auto ml-auto order-3">
+                                                    <span class=" float-right">
+                                                    <label class="control control-checkbox" for="BoardChecbox-{{ childboard.id }}">{{ trans('admin.active') }}
+                                                        <input type="checkbox" class="form-check-input" id="BoardChecbox-{{ childboard.id }}" name="BoardChecbox-{{ childboard.id }}" {% if childboard.active %}checked{% endif %}>
+                                                        <div class="control_indicator mt-1"></div>
+                                                    </label>
+                                                    </span>
+                                            </div>
+                                            {% if childboard.board_description %}
+                                            <div class="col-auto fs-15 my-2 order-1">
+                                             <a class="btn btn-outline-secondary btn-sm" data-toggle="collapse" href="#board{{ childboard.id }}" role="button" aria-expanded="false" aria-controls="board{{ childboard.id }}">
+                                                Show board desc
+                                              </a>
+                                            </div>
+                                            <div class="col-12 fs-12 mt-3 collapse order-3" id="board{{ childboard.id }}">
+                                            <div class="card card-body">
+                                                <p>Board desc:</p>
+                                                <p>{{ childboard.board_description | raw }}</p>
+                                            </div>
+                                            </div>
+                                            {% set myVal = myVal + 1 %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    </div>
+                                    </li>
+                                    
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
 							</li>
 							{% set myVal = myVal + 1 %}
 							{% endfor %}
 							<!-- /one board -->								
 						</ul>
 					</div>
-			</div>
+                </div>
+
 			{% endfor %}
-			<!-- /board -->	 
+			<!-- /cat -->	 
 	<div class="row">
 	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right">{{ trans('admin.submit') }}</button></div>
 	</div>

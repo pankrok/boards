@@ -37,7 +37,9 @@ class BoardController extends Controller
                                                             'board_id' => $arg['board_id'],
                                                             'board_url' => $arg['board'],
                                                             ]);
-            
+        if (isset($data[4])) {
+            $this->view->getEnvironment()->addGlobal('childboards', $data[4]);
+        }
             
         $this->cache->deleteExpired();
         return $this->view->render($response, 'board.twig');
@@ -54,6 +56,13 @@ class BoardController extends Controller
         $paginator = new \JasonGrimes\Paginator($totalItems, $itemsPerPage, $currentPage, $urlPattern);
         
         $boardName = BoardsModel::select('board_name')->find($arg['board_id'])->toArray()['board_name'];
+        $childboards = BoardsModel::where([
+            ['active', 1], ['parent_id', $arg['board_id']]
+        ])->get()->toArray(); 
+        foreach ($childboards as $k => $v) {
+            $childboards[$k]['all_posts'] = PostsModel::where([['plot_id', $v['id']], ['hidden', 0]])->count();           
+        }
+
         $data = PlotsModel::where([
                     ['plot_active', '=', '1'],
                     ['board_id', '=', $arg['board_id']]])
@@ -94,9 +103,8 @@ class BoardController extends Controller
             ]);
         }
         $newPlot = $this->router->urlFor('board.newPlot', ['board_id' => $arg['board_id']]);
-        
-        
-        return [$data, $paginator, $boardName, $newPlot];
+
+        return [$data, $paginator, $boardName, $newPlot, $childboards];
     }
     
     public function boardCleanCache($id, $name = null)

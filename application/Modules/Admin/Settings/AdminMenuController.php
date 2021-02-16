@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Modules\Admin\Settings;
 
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 use Application\Core\Modules\Configuration\ConfigurationCore;
 use Application\Models\MenuModel;
 use Application\Models\PagesModel;
@@ -36,6 +36,18 @@ class AdminMenuController extends Controller
             }
             
             $this->adminView->getEnvironment()->addGlobal('links', $links);
+        }
+        
+        if (isset($body['own_name']) && isset($body['own_url'])) {
+           
+            $menu = MenuModel::create([
+                'url' => $body['own_url'],
+                'name' => $body['own_name'],
+                'url_order' => $body['url_order']
+                ]);
+            return $response
+                ->withHeader('Location', $this->router->urlFor('admin.menu.manage', ['id' => $menu->id]))
+                ->withStatus(302);
         }
         
         if (isset($body['id'])) {

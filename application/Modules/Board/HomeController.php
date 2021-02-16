@@ -94,7 +94,12 @@ class HomeController extends Controller
                 $postsNo += \Application\Models\PostsModel::where([['plot_id', $plot->id], ['hidden', 0]])->count();
             }
             
-            $boards[$v['category_id']][$v['id']] = $v;
+            if ($boards[$v['category_id']][$v['id']]['childboard'] !== null) {
+                $boards[$v['category_id']][$v['id']] += $v;
+            } else {
+                $boards[$v['category_id']][$v['id']] = $v;
+            }
+            
             $boards[$v['category_id']][$v['id']]['plots_number'] =  $plots->count();
             $boards[$v['category_id']][$v['id']]['posts_number'] =  $postsNo;
             $boards[$v['category_id']][$v['id']]['url'] = self::base_url() . '/board/' . $this->urlMaker->toUrl($v['board_name'])	. '/' . $v['id'];
@@ -116,6 +121,12 @@ class HomeController extends Controller
             } else {
                 $boards[$v['category_id']][$v['id']]['last_post'] = false;          
             }
+            
+            if ($boards[$v['category_id']][$v['id']]['parent_id'] !== null) {
+                $pid = $boards[$v['category_id']][$v['id']]['parent_id'];
+                $boards[$v['category_id']][$pid]['childboard'][$v['id']] = $boards[$v['category_id']][$v['id']];
+                unset($boards[$v['category_id']][$v['id']]);
+            }
         }
         
         $boards['groups_legend'] = \Application\Models\GroupsModel::select('grupe_name')->get()->toArray();
@@ -123,10 +134,4 @@ class HomeController extends Controller
         return $boards;
     }
     
-    public function session($request, $response)
-    {
-    
-        //var_dump($_SESSION);
-        return $response;
-    }
 };

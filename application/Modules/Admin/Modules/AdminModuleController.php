@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace Application\Modules\Admin\Modules;
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 
 class AdminModuleController extends Controller
 {

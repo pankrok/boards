@@ -92,7 +92,7 @@ class Auth
             return false;
         }
         
-        if(!$user->confirmed && $this->settings['board']['confirm_reg'] === 1) {
+        if(!$user->confirmed) {
             return 'not confirmed account';
         }
         

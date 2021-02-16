@@ -47,6 +47,7 @@ $app->group('/chatbox', function (RouteCollectorProxy $chatbox) {
     $chatbox->post('/postmessage', 'ChatboxController:postChatMessage')->setName('postChatbox');
     $chatbox->post('/loadmore', 'ChatboxController:loadMoreMessages')->setName('loadChatbox');
     $chatbox->post('/checknew', 'ChatboxController:checkNewMessage')->setName('checkNewMessage');
+    $chatbox->post('/edit', 'ChatboxController:editMessage')->setName('editMessage');
 });
 #user
 $app->group('/user', function (RouteCollectorProxy $user) {

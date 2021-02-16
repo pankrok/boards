@@ -85,6 +85,26 @@ class ChatboxController extends Controller
                         ->withStatus(201);
     }
     
+    public function editMessage($request, $response)
+    {
+        $body = $request->getParsedBody();
+        $shout = ChatboxModel::where('id', $body['shout_id'])->first();
+        $return['csrf'] = self::csftToken();
+        if ($this->auth->checkAdmin() > 1 || $shout->user_id === $this->auth->check()) {
+           $shout->content = $return['content'] = $this->purifier->purify($body['shout_content']);
+           $shout->save();
+           $return['info'] = 'Shout edit success!';
+           
+        } else {
+           $return['info'] = 'Shout edit not autorized!';
+        }
+        
+        $return['id'] = $body['shout_id'];
+        $response->getBody()->write(json_encode($return));
+        return $response->withHeader('Content-Type', 'application/json')
+                        ->withStatus(201);
+    }
+    
     public function loadMoreMessages($request, $response)
     {
         $base_url = self::base_url();

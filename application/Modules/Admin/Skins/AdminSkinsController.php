@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Modules\Admin\Skins;
 
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 use Application\Models\SkinsModel;
 use MatthiasMullie\Minify;
 
@@ -42,8 +42,6 @@ class AdminSkinsController extends Controller
             $diff[$k] = $v['dirname'];
         }
         
-        
-        
         $files  = array_diff($files, $diff);
         $files  = array_diff($files, ['.', '..']);
 
@@ -57,7 +55,7 @@ class AdminSkinsController extends Controller
         if (file_exists(MAIN_DIR . '/skins/' . $skinDir . '/skin.json')) {
             $paths = [];
             $skinData = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skinDir . '/skin.json'), true);
-
+            
             $skin =	SkinsModel::Create([
                 'name' => $skinData['name'],
                 'dirname' => $skinDir,
@@ -232,5 +230,21 @@ class AdminSkinsController extends Controller
             }
         }
         rmdir($dirPath);
+    }
+    
+    protected function compareVersion(string $skinVersion) : bool
+    {
+        $skinVersion = explode('.', $skinVersion);
+        $boardVersion = explode('.', base64_decode($this->settings['core']['version']));
+        foreach ($skinVersion as $k => $v) {
+            if ($v === $boardVersion[$k] || $v === '*') {
+               $return = true; 
+            } else {
+               $return = false;
+               break;
+            }
+        }
+        
+        return $return;
     }
 }

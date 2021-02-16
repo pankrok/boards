@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Modules\Admin\Board;
 
-use Application\Core\Controller as Controller;
+use Application\Core\AdminController as Controller;
 
 use Application\Models\BoardsModel;
 use Application\Models\CategoryModel;
@@ -15,6 +15,7 @@ class AdminBoardController extends Controller
     {
         $this->adminView->getEnvironment()->addGlobal('categories', self::getCategories());
         $this->adminView->getEnvironment()->addGlobal('boards', self::getBoards());
+        $this->adminView->getEnvironment()->addGlobal('parents', self::getParentBoards());
 
         return $this->adminView->render($response, 'board.twig');
     }
@@ -82,13 +83,20 @@ class AdminBoardController extends Controller
     public function addBoard($request, $response)
     {
         $body = $request->getParsedBody();
+        isset($body['visability']) ? $visability = 1 : $visability = 0;
+        if ($body['parent_id'] !== '') {
+            $body['cat_id'] = BoardsModel::find($body['parent_id'])['category_id']; 
+        } else {
+            $body['parent_id'] = null;
+        }
         
         BoardsModel::create([
             'board_name' => $body['name'],
             'board_description' => $body['desc'],
             'category_id' => $body['cat_id'],
             'board_order' => $body['order'],
-            'active' => 1
+            'parent_id' => $body['parent_id'],
+            'active' => $visability
         ]);
         
         return $response
@@ -126,14 +134,31 @@ class AdminBoardController extends Controller
         if ($body) {
             isset($body['visability']) ? $visability = 1 : $visability = 0;
             $board->board_name = $body['name'];
-            $board->board_description = $body['desc'];
+            $board->board_description = $body['desc']; 
+            if ($body['parent_id'] !== '') {
+                $isParent = BoardsModel::where('parent_id', $arg['id'])->count();
+                if ($isParent === 0) {
+                    $body['cat_id'] = BoardsModel::find($body['parent_id'])['category_id']; 
+                } else {
+                    unset($body['parent_id']);
+                    $this->flash->addMessage('danger', 'parent cannot be childboard!');
+                }
+            } else {
+                $body['parent_id'] = null;
+            }
+            
+            $board->parent_id = $body['parent_id'];
             $board->category_id = $body['cat_id'];
             $board->board_order = $body['order'];
             $board->active	= $visability;
             $board->save();
-        }
-        
+            
+            return $response
+              ->withHeader('Location', $this->router->urlFor('admin.edit.board', ['id' => $arg['id']]))
+              ->withStatus(302);
+        }      
         $this->adminView->getEnvironment()->addGlobal('categories', self::getCategories());
+        $this->adminView->getEnvironment()->addGlobal('parents', self::getParentBoards());
         $this->adminView->getEnvironment()->addGlobal('data', $board->toArray());
         $this->adminView->getEnvironment()->addGlobal('id', $arg['id']);
         
@@ -167,10 +192,28 @@ class AdminBoardController extends Controller
     
     protected function getBoards()
     {
-        $boards = false;
+        $boards = null;
         $handler = \Application\Models\BoardsModel::orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
         foreach ($handler as $k => $v) {
-            $boards[$v['category_id']][$v['id']] = $v;
+            
+            if ($v['parent_id'] !== null) {
+                $boards[$v['category_id']][$v['parent_id']]['childboards'][$v['id']] = $v;
+                unset($boards[$v['category_id']][$v['id']]);
+            } elseif ($boards[$v['category_id']][$v['id']]['childboards'] !== null) {
+                $boards[$v['category_id']][$v['id']] += $v;
+            } else {
+                $boards[$v['category_id']][$v['id']] = $v;
+            }
+        }
+        return $boards;
+    }
+    
+    protected function getParentBoards()
+    {
+        $boards = null;
+        $handler = \Application\Models\BoardsModel::whereNull('parent_id')->orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
+        foreach ($handler as $k => $v) {
+            $boards[$v['id']] = $v;
         }
         return $boards;
     }
