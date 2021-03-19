@@ -37,10 +37,10 @@ Ready features:
 * chat included,
 * two factor authentication,
 * email templates with editor,
+* nested boards / childboards,
 
 In progress:
 * ban reasons,
-* nested boards / childboards,
 * english translation
 
 ## Status
