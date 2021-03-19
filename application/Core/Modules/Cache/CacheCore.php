@@ -68,7 +68,7 @@ class CacheCore
             {
                 $list = unserialize(file_get_contents(MAIN_DIR . $this->mainDir . 'cache[0].cache'));
             }
-            if (is_array($list)) {
+            if (@is_array($list)) {
                 $list += [
                     self::getDir() . md5($fname) => (time()+$exp)
                 ];

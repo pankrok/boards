@@ -48,19 +48,22 @@ class PlotController extends Controller
     
     public function getPlot($request, $response, $arg)
     {
+        if (!isset($arg['page'])) {
+            $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
+            $routeName = $routeContext->getRoutingResults()->getUri();
+            return  $response
+                    ->withHeader('Location', "$routeName/1")
+                    ->withStatus(302);
+        }
+        
         $cache = $request->getAttribute('cache');
         if (!isset($cache)) {
             $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
             $name = $routeContext->getRoute()->getName();
             $routeName = $routeContext->getRoutingResults()->getUri();
             $this->cache->setName($name);
-            
-            if (isset($arg['page']) && $arg['page'] > 0) {
-                $currentPage = $arg['page'];
-            } else {
-                $currentPage = 1;
-            }
-            
+            $currentPage = $arg['page'];
+
             $totalItems = PostsModel::where('plot_id', $arg['plot_id'])->count();
             $itemsPerPage = $this->settings['pagination']['plots'];
             
@@ -80,7 +83,7 @@ class PlotController extends Controller
             
             foreach ($data as $k => $v) {
                 $group = $this->group->getGroupDate($v->main_group, $v->username);
-                $data[$k]->user_url = self::base_url() .'/user/'. $v->username .'/'. $v->user_id ;
+                $data[$k]->user_url = $this->router->urlFor('user.profile', ['username' => $v->username, 'uid' => $v->user_id]);
                 $data[$k]->avatar = $v->avatar ? self::base_url() . $this->settings['images']['path'] . $v->_85 : self::base_url() . '/public/img/avatar.png';
                 $data[$k]->username_html = $group['username'];
                 $data[$k]->group = $group['group'];
@@ -101,6 +104,7 @@ class PlotController extends Controller
                 'data' => $data,
                 'locked' => $plot->locked,
                 'plot_name' => $plot->plot_name,
+                'board_id' => $plot->board_id,
                 'hidden' => $plot->hidden,
                 'plotList' => $boardList
             ];
@@ -445,16 +449,39 @@ class PlotController extends Controller
         $plot->locked = ($body['lock'] ? 1 : 0);
         $plot->hidden = $hidden;
         $plot->save();
-
+        $route = $this->router->urlFor('board.getPlot', ['plot_id'=>$body['id'], 'plot' => $this->urlMaker->toUrl($plot->plot_name)]);
         if (isset($body['lock'])) { 
             $lock = 'locked';
         } else {
             $lock = 'ulocked';
         }
+        
+        self::cleanAllPlotPages($body['id']);
         $this->BoardController->boardCleanCache($plot->board_id);
         $this->flash->addMessage('success', $this->translator->get('Plot '.$lock.' success!'));
         return $response
-          ->withHeader('Location', $this->router->urlFor('board.getPlot', ['plot_id'=>$body['id'], 'plot' => $this->urlMaker->toUrl($plot->plot_name)]))
+          ->withHeader('Location', $route)
           ->withStatus(302);
+    }
+    
+    protected function cleanAllPlotPages($plotId) : bool
+    {
+        $this->cache->setName('board.getPlot');
+        $plot = PlotsModel::find($plotId);
+        $pages = ceil(PostsModel::where('plot_id', $plotId)->count() / $this->settings['pagination']['plots']);
+        $plotUrl = $this->urlMaker->toUrl(PlotsModel::find($plotId)->plot_name);    
+        for ($i = 1; $i <= $pages; $i++) {
+            
+            $route = $this->router->urlFor('board.getPlot', [
+                                                        'plot' => $plotUrl,
+                                                        'plot_id' => $plotId,
+                                                        'page' => $i
+                                                        ]);
+            if ($this->cache->delete($route) === false ) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

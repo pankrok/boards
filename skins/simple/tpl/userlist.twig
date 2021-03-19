@@ -7,7 +7,9 @@
 	<!-- main board -->
 	
 	<div class="col-lg order-1">
-		
+	 <div class="row">
+    {% include 'templates/partials/inside-modules.twig' %}
+    <div class="col order-1">			
 		{% if users %}
 		<div class="card-header"><i class="fas fa-users"></i> Użytkownicy</div>
 		<div class="card-body px-0 py-1 collapse show" id="board-{{ category.cat_id }}">
@@ -25,10 +27,7 @@
 									<div class="col-12 fs-12">{{ user.group_name |raw }}</div>
 								</div>
 							</div>
-							<div class="col-4 mx-auto d-none d-md-block">od: {{ user.created_at }}<br/>aktywny: {{ user.last_active|date("Y-m-d H:m:i") }}</div>
-							<div class="col-1 d-none d-md-block">
-								
-							</div>
+							<div class="col float-right d-none d-md-block text-right">od: {{ user.created_at }}<br/>aktywny: {{ user.last_active|date("Y-m-d H:m:i") }}</div>
 							</div>
 						</li>
 						{% endfor %}
@@ -36,12 +35,17 @@
 					</ul>
 		</div>
 		{% endif %}
-		
 	</div>
+
 	<!-- /main board -->
 
-	</div>
+	
+    <div class="col-12 order-3">
 	{% include 'templates/partials/pagination.twig' %}	
+    </div>
+    </div>	
+    </div>
+</div>
 {% endblock %}
 
 {% block endcontent %}

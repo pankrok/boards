@@ -33,7 +33,7 @@ class ModulesMiddleware extends Middleware
         
         $this->container->get('cache')->setName('box-controller');
         if (!$boxes = $this->container->get('cache')->receive($name)) {
-            $positions = ['top', 'left', 'right', 'bottom'];
+            $positions = ['top', 'left', 'right', 'bottom', 'iTop', 'iBottom'];
             $activeSkin = SkinsModel::where('active', 1)->select('id')->first()->toArray()['id'];
         
             foreach ($positions as $position) {
@@ -63,6 +63,7 @@ class ModulesMiddleware extends Middleware
                             
             $this->container->get('cache')->store($name, $boxes, 0);
         }
+
         $this->container->get('view')->getEnvironment()->addGlobal('modules', $boxes);
         return $handler->handle($request);
     }

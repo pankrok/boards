@@ -15,10 +15,12 @@
 	<!-- new plot button -->
 	<div class="col-lg order-1">		
 		<!-- Category Board -->
-				
+		<div class="row">
+        {% include 'templates/partials/inside-modules.twig' %}
+        <div class="col order-1">					
 		<div class="card border-light">
 			<div class="card-header">
-				<div class="float-left"><h1><i class="fas fa-clipboard-list"></i> {{ board_name }}</h1></div>
+				<div class="float-left"><h1><i class="fas fa-clipboard-list"></i> {{ board_name | raw }}</h1></div>
 				<div class="float-right"><a href="#">Mark as read</a> | <a href="#">Subscribe this Board</a></div>
 			</div>
             <div class="card border-light">
@@ -36,7 +38,7 @@
                   <div class="col-2 col-md-1 pl-3 fc-g text-center"><i class="{% if not unread_board(childboard.id) %}text-success{% endif %} fas fa-comment fa-2x"></i></div>
                   <div class="col-10 col-md-5">
                     <div class="row">
-                    <div class="col-12 fs-15"><h2><a href="{{ childboard.url }}">{{ childboard.board_name }}</a></h2> 
+                    <div class="col-12 fs-15"><h2><a href="{{ childboard.url }}">{{ childboard.board_name | raw }}</a></h2> 
                     {% if childboard.board_description %}
                     <p class="onoff float-right"><input type="checkbox" value="0" id="checbox-board-{{ childboard.id }}" data-toggle="collapse" data-target="#board-{{ childboard.id }}" aria-expanded="true" aria-controls="board-{{ childboard.id }}"><label for="checbox-board-{{ childboard.id }}"></label></p>
                     {% endif %}
@@ -134,6 +136,8 @@
 		</div>	
 		<!-- / Board -->	
 	</div>
+    </div>
+    </div>
 	<!-- /main board -->
 	</div>
 

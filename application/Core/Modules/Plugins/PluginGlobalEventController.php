@@ -3,7 +3,7 @@ declare(strict_types=1);
 namespace Application\Core\Modules\Plugins;
 
 use Symfony\Component\EventDispatcher\Event;
-use Slim\Routing\RouteContext;
+// use Slim\Routing\RouteContext;
 
 /**
 * Register

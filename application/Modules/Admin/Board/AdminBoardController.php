@@ -196,10 +196,10 @@ class AdminBoardController extends Controller
         $handler = \Application\Models\BoardsModel::orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
         foreach ($handler as $k => $v) {
             
-            if ($v['parent_id'] !== null) {
+            if (isset($v['parent_id'])) {
                 $boards[$v['category_id']][$v['parent_id']]['childboards'][$v['id']] = $v;
                 unset($boards[$v['category_id']][$v['id']]);
-            } elseif ($boards[$v['category_id']][$v['id']]['childboards'] !== null) {
+            } elseif (isset($boards[$v['category_id']][$v['id']]['childboards'])) {
                 $boards[$v['category_id']][$v['id']] += $v;
             } else {
                 $boards[$v['category_id']][$v['id']] = $v;

@@ -3,7 +3,9 @@
 	<div class="col-auto p-2">
 	<div class="card {% if skin.active %}border border-success{% endif %}" style="width: 18rem;">
 	{% if skin.active %}<span class="badge badge-pill badge-success m-2 position-absolute">{{ trans('admin.is active') }}</span>{% endif %}
-	  <img class="card-img-top" style="max-height: 150px;" src="{{ base_url() }}/skins/{{ skin.dirname }}/{{ skin.dirname }}.png" alt="{{ skin.name }}">
+    <div class="crop">
+	  <img class="card-img-top" src="{{ base_url() }}/skins/{{ skin.dirname }}/{{ skin.dirname }}.png" alt="{{ skin.name }}">
+    </div>
 	  <div class="card-body">
 			<h5 class="card-title ml-3">{{ skin.name }} <button type="button" class="btn btn-outline-dark float-right" data-toggle="modal" data-target="#renameSkin{{ skin.id }}">
 				<i class="fas fa-edit"></i>

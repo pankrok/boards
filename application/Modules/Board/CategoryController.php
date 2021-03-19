@@ -28,7 +28,7 @@ class CategoryController extends Controller
             
            
         }
-        
+
         $this->view->getEnvironment()->addGlobal('boards', $data);
         $this->view->getEnvironment()->addGlobal('category', $category);
         $this->view->getEnvironment()->addGlobal('title', $category['name']);
@@ -61,10 +61,11 @@ class CategoryController extends Controller
     
     protected function getCategoryData($id) {
      
+        $data = [];
         $boards = BoardsModel::where([['category_id', $id], ['active', '=', '1']])->get()->toArray();
         foreach ($boards as $k => $v) {
             
-            if ($data[$v['id']]['childboard'] !== null) {
+            if (isset($data[$v['id']]['childboard'])) {
                 $data[$v['id']] += $v;
             } else {
                 $data[$v['id']] = $v;

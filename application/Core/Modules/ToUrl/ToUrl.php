@@ -110,12 +110,21 @@ class ToUrl
     
     public function toUrl($str)
     {
-        $str = str_replace(
+        $str = urlencode(strip_tags(str_replace(
             array_keys($this->transliteration),
             array_values($this->transliteration),
             $str
-        );
-        return urlencode($str);
+        )));
+
+        if ($str[0] === '-') {
+            $str = substr($str, 1);
+        }
+
+        if (substr($str, -1)  === '-') {
+            $str = substr($str, 0, -1);
+        }
+        
+        return $str;
     }
     
     public function fromUrl($str)

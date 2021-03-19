@@ -9,8 +9,9 @@
 	<!-- main board -->
 	
 	<div class="col-lg order-sm-2 order-1"> 
-	{% include 'templates/partials/chatbox.twig' %}
-				
+    <div class="row">
+	{% include 'templates/partials/inside-modules.twig' %}
+	<div class="col order-1">			
 		<!-- board -->
 		{% for category in categories %}
 		<div class="card border-light mb-3">
@@ -37,11 +38,11 @@
 							<div class="col-2 col-md-1 pl-3 text-center"><i class="{% if not unread_board(board.id) %}text-success{% endif %} fas fa-comment fa-2x"></i></div>
 							<div class="col-7 col-md-5">
 								<div class="row">
-									<div class="col-12 fs-15"><a href="{{ board.url }}">{{ board.board_name }}</a></div>
+									<div class="col-12 fs-15"><a href="{{ board.url }}">{{ board.board_name|raw }}</a></div>
 									{% for  childboard in board.childboard%} 
 									<div class="col-6 fs-12">
 									<a href="{{ childboard.url }}">
-									<i class="fas fa-arrow-right"> {{ childboard.board_name }}</i> 
+									<i class="fas fa-arrow-right"> {{ childboard.board_name | raw}}</i> 
 									</a>
 									</div>
 									{% endfor %}
@@ -80,10 +81,11 @@
 				</div>
 		</div>
 		{% endfor %}
-		<!-- \/board -->
-{{ plugin_bar | raw }}
-
-
+		<!-- /board -->
+    
+{{ include(template_from_string(plugin_bar | raw)) }}
+</div>
+</div>
 	</div>
 	<!-- /main board -->
 	

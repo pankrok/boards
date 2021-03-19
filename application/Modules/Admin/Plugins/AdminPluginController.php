@@ -29,9 +29,13 @@ class AdminPluginController extends Controller
     {
         global $params;
         $params = [
-            '1' => $arg['param1'] ?? null,
-            '2' => $arg['param2'] ?? null
+            $arg['param1'] ?? null,
+            $arg['param2'] ?? null
         ];
+        if(PluginsModel::where('plugin_name', $arg['pluginName'])->first()->active === 0) {
+            $pluginName = 'Plugins\\'. (string)$arg['pluginName'] .'\\'.(string)$arg['pluginName'];
+            $this->container->get('event')->addSubscriber(new $pluginName());
+        }
         
         $this->container->get('event')->addGlobalEvent('plugin.contoller.'.$arg['pluginName']);
         $this->adminView->getEnvironment()->addGlobal('params', $params);

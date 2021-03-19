@@ -1,10 +1,10 @@
 		<!-- chat -->
-		<div class="card border-light mb-3">
+		<div class="card border-light mb-3" style="height: 380px">
 		  <div class="card-header"><i class="far fa-comments"></i> <strong>Chat</strong>
 				<p class="onoff float-right"><input type="checkbox" value="0" id="checkboxID" data-toggle="collapse" data-target="#collapseChat" aria-expanded="true" aria-controls="collapseChat"><label for="checkboxID"></label></p>
 		  </div>
-		  <div class="collapse show" id="collapseChat">
-		  <div class="chatbox card-body">
+		  <div class="collapse show" id="collapseChat" style="height: 280px">
+		  <div class="chatbox card-body" style="height: 280px">
 		  
 				<ul id="shouts" class="list-group list-group-flush">	
 				 {% for shout in chatbox %}
@@ -13,7 +13,9 @@
 				<span id="chatend"></span>
 			</ul>
 		  
-		  <div class="input-group mb-3">
+		   
+		</div>
+        <div class="input-group mb-3">
 		  <input id="shout-content" type="text" class="form-control chatbox-input" placeholder="{% if auth.check == false %}{{ trans('you have to sign in to chat') }}{% else %}{{ trans('Enter your message here:') }}{% endif %}" aria-describedby="button-chatbox" {% if auth.check == false %}disabled{% endif %}>
 		  <input id="sav" type="hidden" value="{{ auth.user.avatar }}">
 		  <input id="suid" type="hidden" value="{{ auth.user.id }}">
@@ -22,8 +24,7 @@
 			<button class="btn btn-outline-secondary chatbox-input {% if auth.check == false %}disabled{% endif %}" type="button" id="button-chatbox">{{ trans('send') }}  <i class="far fa-paper-plane"></i></button>
 		  </div>
 		  
-		</div>  
-		</div>
+		</div> 
 		  
 		</div>
 	</div>

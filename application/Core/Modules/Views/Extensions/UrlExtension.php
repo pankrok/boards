@@ -24,7 +24,8 @@ class UrlExtension extends AbstractExtension
             new TwigFunction('base_url', [$this, 'base_url']),
             new TwigFunction('path_for', [$this, 'path_for']),
     		new TwigFunction('json_decode', [$this, 'jsonDecode']),
-            new TwigFunction('toUrl', [$this, 'toUrl'])
+            new TwigFunction('toUrl', [$this, 'toUrl']),
+            new TwigFunction('stripTags', [$this, 'stripTags'])
         ];
     }
     
@@ -47,5 +48,10 @@ class UrlExtension extends AbstractExtension
     public function toUrl($arg)
     {
         return $this->urlMaker->toUrl($arg);
+    }
+    
+    public function stripTags($arg)
+    {
+        return strip_tags($arg);
     }
 }

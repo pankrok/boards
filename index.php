@@ -26,4 +26,3 @@ else
     $url.= $_SERVER['REQUEST_URI'] . '/install';   
 	header("Location: $url");
 }
-

@@ -43,10 +43,10 @@ class BreadcrumbsMiddleware extends Middleware
                     $data = PlotsModel::where('plots.id', $atr['plot'])
                                     ->leftJoin('boards', 'boards.id', 'plots.board_id')
                                     ->leftJoin('categories', 'categories.id', 'boards.category_id')
-                                    ->select('plots.plot_name', 'boards.board_name', 'categories.name', 'plots.id', 'plots.board_id', 'boards.category_id')
+                                    ->select('plots.plot_name', 'boards.board_name', 'categories.name', 'plots.id', 'plots.board_id', 'boards.category_id', 'boards.parent_id')
                                     ->get()->toArray()[0];
-                            
-                    $breadcrumbs = [
+                                    
+                     $breadcrumbs = [
                         0 => [	'last' => 0,
                                 'path' => $this->container->get('router')->urlFor(
                                     'category.getCategory',
@@ -54,30 +54,46 @@ class BreadcrumbsMiddleware extends Middleware
                                     'category' => $this->container->get('urlMaker')->toUrl($data['name'])]
                                 ),
                                 'name' => $data['name']
-                            ],
-                        1 => [	'last' => 0,
+                            ]
+                        ];
+                              
+                                    
+                    if (isset($data['parent_id'])) {
+                        $parentBoards = BoardsModel::find($data['parent_id']);
+                        array_push($breadcrumbs,  ['last' => 1,
+                                'path' => $this->container->get('router')->urlFor(
+                                    'board.getBoard',
+                                    ['board_id' => $parentBoards['id'],
+                                    'board' => $this->container->get('urlMaker')->toUrl($parentBoards['board_name'])]
+                                ),
+                                'name' => $parentBoards['board_name']
+                            ]);   
+                    }
+                    
+                    array_push($breadcrumbs,   
+                        ['last' => 0,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getBoard',
                                     ['board_id' => $data['board_id'],
                                     'board' => $this->container->get('urlMaker')->toUrl($data['board_name'])]
                                 ),
                                 'name' => $data['board_name']
-                            ],
-                        2 => [	'last' => 1,
+                        ]); 
+                    array_push($breadcrumbs,            
+                            ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getPlot',
                                     ['plot_id' => $data['id'],
                                     'plot' => $this->container->get('urlMaker')->toUrl($data['plot_name'])]
                                 ),
                                 'name' => $data['plot_name']
-                            ]
-                        ];
+                            ]);       
                 }
                 if (isset($atr['board'])) {
                     $data = BoardsModel::where('boards.id', $atr['board'])
                                     ->leftJoin('categories', 'categories.id', 'boards.category_id')
                                     ->select('boards.board_name', 'categories.name', 'boards.id', 'boards.category_id')
-                                    ->get()->toArray()[0];
+                                    ->first();
                             
                     $breadcrumbs = [
                         0 => [	'last' => 0,
@@ -87,16 +103,30 @@ class BreadcrumbsMiddleware extends Middleware
                                     'category' => $this->container->get('urlMaker')->toUrl($data['name'])]
                                 ),
                                 'name' => $data['name']
-                            ],
-                        1 => [	'last' => 1,
+                            ]
+                        ];
+                        
+                     if (isset($data['parent_id'])) {
+                        $parentBoards = BoardsModel::find($data['parent_id']);
+                        array_push($breadcrumbs,  ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getBoard',
-                                    ['board_id' => $data['id'],
+                                    ['board_id' => $parentBoards['id'],
+                                    'board' => $this->container->get('urlMaker')->toUrl($parentBoards['board_name'])]
+                                ),
+                                'name' => $parentBoards['board_name']
+                            ]);   
+                    }
+                    
+                    array_push($breadcrumbs,   
+                        ['last' => 0,
+                                'path' => $this->container->get('router')->urlFor(
+                                    'board.getBoard',
+                                    ['board_id' => $data['board_id'],
                                     'board' => $this->container->get('urlMaker')->toUrl($data['board_name'])]
                                 ),
                                 'name' => $data['board_name']
-                            ]
-                        ];
+                        ]); 
                 }
                 if (isset($atr['cat'])) {
                     $data = CategoryModel::where('categories.id', $atr['cat'])

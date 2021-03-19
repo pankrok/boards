@@ -1,14 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 4.9.5
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Czas generowania: 09 Lut 2021, 12:26
--- Wersja serwera: 10.4.14-MariaDB
--- Wersja PHP: 7.4.11
+-- Host: mysql.ct8.pl
+-- Czas generowania: 18 Mar 2021, 12:37
+-- Wersja serwera: 5.7.33-log
+-- Wersja PHP: 7.1.33
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Baza danych: `b`
+-- Baza danych: `m3552_jr`
 --
 
 -- --------------------------------------------------------
@@ -32,9 +32,9 @@ CREATE TABLE `brd_additional_fields` (
   `id` int(11) NOT NULL,
   `add_name` varchar(255) NOT NULL,
   `add_type` varchar(32) NOT NULL,
-  `add_values` text DEFAULT NULL,
-  `add_require` tinyint(1) NOT NULL DEFAULT 0,
-  `description` text DEFAULT NULL
+  `add_values` text,
+  `add_require` tinyint(1) NOT NULL DEFAULT '0',
+  `description` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -50,12 +50,12 @@ CREATE TABLE `brd_boards` (
   `category_id` int(11) NOT NULL,
   `parent_id` int(11) DEFAULT NULL,
   `board_order` int(11) DEFAULT NULL,
-  `plots_number` int(11) DEFAULT 0,
-  `posts_number` int(11) DEFAULT 0,
+  `plots_number` int(11) DEFAULT '0',
+  `posts_number` int(11) DEFAULT '0',
   `last_post_date` int(11) DEFAULT NULL,
   `last_post_author` varchar(255) DEFAULT NULL,
-  `active` tinyint(1) DEFAULT 1,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `active` tinyint(1) DEFAULT '1',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -68,7 +68,7 @@ CREATE TABLE `brd_boards` (
 CREATE TABLE `brd_boxes` (
   `id` int(11) NOT NULL,
   `costum_id` int(11) NOT NULL,
-  `costum` tinyint(1) NOT NULL DEFAULT 1,
+  `costum` tinyint(1) NOT NULL DEFAULT '1',
   `engine` varchar(32) NOT NULL DEFAULT 'custom'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -79,7 +79,8 @@ CREATE TABLE `brd_boxes` (
 INSERT INTO `brd_boxes` (`id`, `costum_id`, `costum`, `engine`) VALUES
 (1, 1, 0, 'userdata'),
 (2, 2, 0, 'statistics'),
-(3, 3, 1, 'custom');
+(3, 3, 0, 'chatbox'),
+(4, 4, 1, 'custom');
 
 -- --------------------------------------------------------
 
@@ -90,9 +91,9 @@ INSERT INTO `brd_boxes` (`id`, `costum_id`, `costum`, `engine`) VALUES
 CREATE TABLE `brd_categories` (
   `id` int(11) NOT NULL,
   `name` varchar(527) NOT NULL,
-  `category_order` int(4) NOT NULL DEFAULT 0,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `category_order` int(4) NOT NULL DEFAULT '0',
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -106,7 +107,7 @@ CREATE TABLE `brd_chatbox` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `content` varchar(2048) NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2019-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -118,11 +119,11 @@ CREATE TABLE `brd_chatbox` (
 
 CREATE TABLE `brd_costum_boxes` (
   `id` int(11) NOT NULL,
-  `translate` tinyint(1) NOT NULL DEFAULT 0,
+  `translate` tinyint(1) NOT NULL DEFAULT '0',
   `name_prefix` varchar(255) NOT NULL,
   `name` varchar(128) NOT NULL,
-  `html` blob DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `html` blob,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -133,7 +134,8 @@ CREATE TABLE `brd_costum_boxes` (
 INSERT INTO `brd_costum_boxes` (`id`, `translate`, `name_prefix`, `name`, `html`, `updated_at`, `created_at`) VALUES
 (1, 0, 'system', 'userdata', NULL, '2021-01-14 13:23:52', '2000-01-01 00:00:00'),
 (2, 0, 'system', 'statistics', NULL, '2021-01-14 13:24:16', '2000-01-01 00:00:00'),
-(3, 1, '<i class=\"fa fa-bullhorn\"></i>', 'Announcements', 0x3c64697620636c6173733d226974656d5f6d61696e223e090909090d0a093c703e536f6d6520717569636b206578616d706c65207465787420746f206275696c64206f6e207468652063617264207469746c6520616e64206d616b65207570207468652062756c6b206f66207468652063617264277320636f6e74656e742e3c2f703e0d0a3c2f6469763e, '2020-11-23 10:33:28', '2000-01-01 00:00:00');
+(3, 0, 'system', 'chatbox', NULL, '2021-03-18 10:02:22', '2000-01-01 00:00:00'),
+(4, 1, '<i class=\"fa fa-bullhorn\"></i>', 'Announcements', 0x3c64697620636c6173733d226974656d5f6d61696e223e090909090d0a093c703e536f6d6520717569636b206578616d706c65207465787420746f206275696c64206f6e207468652063617264207469746c6520616e64206d616b65207570207468652062756c6b206f66207468652063617264277320636f6e74656e742e3c2f703e0d0a3c2f6469763e, '2020-11-23 10:33:28', '2000-01-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -146,13 +148,9 @@ CREATE TABLE `brd_groups` (
   `username_html` varchar(255) NOT NULL,
   `grupe_name` varchar(255) NOT NULL,
   `grupe_level` int(11) NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Zrzut danych tabeli `brd_groups`
---
 
 INSERT INTO `brd_groups` (`id`, `username_html`, `grupe_name`, `grupe_level`, `updated_at`, `created_at`) VALUES
 (1, '<strong style=\"color:red\"><i class=\"fas fa-circle-notch fa-spin\"></i> {{username}}</strong>', '<strong style=\"color:red\"><i class=\"fas fa-circle-notch fa-spin\"></i> Admin</strong>', 10, '2020-12-21 13:32:51', '2000-01-01 00:00:00'),
@@ -183,7 +181,7 @@ CREATE TABLE `brd_likeit` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `post_id` int(11) NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -198,7 +196,7 @@ CREATE TABLE `brd_mailbox` (
   `user_id` int(11) NOT NULL,
   `mailbox` varchar(15) NOT NULL,
   `message_id` int(11) NOT NULL,
-  `unread` tinyint(1) NOT NULL DEFAULT 1
+  `unread` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -215,7 +213,7 @@ CREATE TABLE `brd_mail_logs` (
   `content_txt` text NOT NULL,
   `content_html` text NOT NULL,
   `log` text NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 22:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -228,10 +226,10 @@ CREATE TABLE `brd_mail_logs` (
 CREATE TABLE `brd_menu` (
   `id` int(11) NOT NULL,
   `url` text NOT NULL,
-  `translate` tinyint(1) NOT NULL DEFAULT 0,
+  `translate` tinyint(1) NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL,
   `url_order` int(11) NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -247,7 +245,7 @@ CREATE TABLE `brd_message` (
   `recipient_id` int(11) DEFAULT NULL,
   `topic` varchar(255) NOT NULL,
   `body` blob NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -260,10 +258,10 @@ CREATE TABLE `brd_message` (
 CREATE TABLE `brd_pages` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `content` longblob DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `content` longblob,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
   `system` varchar(31) DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -300,14 +298,14 @@ CREATE TABLE `brd_plots` (
   `plot_tags` varchar(1023) DEFAULT NULL,
   `board_id` int(11) NOT NULL,
   `author_id` int(11) NOT NULL,
-  `plot_active` tinyint(1) DEFAULT 1,
+  `plot_active` tinyint(1) DEFAULT '1',
   `pinned` tinyint(1) DEFAULT NULL,
   `pinned_order` int(11) DEFAULT NULL,
-  `locked` tinyint(1) NOT NULL DEFAULT 0,
-  `hidden` tinyint(1) NOT NULL DEFAULT 0,
-  `posts_nuber` int(11) DEFAULT 0,
-  `views` int(11) NOT NULL DEFAULT 0,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `locked` tinyint(1) NOT NULL DEFAULT '0',
+  `hidden` tinyint(1) NOT NULL DEFAULT '0',
+  `posts_nuber` int(11) DEFAULT '0',
+  `views` int(11) NOT NULL DEFAULT '0',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -323,7 +321,7 @@ CREATE TABLE `brd_plugins` (
   `active` tinyint(1) NOT NULL,
   `install` tinyint(1) NOT NULL,
   `version` varchar(255) NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -335,13 +333,13 @@ CREATE TABLE `brd_plugins` (
 
 CREATE TABLE `brd_posts` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `plot_id` int(11) NOT NULL,
   `content` text NOT NULL,
-  `post_reputation` int(11) NOT NULL DEFAULT 0,
-  `hidden` tinyint(1) DEFAULT 0,
+  `post_reputation` int(11) NOT NULL DEFAULT '0',
+  `hidden` tinyint(1) DEFAULT '0',
   `edit_by` varchar(255) DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -369,8 +367,8 @@ CREATE TABLE `brd_skins` (
   `dirname` varchar(255) NOT NULL,
   `author` varchar(255) NOT NULL,
   `version` varchar(255) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -379,7 +377,7 @@ CREATE TABLE `brd_skins` (
 --
 
 INSERT INTO `brd_skins` (`id`, `name`, `dirname`, `author`, `version`, `active`, `updated_at`, `created_at`) VALUES
-(1, 'simple', 'simple', 'PanKrok', '1.0', 1, '2021-01-12 07:02:49', '2020-11-24 13:51:27');
+(1, 'simple', 'simple', 'PanKrok', '1.0', 1, '2021-03-18 10:31:23', '2020-11-24 13:51:27');
 
 -- --------------------------------------------------------
 
@@ -392,9 +390,9 @@ CREATE TABLE `brd_skins_boxes` (
   `skin_id` int(11) NOT NULL,
   `box_id` int(11) NOT NULL,
   `side` varchar(8) DEFAULT 'right',
-  `box_order` int(11) NOT NULL DEFAULT 0,
-  `hide_on_mobile` tinyint(1) NOT NULL DEFAULT 0,
-  `active` text DEFAULT NULL
+  `box_order` int(11) NOT NULL DEFAULT '0',
+  `hide_on_mobile` tinyint(1) NOT NULL DEFAULT '0',
+  `active` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -404,7 +402,8 @@ CREATE TABLE `brd_skins_boxes` (
 INSERT INTO `brd_skins_boxes` (`id`, `skin_id`, `box_id`, `side`, `box_order`, `hide_on_mobile`, `active`) VALUES
 (1, 1, 1, 'right', 0, 0, '{\"home\":1}'),
 (2, 1, 2, 'right', 1, 0, '{\"home\":1}'),
-(3, 1, 3, 'top', 6, 0, '{\"home\":1,\"category.getCategory\":1,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":1,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":1}');
+(3, 1, 4, 'top', 6, 0, '{\"home\":1,\"category.getCategory\":0,\"board.getBoard\":0,\"board.getPlot\":0,\"board.newPlot\":0,\"auth.signin\":0,\"auth.signup\":0,\"user.profile\":0,\"userlist\":0}'),
+(4, 1, 3, 'iTop', 0, 0, '{\"home\":1}');
 
 -- --------------------------------------------------------
 
@@ -435,6 +434,7 @@ CREATE TABLE `brd_users` (
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `confirmed` tinyint(1) NOT NULL DEFAULT '0',
   `user_group` varchar(255) DEFAULT NULL,
   `additional_groups` varchar(255) DEFAULT NULL,
   `main_group` int(11) DEFAULT NULL,
@@ -442,8 +442,8 @@ CREATE TABLE `brd_users` (
   `posts` varchar(255) NOT NULL DEFAULT '0',
   `plots` varchar(255) NOT NULL DEFAULT '0',
   `avatar` int(11) DEFAULT NULL,
-  `reputation` int(11) NOT NULL DEFAULT 0,
-  `last_active` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `reputation` int(11) NOT NULL DEFAULT '0',
+  `last_active` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `last_post` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
   `online_time` int(11) NOT NULL,
   `recommended_by` varchar(255) NOT NULL,
@@ -457,16 +457,16 @@ CREATE TABLE `brd_users` (
   `friends` varchar(255) NOT NULL,
   `ignore_users` varchar(255) NOT NULL,
   `style` varchar(255) NOT NULL,
-  `away` tinyint(1) NOT NULL DEFAULT 0,
+  `away` tinyint(1) NOT NULL DEFAULT '0',
   `away_start` varchar(255) NOT NULL,
   `away_end` varchar(255) NOT NULL,
   `lang` varchar(5) NOT NULL DEFAULT 'pl_PL',
-  `warn_level` int(100) NOT NULL DEFAULT 0,
-  `banned` tinyint(1) NOT NULL DEFAULT 0,
+  `warn_level` int(100) NOT NULL DEFAULT '0',
+  `banned` tinyint(1) NOT NULL DEFAULT '0',
   `priv_notes` varchar(2048) NOT NULL,
   `lostpw` varchar(255) NOT NULL,
-  `tfa` tinyint(1) NOT NULL DEFAULT 0,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `tfa` tinyint(1) NOT NULL DEFAULT '0',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -659,7 +659,7 @@ ALTER TABLE `brd_user_additional_fields`
   ADD KEY `additional_field_id` (`field_id`);
 
 --
--- AUTO_INCREMENT dla zrzuconych tabel
+-- AUTO_INCREMENT dla tabel zrzutów
 --
 
 --
@@ -678,7 +678,7 @@ ALTER TABLE `brd_boards`
 -- AUTO_INCREMENT dla tabeli `brd_boxes`
 --
 ALTER TABLE `brd_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_categories`
@@ -696,13 +696,13 @@ ALTER TABLE `brd_chatbox`
 -- AUTO_INCREMENT dla tabeli `brd_costum_boxes`
 --
 ALTER TABLE `brd_costum_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_groups`
 --
 ALTER TABLE `brd_groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_images`
@@ -780,13 +780,13 @@ ALTER TABLE `brd_secret`
 -- AUTO_INCREMENT dla tabeli `brd_skins`
 --
 ALTER TABLE `brd_skins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_skins_boxes`
 --
 ALTER TABLE `brd_skins_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_userdata`
@@ -868,8 +868,8 @@ ALTER TABLE `brd_plots`
 --
 ALTER TABLE `brd_posts`
   ADD CONSTRAINT `brd_posts_ibfk_1` FOREIGN KEY (`plot_id`) REFERENCES `brd_plots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `brd_posts_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `brd_posts_ibfk_3` FOREIGN KEY (`edit_by`) REFERENCES `brd_users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `brd_posts_ibfk_3` FOREIGN KEY (`edit_by`) REFERENCES `brd_users` (`username`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `brd_posts_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Ograniczenia dla tabeli `brd_secret`
@@ -903,11 +903,6 @@ ALTER TABLE `brd_users`
 ALTER TABLE `brd_user_additional_fields`
   ADD CONSTRAINT `brd_user_additional_fields_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_additional_fields_ibfk_2` FOREIGN KEY (`field_id`) REFERENCES `brd_additional_fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-  
-  
-ALTER TABLE `brd_users` ADD `confirmed` BOOLEAN NOT NULL DEFAULT FALSE AFTER `password`; 
-  
-SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

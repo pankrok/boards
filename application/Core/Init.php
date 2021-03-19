@@ -94,6 +94,7 @@ $container->set('translator', function ($container) {
         new \Illuminate\Filesystem\Filesystem(),
         MAIN_DIR . '/environment/Translations'
     );
+    $loader->addJsonPath(MAIN_DIR . '/environment/Translations');
     $translator = new \Illuminate\Translation\Translator($loader, $_SESSION['lang'] ?? $fallback);
     $translator->setFallback($fallback);
     return $translator;
@@ -198,6 +199,7 @@ $container->set('adminView', function ($container) {
     $router = $container->get('router');
     
     
+    $view->addExtension(new \Twig\Extension\StringLoaderExtension());
     $view->addExtension(new Application\Core\Modules\Views\Extensions\UrlExtension($router, $container->get('urlMaker')));
     $view->addExtension(new Application\Core\Modules\Views\Extensions\TranslationExtension($container->get('translator')));
     if ($twigSettings['debug']) {
@@ -241,15 +243,14 @@ $container->set('captcha', function ($container) use ($routeParser) {
     return new LordDashMe\SimpleCaptcha\Captcha();
 });
 
-$container->set('event', function ($container) {
+$container->set('event', function ($container) { 
     return new Application\Core\Modules\Plugins\PluginController($container);
 });
-
 
 $container->set('group', function () {
     return new Application\Modules\User\GroupController();
 });
-
+ 
 $middleware = require 'Middleware.php';
 $middleware($app);
 
@@ -259,3 +260,9 @@ $modules($app);
 v::with('Application\\Core\\Modules\\Validation\\Rules\\');
 
 require 'Routes.php';
+
+$pluginsTrans = $container->get('event')->getTranslationPaths();
+foreach ($pluginsTrans as $pluginTrans) {
+    $container->get('translator')->addJsonPath($pluginTrans);
+}
+

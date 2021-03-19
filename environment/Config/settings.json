@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "MC4xLjY",
+        "version": "MC4xLjc",
         "show_version": "1",
         "log_level": "0",
         "debug": "0",
@@ -13,7 +13,7 @@
         "boards_off": 0,
         "default_group": 3,
         "unread": 30,
-        "confirm_reg": 1,
+        "confirm_reg": 0,
         "chatbox_h": "260"
     },
     "admin": {
@@ -36,7 +36,7 @@
     "twig": {
         "debug": "0",
         "cache": "1",
-        "skin": "bluehaze"
+        "skin": "simple"
     },
     "pagination": {
         "boards": "10",

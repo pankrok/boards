@@ -3,7 +3,11 @@
 {% block content %}
 <br />
     <div class="row">
+     {% include 'templates/partials/modules.twig' %}
         <div class="col-md-6 offset-md-3">
+        <div class="row">
+        {% include 'templates/partials/inside-modules.twig' %}
+        <div class="col order-1">	
             <div class="card panel-default">
                 <div class="card-header">{{ trans('Sign in') }}</div>
                 <div class="card-body">
@@ -23,6 +27,8 @@
                     </form>
                 </div>
             </div>
+        </div>
+        </div>
         </div>
     </div>
 

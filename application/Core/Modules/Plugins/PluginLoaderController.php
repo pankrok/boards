@@ -23,16 +23,18 @@ class PluginLoaderController
    
     protected $cache;
     protected $skin;
+    private $version;
     
     /**
     * Constructor load plugin list from cache or create new list in cache
     * @return void
     **/
     
-    public function __construct($cache, $skin)
+    public function __construct($cache, $skin, $version)
     {
         $this->cache = $cache;
         $this->skin = $skin;
+        $this->version = $version;
         
         
         if (!$cacheData = $cache->receive('Plugins')) {
@@ -105,8 +107,11 @@ class PluginLoaderController
             return false;
         }
         
-        $pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
-        $pluginName::activation();
+        $pluginName = "\\Plugins\\$pluginName\\$pluginName";
+        $handler = $pluginName::activation();
+        if ( $handler === false) { die( $handler);
+            return false; 
+        }
         $plugin->active = true;
         $plugin->save();
         
@@ -137,13 +142,45 @@ class PluginLoaderController
         if ($plugin->install) {
             return false;
         }
-        $pluginName = "\\Plugins\\$pluginName\\$pluginName" ;
+        
+        $pluginName = "\\Plugins\\$pluginName\\$pluginName";
+        $info = $pluginName::info();
+        $pluginVersion = explode('.', $info['boards_v']);
+        $boardsVersion = explode('.', $this->version);
+        
+        switch ($pluginVersion[0]) {
+            case '=':
+            foreach ($boardsVersion as $k => $v) {
+                if (intval($v) !== intval($pluginVersion[$k+1]) && $pluginVersion[$k+1] !== '*') {
+                    return false;
+                }
+            }
+            break;
+            
+            case '<':
+            foreach ($boardsVersion as $k => $v) {
+                if (intval($v) > intval($pluginVersion[$k+1]) && $pluginVersion[$k+1] !== '*') {
+                    return false;
+                }
+            }
+            break;
+            
+            case '>':
+            foreach ($boardsVersion as $k => $v) {
+                if (intval($v) < intval($pluginVersion[$k+1]) && $pluginVersion[$k+1] !== '*') {
+                    return false;
+                }
+            }
+            break;
+   
+        }
         $pluginName::install();
         $plugin->install = true;
         $plugin->save();
         
         $this->cache->clearTwigCache($this->skin);
         $this->cache->clearCache();
+        return true;
     }
     
     public function uninstallPlugin($pluginName)

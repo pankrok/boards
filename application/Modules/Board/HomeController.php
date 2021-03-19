@@ -94,7 +94,7 @@ class HomeController extends Controller
                 $postsNo += \Application\Models\PostsModel::where([['plot_id', $plot->id], ['hidden', 0]])->count();
             }
             
-            if ($boards[$v['category_id']][$v['id']]['childboard'] !== null) {
+            if (isset($boards[$v['category_id']][$v['id']]['childboard'])) {
                 $boards[$v['category_id']][$v['id']] += $v;
             } else {
                 $boards[$v['category_id']][$v['id']] = $v;
@@ -110,7 +110,7 @@ class HomeController extends Controller
                 $boards[$v['category_id']][$v['id']]['last_post_url'] = $this->router->urlFor('board.getPlot', [
                     'plot' => $this->urlMaker->toUrl($lastpost['plot_name']),
                     'plot_id' => $lastpost['id'],
-                    'page' => $count,
+                    'page' => \Application\Models\PlotsModel::where('board_id', '=', $v['id'])->count(),
                 ]) .'#post-' . $lastpost['id'];
                 
                 $boards[$v['category_id']][$v['id']]['last_post_author_url'] = $this->router->urlFor('user.profile', [

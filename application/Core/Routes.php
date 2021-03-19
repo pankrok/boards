@@ -35,7 +35,7 @@ $app->group('/auth', function (RouteCollectorProxy $auth) {
     $auth->get('/signup', 'AuthController:getSignUp')->setName('auth.signup');
     $auth->get('/confirm-account[/{code}]', 'AuthController:confirmAccount')->setName('auth.confirm');
     $auth->post('/signup', 'AuthController:postSignUp')->setName('auth.post.signup');
-    $auth->get('/autlogout', 'AuthController:getSignOut')->setName('auth.signout');
+    $auth->get('/logout', 'AuthController:getSignOut')->setName('auth.signout');
     $auth->post('/hint', 'AuthController:postHintUsers')->setName('auth.hint');
     $auth->post('/ref/captcha', 'AuthController:refreshCaptcha')->setName('auth.ref.captcha');
     $auth->get('/forgetpassword', 'ForgetPasswordController:index')->setName('auth.forget.pass');

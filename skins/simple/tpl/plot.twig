@@ -11,7 +11,9 @@
 	<!-- main row -->
 	
 	<div id="posts" class="col-lg order-1">
-		
+	 <div class="row">
+    {% include 'templates/partials/inside-modules.twig' %}
+    <div class="col order-1">		
 		<!-- Main Plot -->
 		<!-- paginator -->
 		{% include 'templates/partials/pagination.twig' %}	
@@ -87,11 +89,11 @@
 	{% include 'templates/partials/pagination.twig' %}	
 	<!-- /paginator -->
 	</div>	
-
+    
 	<!-- /Main Plot -->	
-	{% if auth.check and locked == 0 %}
+	{% if auth.check and locked == 0 or auth.admin   %}
 	<!-- Quick Reply -->
-	<div class="col-lg-12 order-3">
+	<div class="col-lg-12 order-2">
 		<div id="accordion">
 		    <div class="card mb-2">
 				<div class="card-header" id="headingTwo">
@@ -113,7 +115,8 @@
 		</div>
 	</div>
 	{% else %}
-	
+	</div>
+    </div>
 	<!-- /Quick Reply -->	
 	{% endif %}
 	

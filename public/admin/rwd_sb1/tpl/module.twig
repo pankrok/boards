@@ -70,7 +70,48 @@
 		  </span>
 		{% endfor %}
 	</div>
-	<div class="col-6 border bg-dark text-center"><div class="m-4">CONTENT</div></div>
+	<div class="col-6 border text-center">
+        <div class="row">
+        
+        <div class="col-12">
+        {% for module in skin_modules.iTop %}
+              <span class="badge badge-info w-100">
+              <form action="{{ path_for('admin.modules.skin.fastRemove') }}" method="post">
+              <input type="hidden" name="id" value="{{ module.id }}">
+              <input type="hidden" name="skin_id" value="{{ id }}">
+              <input type="hidden" name="route" value="{{ route }}">
+              <button type="submit" class="close" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+              </form>
+              <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
+              {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+              </a>
+              </span>
+		{% endfor %}
+        </div>
+        <div class="col-12 p-3 my-2 bg-dark ">
+            CONTENT
+        </div>
+        <div class="col-12 mb-2">
+        {% for module in skin_modules.iBottom %}
+              <span class="badge badge-info w-100">
+              <form action="{{ path_for('admin.modules.skin.fastRemove') }}" method="post">
+              <input type="hidden" name="id" value="{{ module.id }}">
+              <input type="hidden" name="skin_id" value="{{ id }}">
+              <input type="hidden" name="route" value="{{ route }}">
+              <button type="submit" class="close" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+              </form>
+              <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
+              {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+              </a>
+              </span>
+		{% endfor %}
+        </div>
+        </div>
+    </div>
 	<div class="col-3 border">
 		{% for module in skin_modules.right %}
 		  <span class="badge badge-info w-100">

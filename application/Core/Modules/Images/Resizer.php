@@ -27,8 +27,11 @@ class Resizer
         $targetFile = self::generateRandomString();
         
         $info = getimagesize(MAIN_DIR. $this->_imageDir .$file);
+         if (!isset($info['mime'])) {
+            throw new \Exception('Unknown mime type' . json_encode($info));
+        }
         $mime = $info['mime'];
-        
+       
         switch ($mime) {
             case 'image/jpeg':
                     $image_create_func = 'imagecreatefromjpeg';
@@ -49,7 +52,7 @@ class Resizer
                     break;
 
             default:
-                    throw new \Exception('Unknown image type.');
+                    throw new \Exception('Unknown image type: '. json_encode($info));
         }
         
         $img = $image_create_func(MAIN_DIR. $this->_imageDir .$file);

@@ -86,7 +86,7 @@ class AdminSkinsBoxesController extends Controller
     
     protected function getSkinModules($activeSkin, $name)
     {
-        $positions = ['top', 'left', 'right', 'bottom'];
+        $positions = ['top', 'left', 'right', 'bottom', 'iTop', 'iBottom'];
     
         foreach ($positions as $position) {
             $boxes[$position] = SkinsBoxesModel::where([['side', $position], ['skin_id', $activeSkin]])

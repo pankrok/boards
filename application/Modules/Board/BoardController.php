@@ -60,13 +60,20 @@ class BoardController extends Controller
             ['active', 1], ['parent_id', $arg['board_id']]
         ])->get()->toArray(); 
         foreach ($childboards as $k => $v) {
-            $childboards[$k]['all_posts'] = PostsModel::where([['plot_id', $v['id']], ['hidden', 0]])->count();           
+            $childboards[$k]['all_posts'] = PostsModel::where([['plot_id', $v['id']], ['hidden', 0]])->count();  
+            $childboards[$k]['url'] = $this->container->get('router')->urlFor(
+                                    'board.getBoard',
+                                    [
+                                        'board_id' => $v['id'],
+                                        'board' => $this->container->get('urlMaker')->toUrl($v['board_name'])
+                                    ]
+                                );
         }
 
         $data = PlotsModel::where([
                     ['plot_active', '=', '1'],
                     ['board_id', '=', $arg['board_id']]])
-                ->join('users', 'users.id', '=', 'plots.author_id')
+                ->leftJoin('users', 'users.id', '=', 'plots.author_id')
                 ->select('plots.*', 'users.username', 'users.main_group')
                 ->orderBy('updated_at', 'DESC')
                 ->skip(($paginator->getCurrentPage() - 1)*$paginator->getItemsPerPage())
@@ -77,7 +84,7 @@ class BoardController extends Controller
             $postsCount = PostsModel::where([['plot_id', $v['id']], ['hidden', 0]])->count();
             $lastPostData = PostsModel::where('plot_id', $v['id'])
                                         ->orderBy('created_at', 'desc')
-                                        ->join('users', 'users.id', '=', 'posts.user_id')
+                                        ->leftJoin('users', 'users.id', '=', 'posts.user_id')
                                         ->select('users.username', 'users.main_group', 'posts.created_at', 'posts.id', 'posts.user_id')
                                         ->first()
                                         ->toArray();
@@ -112,14 +119,25 @@ class BoardController extends Controller
         $this->cache->setName('board.getBoard');
         $pages = ceil(PlotsModel::where('board_id', $id)->count() / $this->settings['pagination']['boards']);
         if (!isset($name)) {
-            $name = $this->urlMaker->toUrl(BoardsModel::select('board_name')->find($id)->toArray()['board_name']);
+            $name = $this->urlMaker->toUrl(BoardsModel::find($id)->board_name);
         }
         
         for ($i = 1; $i <= $pages; $i++) {
-            $this->cache->delete('/board/'.$name.'/'.$id.'/'.$i);
+            $this->cache->delete(
+                $this->router->urlFor('board.getBoard', [
+                    'board' => $name,
+                    'board_id' => $id,
+                    'page' => $i
+                ])
+            );
         }
         
-        $this->cache->delete('/board/'.$name.'/'.$id);
+        $this->cache->delete(
+                $this->router->urlFor('board.getBoard', [
+                    'board' => $name,
+                    'board_id' => $id
+                ])
+            );
         $this->CategoryController->categoryCleanCache(BoardsModel::find($id)->category_id); 
         $this->cache->setName('home');
         $this->cache->delete($this->router->urlFor('home'));

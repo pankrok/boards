@@ -33,28 +33,23 @@ class PluginController
     * @var EventDispatcher
     **/
     
-    protected $pluginLoader;
+    protected $pluginLoader;   
+    protected static $tplDir;    
+    private $translations = [];
 
-    /**
-    *
-    * @todo remove 45 line!
-    *
-    **/
-    
-    protected static $tplDir;
-    
     public function __construct($container)
     {
         $this->dispacher = new \Symfony\Component\EventDispatcher\EventDispatcher();
         $this->globalEvent = new PluginGlobalEventController($container);
         $this->adminEvent = new PluginAdminEventController($container);
-        $this->pluginLoader = new PluginLoaderController($container->get('cache'), $container->get('settings')['twig']['skin']);
-        self::$tplDir = $container->get('settings')['twig']['skin'];
+        $this->pluginLoader = new PluginLoaderController($container->get('cache'), $container->get('settings')['twig']['skin'], base64_decode($container->get('settings')['core']['version']));
+         self::$tplDir = $container->get('settings')['twig']['skin'];
         
         if ($container->get('settings')['plugins']['active'] === 1) {   
             if (is_array($this->pluginLoader->getPluginsList())) {
                 foreach ($this->pluginLoader->getPluginsList() as $val) {
                     if (($val['active'] || isset($GLOBALS['admin'])) && class_exists('Plugins\\'.$val['plugin_name'].'\\'.$val['plugin_name'])) {
+                        array_push($this->translations, MAIN_DIR . '/plugins/' . $val['plugin_name'] . '/lang');
                         $pluginName = 'Plugins\\'. (string)$val['plugin_name'] .'\\'.(string)$val['plugin_name'];
                         $this->dispacher->addSubscriber(new $pluginName());
                     }
@@ -62,8 +57,11 @@ class PluginController
             }
         }
     }
-    
-    
+     
+    public function getTranslationPaths()
+    {
+        return $this->translations;
+    }
     
     public function addGlobalEvent($eventName)
     {
@@ -80,6 +78,10 @@ class PluginController
         return $this->pluginLoader;
     }
     
+    public function addSubscriber($pluginName)
+    {
+        $this->dispacher->addSubscriber(new $pluginName());
+    }
     
     public static function addToTpl($template, $find, $html)
     {
@@ -88,7 +90,7 @@ class PluginController
         $filecontent = file_get_contents($tpl);
         $pattern = '/('. $find .')(.*?)/s';
         $result = preg_replace($pattern, $find."\n".$html."\n", $filecontent);
-
+        $result = str_replace('\\/', '/', $result);
         return file_put_contents($tpl, $result);
     }
     

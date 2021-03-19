@@ -12,12 +12,15 @@ class GroupController
     public function getGroupDate($id, $username)
     {
         if ($id === null) {
+            if ($username === null) {
+                $username = '';
+            }
             $id = self::getGroupeId($username);
         }
         if (!$group = GroupsModel::find($id)) {
             return [
-                'username' => $username,
-                'group' => 'none'
+                'username' => 'deleted user',
+                'group' => 'deleted user'
             ];
         }
         
@@ -31,6 +34,11 @@ class GroupController
     
     public function getGroupeId(string $username) : int
     {
-        return UserModel::where('username', $username)->first()->main_group;
+        $data = UserModel::where('username', $username)->first();
+        if( $data->main_group === null || $username === '') {
+            return 0;
+        }
+        
+        return $data->main_group;
     }
 }

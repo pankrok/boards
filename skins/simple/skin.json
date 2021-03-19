@@ -8,6 +8,8 @@
 			"loader.css",
 			"noscript.css"
         ],
-        "js": []
+        "js": [
+            "userpanel.js"
+        ]
     }
 }

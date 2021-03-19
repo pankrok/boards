@@ -15,7 +15,7 @@
 		<label for="SelectCategory">{{ trans('admin.select category') }}:</label>
 		<select class="form-control" id="SelectCategory" name="cat_id">
 		  {% for category in categories %}
-		  <option value="{{ category.id }}" {% if category.id == data.id %}selected{% endif %}>{{ category.name }}</option>	  
+		  <option value="{{ category.id }}" {% if category.id == data.id %}selected{% endif %}>{{ stripTags(category.name) }}</option>	  
 		  {% endfor %}
 		</select>
 	  </div>
@@ -24,7 +24,7 @@
 		<select class="form-control" id="SelectParent" name="parent_id">
           <option value="" {% if not parent.id %}selected{% endif %}> </option>
 		  {% for parent in parents %}
-            <option value="{{ parent.id }}" {% if parent.id == data.parent_id %}selected{% endif %}>{{ parent.board_name }}</option>	  
+            <option value="{{ parent.id }}" {% if parent.id == data.parent_id %}selected{% endif %}>{{ stripTags(parent.board_name) }}</option>	  
 		  {% endfor %}
 		</select>
 	  </div>

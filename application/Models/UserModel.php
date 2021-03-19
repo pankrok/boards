@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace Application\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 class UserModel extends Model
 {
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+    
     protected $table = 'users';
     
     protected $fillable =
@@ -18,7 +24,8 @@ class UserModel extends Model
             'user_group',
             'additional_groups',
             'main_group',
-            'admin_level',
+            'admin_lvl',
+            'confirmed',
             'posts',
             'plots',
             'avatar',

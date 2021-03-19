@@ -54,7 +54,7 @@
 				<div class="col p-2">{{ trans('admin.author website') }}: {{ plugin.info.website }}</div>
 				<div class="col-12">	
 					<p>{{ trans('admin.description') }}:</p><hr>
-					<p>{{ plugin.info.desc }}</p>
+					<p>{{ include(template_from_string(plugin.info.desc | raw)) }}</p>
 				</div>
 			  </div>
 		  </div>

@@ -11,6 +11,9 @@
 {% include 'templates/partials/modules.twig' %}
 
 	<div id="newPlot" class="col-lg order-1">
+     <div class="row">
+    {% include 'templates/partials/inside-modules.twig' %}
+    <div class="col order-1">		
 			<div class="card border-light">
 			<div class="card-header">
 				<div class="float-left"><h1><i class="fas fa-pencil-alt"></i> {{ trans('Starting new plot') }}</h1></div>
@@ -29,6 +32,8 @@
 			</div>
 		</div>		
 	</div>
+</div>
+</div>
 </div>
 {% else %}
 {{ trans('You have to log in') }}

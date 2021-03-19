@@ -112,10 +112,12 @@ function createAdmin()
 			'email' => $data['email'],
 			'username' => $data['username'],
 			'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-			'main_group' => 1,			'admin_lvl' => 10,
+			'main_group' => 1,			
+            'admin_lvl' => 10,
+            'confirmed' => 1,
 	];
 	
-	$query = "INSERT INTO ".$sql['prefix']."users (email, username, password, main_group, admin_lvl) VALUES (:email, :username, :password, :main_group, :admin_lvl)";
+	$query = "INSERT INTO ".$sql['prefix']."users (email, username, password, main_group, admin_lvl, confirmed) VALUES (:email, :username, :password, :main_group, :admin_lvl, :confirmed)";
 	$stmt= $pdo->prepare($query);
 	$stmt->execute($data);
 	

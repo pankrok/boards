@@ -52,7 +52,7 @@
 								<div class="col-sm-auto col-md-11 order-1">
 									<div class="row">
 										<div class="col-auto fs-15 my-2">
-										{{ board.board_name }} 
+										{{ board.board_name | raw }} 
 										</div>
 										<div class="col-auto fs-15 my-2">	
 											<a href="{{ path_for('admin.edit.board', {'id': board.id}) }}" class="btn btn-outline-success btn-sm fas fa-edit">edit</a>
@@ -100,7 +100,7 @@
                                     <div class="col-sm-auto col-md-11 order-1">
                                         <div class="row">
                                             <div class="col-auto fs-15 my-2">
-                                            {{ childboard.board_name }} 
+                                            {{ childboard.board_name | raw }} 
                                             </div>
                                             <div class="col-auto fs-15 my-2">	
                                                 <a href="{{ path_for('admin.edit.board', {'id': childboard.id}) }}" class="btn btn-outline-success btn-sm fas fa-edit">edit</a>

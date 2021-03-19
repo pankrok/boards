@@ -23,7 +23,7 @@ class AdminModuleController extends Controller
 	protected function getAllModules($activeSkin)
 	{
 		
-		$positions = ['top', 'left', 'right', 'bottom'];
+		$positions = ['top', 'left', 'right', 'bottom', 'iTop', 'ibottom'];
 	
 		foreach($positions as $position)
 		{

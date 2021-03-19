@@ -22,11 +22,18 @@ class UnreadController extends Controller
                 if (!isset($plotRead)) {
                     return false;
                 }
-                $plot = PostsModel::orderBy('created_at', 'DESC')->select('id', 'created_at')->where('id', $plotRead->plot_id)->first()->toArray();
-                $plot['created_at'] = $plot['created_at'] ?? 'now';
-                ($plotRead['timeline'] >= strtotime($plot['created_at'])) ? $unread = true : $unread = false;
-                
+                $plot = PostsModel::orderBy('created_at', 'DESC')->select('id', 'created_at')->find($plotRead->plot_id)->toArray();  
+                if ($plot !== null) {          
+                    $plot['created_at'] = $plot['created_at'] ?? 'now';
+                    if(!is_string($plot['created_at']) === true) {
+                        return false;
+                    }
+                    ($plotRead['timeline'] >= strtotime($plot['created_at'])) ? $unread = true : $unread = false;
+                } else {
+                    $unread = false;
+                }
                 $this->cache->store('plot-'.$id, $unread, 300);
+                
             }
             return $unread;
         }
@@ -46,20 +53,25 @@ class UnreadController extends Controller
                 if (!isset($query)) {
                     return false;
                 }
-                $plot = PostsModel::orderBy('created_at', 'DESC')->select('id', 'created_at')->whereIn('id', $query)->first()->toArray();
+                $plot = PostsModel::orderBy('created_at', 'DESC')->select('id', 'created_at')->whereIn('id', $query)->first();
+                if ($plot === null) {
+                    return false;
+                }
                 
+                $plot->toArray();
                 $plot['created_at'] = $plot['created_at'] ?? 'now';
                 $plotRead = PlotsReadModel::where([['user_id', $_SESSION['user']],['plot_id', $plot['id']]])->first();
     
                 if (!isset($plotRead)) {
                     return false;
                 }
-                ($plotRead->timeline >= strtotime($plot['created_at'])) ? $unread = true : $unread = false;
+                var_Dump($plot['id']);
+                //($plotRead->timeline >= strtotime($plot['created_at'])) ? $unread = true : $unread = false;
                 
                 $this->cache->store('board-'.$id, $unread, 300);
             }
             
-            return $unread;
+            return $unread = true;
         }
         return false;
     }
