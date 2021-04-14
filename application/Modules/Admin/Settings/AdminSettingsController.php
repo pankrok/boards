@@ -65,7 +65,7 @@ class AdminSettingsController extends Controller
             $this->flash->addMessage('info', $message);
         }
         
-        $this->adminView->getEnvironment()->addGlobal('show_settings', true);     
+        $this->adminView->getEnvironment()->addGlobal('show_settings', true);
         return $this->adminView->render($response, 'cache.twig');
     }
 }

@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace Application\Core\Modules\Plugins;
 
 use Illuminate\Database\Capsule\Manager as DB;
+use Acme\Store\Event\OrderPlacedEvent;
+use Acme\Store\Order;
 
-/**
-*
-*
-*
-**/
 class PluginController
 {
     
@@ -33,8 +30,8 @@ class PluginController
     * @var EventDispatcher
     **/
     
-    protected $pluginLoader;   
-    protected static $tplDir;    
+    protected $pluginLoader;
+    protected static $tplDir;
     private $translations = [];
 
     public function __construct($container)
@@ -43,9 +40,9 @@ class PluginController
         $this->globalEvent = new PluginGlobalEventController($container);
         $this->adminEvent = new PluginAdminEventController($container);
         $this->pluginLoader = new PluginLoaderController($container->get('cache'), $container->get('settings')['twig']['skin'], base64_decode($container->get('settings')['core']['version']));
-         self::$tplDir = $container->get('settings')['twig']['skin'];
+        self::$tplDir = $container->get('settings')['twig']['skin'];
         
-        if ($container->get('settings')['plugins']['active'] === 1) {   
+        if ($container->get('settings')['plugins']['active'] === 1) {
             if (is_array($this->pluginLoader->getPluginsList())) {
                 foreach ($this->pluginLoader->getPluginsList() as $val) {
                     if (($val['active'] || isset($GLOBALS['admin'])) && class_exists('Plugins\\'.$val['plugin_name'].'\\'.$val['plugin_name'])) {
@@ -65,12 +62,12 @@ class PluginController
     
     public function addGlobalEvent($eventName)
     {
-        $this->dispacher->dispatch($eventName, $this->globalEvent);
+        $this->dispacher->dispatch($this->globalEvent, $eventName);
     }
     
     public function addAdminEvent($eventName)
     {
-        $this->dispacher->dispatch($eventName, $this->adminEvent);
+        $this->dispacher->dispatch( $this->adminEvent, $eventName);
     }
     
     public function getPluginLoader()

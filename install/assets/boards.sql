@@ -3,10 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql.ct8.pl
--- Czas generowania: 18 Mar 2021, 12:37
+-- Czas generowania: 13 Kwi 2021, 13:28
 -- Wersja serwera: 5.7.33-log
 -- Wersja PHP: 7.1.33
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -35,6 +36,20 @@ CREATE TABLE `brd_additional_fields` (
   `add_values` text,
   `add_require` tinyint(1) NOT NULL DEFAULT '0',
   `description` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `brd_admin_logs`
+--
+
+CREATE TABLE `brd_admin_logs` (
+  `id` int(11) NOT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `log` blob NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:01'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -152,10 +167,14 @@ CREATE TABLE `brd_groups` (
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Zrzut danych tabeli `brd_groups`
+--
+
 INSERT INTO `brd_groups` (`id`, `username_html`, `grupe_name`, `grupe_level`, `updated_at`, `created_at`) VALUES
-(1, '<strong style=\"color:red\"><i class=\"fas fa-circle-notch fa-spin\"></i> {{username}}</strong>', '<strong style=\"color:red\"><i class=\"fas fa-circle-notch fa-spin\"></i> Admin</strong>', 10, '2020-12-21 13:32:51', '2000-01-01 00:00:00'),
-(2, '<strong style=\"color:green\"><i class=\"fas fa-hammer\"></i> {{username}}</strong>', '<strong style=\"color:green\"><i class=\"fas fa-hammer\"></i> Moderator</strong>', 5, '2020-12-18 09:06:55', '2020-12-18 09:06:55'),
-(3, '<b class=\"fa fa-plus-circle\"> {{username}}</b>', 'user', 1, '2020-11-06 14:06:45', '2000-01-01 00:00:00');
+(1, '<strong style=\"text-shadow: 1px 1px 10px red; color: red; font-weight: bold;\"><i class=\"fas fa-circle-notch fa-spin\"></i> {{username}}</strong>', '<strong style=\"text-shadow: 1px 1px 10px red; color: red; font-weight: bold;\"><i class=\"fas fa-circle-notch fa-spin\"></i> Admin</strong>', 10, '2021-04-12 12:17:23', '2000-01-01 00:00:00'),
+(2, '<strong style=\"text-shadow: 1px 1px 10px green; color: green; font-weight: bold;\"><i class=\"fas fa-hammer\"></i> {{username}}</strong>', '<strong style=\"text-shadow: 1px 1px 10px green; color: green; font-weight: bold;\"><i class=\"fas fa-hammer\"></i> Moderator</strong>', 5, '2021-04-12 12:18:13', '2020-12-18 09:06:55'),
+(3, '<b class=\"fa fa-plus-circle\"> {{username}}</b>', '<i class=\"fa fa-plus-circle\"></i> user', 1, '2021-04-13 11:27:29', '2000-01-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -305,6 +324,7 @@ CREATE TABLE `brd_plots` (
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `posts_nuber` int(11) DEFAULT '0',
   `views` int(11) NOT NULL DEFAULT '0',
+  `stars` float DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -341,6 +361,19 @@ CREATE TABLE `brd_posts` (
   `edit_by` varchar(255) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '1999-12-31 23:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `brd_rates`
+--
+
+CREATE TABLE `brd_rates` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `plot_id` int(11) NOT NULL,
+  `rate` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -494,6 +527,13 @@ ALTER TABLE `brd_additional_fields`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeksy dla tabeli `brd_admin_logs`
+--
+ALTER TABLE `brd_admin_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `admin_id` (`admin_id`);
+
+--
 -- Indeksy dla tabeli `brd_boards`
 --
 ALTER TABLE `brd_boards`
@@ -614,6 +654,14 @@ ALTER TABLE `brd_posts`
   ADD KEY `edit_by` (`edit_by`);
 
 --
+-- Indeksy dla tabeli `brd_rates`
+--
+ALTER TABLE `brd_rates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `plot_id` (`plot_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indeksy dla tabeli `brd_secret`
 --
 ALTER TABLE `brd_secret`
@@ -669,6 +717,12 @@ ALTER TABLE `brd_additional_fields`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT dla tabeli `brd_admin_logs`
+--
+ALTER TABLE `brd_admin_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT dla tabeli `brd_boards`
 --
 ALTER TABLE `brd_boards`
@@ -702,7 +756,7 @@ ALTER TABLE `brd_costum_boxes`
 -- AUTO_INCREMENT dla tabeli `brd_groups`
 --
 ALTER TABLE `brd_groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_images`
@@ -771,6 +825,12 @@ ALTER TABLE `brd_posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT dla tabeli `brd_rates`
+--
+ALTER TABLE `brd_rates`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT dla tabeli `brd_secret`
 --
 ALTER TABLE `brd_secret`
@@ -809,6 +869,12 @@ ALTER TABLE `brd_user_additional_fields`
 --
 -- Ograniczenia dla zrzutów tabel
 --
+
+--
+-- Ograniczenia dla tabeli `brd_admin_logs`
+--
+ALTER TABLE `brd_admin_logs`
+  ADD CONSTRAINT `brd_admin_logs_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `brd_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Ograniczenia dla tabeli `brd_boards`
@@ -872,6 +938,13 @@ ALTER TABLE `brd_posts`
   ADD CONSTRAINT `brd_posts_ibfk_4` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
+-- Ograniczenia dla tabeli `brd_rates`
+--
+ALTER TABLE `brd_rates`
+  ADD CONSTRAINT `brd_rates_ibfk_1` FOREIGN KEY (`plot_id`) REFERENCES `brd_plots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `brd_rates_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
 -- Ograniczenia dla tabeli `brd_secret`
 --
 ALTER TABLE `brd_secret`
@@ -903,6 +976,7 @@ ALTER TABLE `brd_users`
 ALTER TABLE `brd_user_additional_fields`
   ADD CONSTRAINT `brd_user_additional_fields_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_additional_fields_ibfk_2` FOREIGN KEY (`field_id`) REFERENCES `brd_additional_fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

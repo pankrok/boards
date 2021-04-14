@@ -36,17 +36,44 @@ class AdminSkinEditorController extends Controller
     {
         $body = $request->getParsedBody();
         $skinDir = SkinsModel::where('id', $body['skin_id'])->first()->dirname;
-
-        $files = self::getDirContents(MAIN_DIR . '/skins/'.$skinDir.'/tpl');
-            
+        $router = $this->router->urlFor('admin.skin.'.$body['file_type'].'.edit', ['skin_id'=>$body['skin_id'], 'id' => $body['twig_id']]);
+        if ($body['file_type'] === 'twig') {
+            $body['file_type'] = 'tpl';
+        } else {
+            $body['file_type'] = 'assets/'.$body['file_type'];
+        }
         
+        $files = self::getDirContents(MAIN_DIR . '/skins/'.$skinDir.'/'. $body['file_type']);
         file_put_contents($files[$body['twig_id']], $body['code']);
+        $this->AdminSkinsController->reloadAssets($skinDir);
         $this->cache->cleanAllSkinsCache();
         $this->flash->addMessage('success', 'Skin save success!');
         
         return $response
-          ->withHeader('Location', $this->router->urlFor('admin.skin.twig.edit', ['skin_id'=>$body['skin_id'], 'id' => $body['twig_id']]))
-          ->withStatus(302);
+          ->withHeader('Location', $router
+          )->withStatus(302);
+    }
+    
+    public function deleteFile($request, $response)
+    {
+        $body = $request->getParsedBody();
+        $skinDir = SkinsModel::where('id', $body['skin_id'])->first()->dirname;
+        $router = $this->router->urlFor('admin.skin.'.$body['file_type'].'.edit', ['skin_id'=>$body['skin_id'], 'id' => $body['twig_id']]);
+        if ($body['file_type'] === 'twig') {
+            $body['file_type'] = 'tpl';
+        } else {
+            $body['file_type'] = 'assets/'.$body['file_type'];
+        }
+        
+        $files = self::getDirContents(MAIN_DIR . '/skins/'.$skinDir.'/'. $body['file_type']);
+        unlink($files[$body['twig_id']]);
+        $this->AdminSkinsController->reloadAssets($skinDir);
+        $this->cache->cleanAllSkinsCache();
+        $this->flash->addMessage('success', 'File delete success!');
+        
+        return $response
+          ->withHeader('Location', $router
+          )->withStatus(302);
     }
     
     public function cssEditor($request, $response, $arg)
@@ -155,11 +182,11 @@ class AdminSkinEditorController extends Controller
                     file_put_contents(MAIN_DIR . '/skins/'. $skinDir . '/skin.json', json_encode($handler, JSON_PRETTY_PRINT));
                 }
                 if ($body['extension'] === '.js') {
-                    array_push($handler['assets']['css'], $body['file'] . $body['extension']);
+                    array_push($handler['assets']['js'], $body['file'] . $body['extension']);
                     file_put_contents(MAIN_DIR . '/skins/'. $skinDir . '/skin.json', json_encode($handler, JSON_PRETTY_PRINT));
                 }
             }
-            
+            $this->AdminSkinsController->reloadAssets($skinDir);
             $this->cache->cleanAllSkinsCache();
             $this->flash->addMessage('info', "file created");
         } else {

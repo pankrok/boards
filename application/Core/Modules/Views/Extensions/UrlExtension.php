@@ -23,7 +23,8 @@ class UrlExtension extends AbstractExtension
         return 	[
             new TwigFunction('base_url', [$this, 'base_url']),
             new TwigFunction('path_for', [$this, 'path_for']),
-    		new TwigFunction('json_decode', [$this, 'jsonDecode']),
+            new TwigFunction('json_decode', [$this, 'jsonDecode']),
+            new TwigFunction('json_encode', [$this, 'jsonEncode']),
             new TwigFunction('toUrl', [$this, 'toUrl']),
             new TwigFunction('stripTags', [$this, 'stripTags'])
         ];
@@ -42,7 +43,12 @@ class UrlExtension extends AbstractExtension
     
     public function jsonDecode($arg)
     {
-        return json_decode($arg);
+        return json_decode($arg, true);
+    }
+    
+    public function jsonEncode($arg)
+    {
+        return json_encode($arg);
     }
     
     public function toUrl($arg)

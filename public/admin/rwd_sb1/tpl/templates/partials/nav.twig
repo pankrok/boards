@@ -20,7 +20,7 @@
 		<a {% if route_name == 'admin.get.settings' %}class="active"{% endif %} href="{{ path_for('admin.get.settings') }}"><span class="fas fa-cog mr-3"></span> {{trans('admin.settings') }}</a>
 		<a {% if route_name == 'admin.menu' %}class="active"{% endif %} href="{{ path_for('admin.menu') }}"><span class="fas fa-ellipsis-h mr-3"></span> {{trans('admin.menu') }}</a>
 		<a {% if route_name == 'admin.mail.settings' %}class="active"{% endif %} href="{{ path_for('admin.mail.settings') }}"><span class="fas fa-envelope mr-3"></span> {{trans('admin.mail config') }}</a>
-        <a {% if route_name == 'admin.mail.template.list' %}class="active"{% endif %} href="{{ path_for('admin.mail.template.list') }}"><span class="far fa-file-alt mr-3"></span> {{trans('admin.admin.mail.template.list') }}</a>
+        <a {% if route_name == 'admin.mail.template.list' %}class="active"{% endif %} href="{{ path_for('admin.mail.template.list') }}"><span class="far fa-file-alt mr-3"></span> {{trans('admin.mail.template.list') }}</a>
 		<a {% if route_name == 'admin.cache' %}class="active"{% endif %} href="{{ path_for('admin.cache') }}"><span class="fas fa-database mr-3"></span> {{trans('admin.cache') }}</a>
 		<a {% if route_name == 'admin.update' %}class="active"{% endif %} href="{{ path_for('admin.update') }}"><span class="fas fa-arrow-circle-up mr-3"></span> {{trans('admin.update') }}</a>
 	</ul>
@@ -31,6 +31,7 @@
 	<ul id="collapseUsers" class="collapse{% if show_users %} show{% endif %}" aria-labelledby="headingOne" data-parent="#BoardsMenuList">
 		<a {% if route_name == 'admin.users' %}class="active"{% endif %} href="{{ path_for('admin.users') }}"><span class="fas fa-user mr-3"></span> {{ trans('admin.users') }}</a>
 		<a {% if route_name == 'admin.groups' %}class="active"{% endif %}  href="{{ path_for('admin.groups') }}"><span class="fas fa-users mr-3"></span> {{ trans('admin.groups') }}</a>
+        <a {% if route_name == 'admin.logs' %}class="active"{% endif %}  href="{{ path_for('admin.logs') }}"><span class="fas  fa-file-contract mr-3"></span> {{ trans('admin.logs') }}</a>
 	</ul>
   </li>
   <li>

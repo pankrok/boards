@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<h2>{{ trans('admin.admin.user.edit') }}: {{ user.username }}</h2>
+<h2>{{ trans('admin.user.edit') }}: {{ user.username }}</h2>
 <div class="row">
 	<ul class="nav">
 	  <li class="nav-item">
@@ -44,6 +44,27 @@
                     </div>
                     <div class="col-sm-9 text-secondary">
                       <input class="form-control" type="text" name="email" value="{{ user.email }}">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">{{ trans('Password') }}</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input class="form-control" type="text" name="password" value="">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">{{ trans('confirmed') }}</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                    <select class="form-control" name="confirmed">
+						<option value="1" {% if user.confirmed %}selected{% endif %}>{{ trans('admin.yes') }}</option>
+						<option value="0" {% if not user.confirmed %}selected{% endif %}>{{ trans('admin.no') }}</option>
+					</select>
                     </div>
                   </div>
                   <hr>

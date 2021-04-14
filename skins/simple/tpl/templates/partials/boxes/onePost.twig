@@ -16,7 +16,7 @@
 				
 				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Posts') }}:</span> <span class="float-right">{{ post.posts }}</span></p><br />
 				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Plots') }}:</span> <span class="float-right">{{ post.plots }}</span></p><br />
-				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Join') }}:</span> <span class="float-right"> {{ post.created_at }}</span></p><br />
+				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Join') }}:</span> <span class="float-right"> {{ post.user_join }}</span></p><br />
 				<p class="fs-12 m-0 fc-g "><span class="float-left">{{ trans('Reputatnion') }}:</span> <span class="float-right">{{ post.reputation }}</span></p><br />
 				</div>
 			</div>
@@ -29,7 +29,7 @@
 					</div>
 					<div class="col-10 my-1 border-bottom border-dark">
 					<p class="fs-12b mb-1"><a href="#">{{ post.username_html | raw }}</a></p>
-					<p class="fs-10 mb-1">Posted: stworzony o</p>
+					<p class="fs-10 mb-1">Posted: stworzony o: {{ post.created_at }}</p>
 					</div> 
 				</div>
 			</div>

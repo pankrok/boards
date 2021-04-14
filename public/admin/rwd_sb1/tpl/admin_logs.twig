@@ -1,0 +1,66 @@
+{% extends 'templates/main.twig' %}
+
+{% block content %}
+<h1>{{ trans('admin.logs') }}</h1>
+
+<div class="col mx-5 px-5 my-2">
+<div id="accordion">
+{% for log in logs %}
+{% set myLog =  json_decode(log.log) %}
+  <div class="card">
+    <div class="card-header" id="headLog-{{ log.id }}">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed w-100" data-toggle="collapse" data-target="#log-{{ log.id }}" aria-expanded="false" aria-controls="log-{{ log.id }}">
+        <div class="row">
+            <div class="col">#{{ log.id }}</div>
+            <div class="col">Admin ID: {{ log.admin_id }}</div>
+            <div class="col">{{ trans('admin.object') }}: {{ myLog.route }} </div>
+            <div class="col">{{ trans('admin.date') }}: {{ log.created_at }}</div>
+        </div>
+        </button>
+      </h5>
+    </div>
+    <div id="log-{{ log.id }}" class="collapse" aria-labelledby="headLog-{{ log.id }}" data-parent="#accordion">
+      <div class="card-body">
+      <strong>LOG:</strong><hr>
+          <div class="row">
+            {% if myLog.request is not null and myLog.request is defined %}
+            {% for k, i in myLog.request %}
+                <div class="col">{{ k }} : {{ i }}</div>
+            {% else %}    
+                <strong style="color: red;">LOG ERROR!</strong>
+            {% endfor %}
+            {% endif %}  
+              
+          </div>  
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+        
+</div>
+<form method="post" action={{ path_for('admin.logs.set.item') }}>
+<div class="form-group float-right">
+    <select name="items" class="form-control" id="itemSelect">
+    {% for i in range(1, 5) %}
+        {{ i }},<option value="{{ i * 10 }}" {% if i*10 == items %}selected{% endif %}>{{ i * 10 }}</option>
+    {% endfor %}
+      
+    </select>
+  </div>
+</form>
+
+{% include 'templates/partials/paginator.twig' %}	
+{% endblock %}
+{% block endcontent %}
+<script>
+$('[name="items"]').change(function() {
+  $(this).closest('form').submit();
+});
+</script>
+{% endblock %}
+
+
+
+

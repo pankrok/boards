@@ -58,16 +58,16 @@ class BoardController extends Controller
         $boardName = BoardsModel::select('board_name')->find($arg['board_id'])->toArray()['board_name'];
         $childboards = BoardsModel::where([
             ['active', 1], ['parent_id', $arg['board_id']]
-        ])->get()->toArray(); 
+        ])->get()->toArray();
         foreach ($childboards as $k => $v) {
-            $childboards[$k]['all_posts'] = PostsModel::where([['plot_id', $v['id']], ['hidden', 0]])->count();  
+            $childboards[$k]['all_posts'] = PostsModel::where([['plot_id', $v['id']], ['hidden', 0]])->count();
             $childboards[$k]['url'] = $this->container->get('router')->urlFor(
-                                    'board.getBoard',
-                                    [
+                'board.getBoard',
+                [
                                         'board_id' => $v['id'],
                                         'board' => $this->container->get('urlMaker')->toUrl($v['board_name'])
                                     ]
-                                );
+            );
         }
 
         $data = PlotsModel::where([
@@ -133,12 +133,12 @@ class BoardController extends Controller
         }
         
         $this->cache->delete(
-                $this->router->urlFor('board.getBoard', [
+            $this->router->urlFor('board.getBoard', [
                     'board' => $name,
                     'board_id' => $id
                 ])
-            );
-        $this->CategoryController->categoryCleanCache(BoardsModel::find($id)->category_id); 
+        );
+        $this->CategoryController->categoryCleanCache(BoardsModel::find($id)->category_id);
         $this->cache->setName('home');
         $this->cache->delete($this->router->urlFor('home'));
     }

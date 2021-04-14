@@ -13,7 +13,7 @@ class AdditionalFieldsModel extends Model
         [
             'add_name',
             'add_type',
-			'add_values',
-            'description'		
+            'add_values',
+            'description'
         ];
 }

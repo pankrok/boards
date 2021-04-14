@@ -22,10 +22,10 @@ class UnreadController extends Controller
                 if (!isset($plotRead)) {
                     return false;
                 }
-                $plot = PostsModel::orderBy('created_at', 'DESC')->select('id', 'created_at')->find($plotRead->plot_id)->toArray();  
-                if ($plot !== null) {          
+                $plot = PostsModel::orderBy('created_at', 'DESC')->select('id', 'created_at')->find($plotRead->plot_id)->toArray();
+                if ($plot !== null) {
                     $plot['created_at'] = $plot['created_at'] ?? 'now';
-                    if(!is_string($plot['created_at']) === true) {
+                    if (!is_string($plot['created_at']) === true) {
                         return false;
                     }
                     ($plotRead['timeline'] >= strtotime($plot['created_at'])) ? $unread = true : $unread = false;
@@ -33,7 +33,6 @@ class UnreadController extends Controller
                     $unread = false;
                 }
                 $this->cache->store('plot-'.$id, $unread, 300);
-                
             }
             return $unread;
         }

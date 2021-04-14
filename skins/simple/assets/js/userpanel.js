@@ -1,5 +1,5 @@
-    var csrfName = $('#csrf_name').val();
-    var csrfValue = $('#csrf_value').val();
+var csrfName = $('#csrf_name').val();
+var csrfValue = $('#csrf_value').val();
     
     
   Dropzone.options.myDropzone = {
@@ -42,7 +42,7 @@
     confirm.style.left = '10px';
     confirm.style.top = '10px';
     confirm.style.zIndex = 9999;
-    confirm.textContent = 'Confirm';
+    confirm.textContent = 'Ok';
     confirm.addEventListener('click', function() {
 
       // Get the output file data from Croppie
@@ -68,6 +68,10 @@
 
             // Return modified file to dropzone
             done(blob);
+             setTimeout(function () {
+                $('#changeAvatar').modal('hide');
+                location.reload();               
+            }, 2000);   
           }
         );
 
@@ -75,6 +79,8 @@
 
       // Remove the editor from view
       editor.parentNode.removeChild(editor);
+      myDropZone.removeAllFiles();
+     
 
     });
     editor.appendChild(confirm);
@@ -90,7 +96,7 @@
     croppie.bind({
       url: URL.createObjectURL(file)
     });
-
+    
   }
 };  
     

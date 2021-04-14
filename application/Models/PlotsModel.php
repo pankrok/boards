@@ -26,6 +26,6 @@ class PlotsModel extends Model
             'locked',
             'hidden',
             'views',
-    
+            'stars',
         ];
 }

@@ -3,7 +3,7 @@
 
 {% block content %}
       
-        <h2 class="mb-4">{{ trans('admin.admin.mail.template.list') }}</h2>
+        <h2 class="mb-4">{{ trans('admin.mail.template.list') }}</h2>
         <div class="list-group">
             {% for tpl in list %}
                 <a href="{{ path_for('admin.mail.template.edit', {'twig': tpl}) }}" class="list-group-item list-group-item-action">{{ tpl }}</a>

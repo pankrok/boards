@@ -32,7 +32,7 @@ class AdminPluginController extends Controller
             $arg['param1'] ?? null,
             $arg['param2'] ?? null
         ];
-        if(PluginsModel::where('plugin_name', $arg['pluginName'])->first()->active === 0) {
+        if (PluginsModel::where('plugin_name', $arg['pluginName'])->first()->active === 0) {
             $pluginName = 'Plugins\\'. (string)$arg['pluginName'] .'\\'.(string)$arg['pluginName'];
             $this->container->get('event')->addSubscriber(new $pluginName());
         }

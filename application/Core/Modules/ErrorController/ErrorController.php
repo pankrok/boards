@@ -11,6 +11,20 @@ class ErrorController extends ErrorHandler
 {
     protected $_logger;
     
+    protected function writeToErrorLog(): void
+    {
+        $renderer = $this->callableResolver->resolve($this->logErrorRenderer);
+        $error = $renderer($this->exception, $this->logErrorDetails);
+        if (!$this->displayErrorDetails) {
+            $error .= "\nTips: To display error details in HTTP response ";
+            $error .= 'set "displayErrorDetails" to true in the ErrorHandler constructor.';
+        }
+        
+        if ($this->exception->getCode() !== 404 || $this->displayErrorDetails === true) {
+            $this->logError($error);
+        }
+    }
+    
     protected function logError(string $error): void
     {
         $stream = $this->_logger;
@@ -40,4 +54,6 @@ class ErrorController extends ErrorHandler
                 $this->_logger = new \Monolog\Handler\StreamHandler(MAIN_DIR.'/environment/Logs/critical.log.txt', Logger::CRITICAL);
         }
     }
+    
+
 }

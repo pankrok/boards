@@ -11,6 +11,7 @@ use Application\Models\BoardsModel;
 use Application\Models\UserModel;
 use Application\Models\LikeitModel;
 use Application\Models\ImagesModel;
+use Application\Models\RatesModel;
 use Application\Core\Controller;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
@@ -78,7 +79,7 @@ class PlotController extends Controller
                     ->take($paginator->getItemsPerPage())
                     ->join('users', 'users.id', '=', 'posts.user_id')
                     ->leftJoin('images', 'users.avatar', '=', 'images.id')
-                    ->select('posts.*', 'users.avatar', 'users.username', 'users.reputation', 'users.main_group', 'users.posts', 'users.plots', 'images._85', 'images._38')
+                    ->select('posts.*', 'users.avatar', 'users.username', 'users.reputation', 'users.main_group', 'users.posts', 'users.plots', 'users.created_at as user_join','images._85', 'images._38')
                     ->get();
             
             foreach ($data as $k => $v) {
@@ -96,6 +97,7 @@ class PlotController extends Controller
             $plot_data['title'] = $plot->plot_name;
             $plot_data['board_id'] = $plot->board_id;
             $plot_data['hidden'] = $plot->hidden;
+            $plot_data['stars'] = $plot->stars;
             
             $boardList = BoardsModel::select('id', 'board_name')->get()->toArray();
             
@@ -106,7 +108,8 @@ class PlotController extends Controller
                 'plot_name' => $plot->plot_name,
                 'board_id' => $plot->board_id,
                 'hidden' => $plot->hidden,
-                'plotList' => $boardList
+                'plotList' => $boardList,
+                'stars' => $plot->stars
             ];
             $this->cache->store($routeName, $cache, $this->settings['cache']['cache_time']);
         } else {
@@ -116,6 +119,7 @@ class PlotController extends Controller
             $plot_data['title'] = $cache['plot_name'];
             $plot_data['board_id'] = $cache['board_id'];
             $plot_data['hidden'] = $cache['hidden'];
+            $plot_data['stars'] = $cache['stars'];
             $boardList = $cache['plotList'];
             $this->cache->deleteExpired();
         }
@@ -143,6 +147,7 @@ class PlotController extends Controller
         $this->view->getEnvironment()->addGlobal('title', $plot_data['title']);
         $this->view->getEnvironment()->addGlobal('locked', $plot_data['locked']);
         $this->view->getEnvironment()->addGlobal('hidden', $plot_data['hidden']);
+        $this->view->getEnvironment()->addGlobal('stars', $plot_data['stars']);
         if ($plot_data) {
             $this->view->getEnvironment()->addGlobal('plot', [
                                                             'posts' => $plot_data['plot_data'],
@@ -304,6 +309,49 @@ class PlotController extends Controller
                         ->withStatus(201);
     }
     
+    public function ratePlot($request, $response)
+    {
+        $body = $request->getParsedBody();
+        if(!isset($body['plot_id'])) {
+            throw new \Exception('No body in request plot rating, query was: '. json_encode($body['plot_id']));
+            return false;
+        }
+        
+        $message = 'You have to log in for rate topics!';
+        if ($this->auth->check() !== false) {
+            if (RatesModel::where([
+                ['user_id', $_SESSION['user']],
+                ['plot_id', $body['plot_id']]
+            ])->count() > 0 ) {
+                $message = 'You already rate this topic';
+            } else {
+                RatesModel::create([
+                    'user_id' => $_SESSION['user'],
+                    'plot_id' => $body['plot_id'],
+                    'rate' => $body['rate'],
+                ]);
+                $avr = RatesModel::where('plot_id', $body['plot_id'])->avg('rate');                
+                $plot = PlotsModel::find($body['plot_id']); 
+                $plot->stars = $avr;               
+                $plot->save();
+                self::cleanAllPlotPages($plot->id);       
+                $message = 'You rate topics!';
+            }
+        }
+
+        if ($request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest') {
+            
+            $data['csrf'] = self::csftToken();
+            $data['message'] = $this->translator->get($message);
+            
+            $response->getBody()->write(json_encode($data));
+            return $response->withHeader('Content-Type', 'application/json')
+                        ->withStatus(201);
+        }
+        
+        
+
+    }
     
     public function reportPost($request, $response)
     {
@@ -428,8 +476,8 @@ class PlotController extends Controller
     {
         if ($this->auth->checkAdmin() < 1) {
             echo $this->explorer->showError(
-                'Unauthorized', 
-                401, 
+                'Unauthorized',
+                401,
                 'Access to this resource is denied your client has not supplied the correct authentication.'
             );
             die();
@@ -450,7 +498,7 @@ class PlotController extends Controller
         $plot->hidden = $hidden;
         $plot->save();
         $route = $this->router->urlFor('board.getPlot', ['plot_id'=>$body['id'], 'plot' => $this->urlMaker->toUrl($plot->plot_name)]);
-        if (isset($body['lock'])) { 
+        if (isset($body['lock'])) {
             $lock = 'locked';
         } else {
             $lock = 'ulocked';
@@ -469,15 +517,14 @@ class PlotController extends Controller
         $this->cache->setName('board.getPlot');
         $plot = PlotsModel::find($plotId);
         $pages = ceil(PostsModel::where('plot_id', $plotId)->count() / $this->settings['pagination']['plots']);
-        $plotUrl = $this->urlMaker->toUrl(PlotsModel::find($plotId)->plot_name);    
+        $plotUrl = $this->urlMaker->toUrl(PlotsModel::find($plotId)->plot_name);
         for ($i = 1; $i <= $pages; $i++) {
-            
             $route = $this->router->urlFor('board.getPlot', [
                                                         'plot' => $plotUrl,
                                                         'plot_id' => $plotId,
                                                         'page' => $i
                                                         ]);
-            if ($this->cache->delete($route) === false ) {
+            if ($this->cache->delete($route) === false) {
                 return false;
             }
         }

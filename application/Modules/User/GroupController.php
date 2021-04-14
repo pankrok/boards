@@ -35,7 +35,7 @@ class GroupController
     public function getGroupeId(string $username) : int
     {
         $data = UserModel::where('username', $username)->first();
-        if( $data->main_group === null || $username === '') {
+        if ($data->main_group === null || $username === '') {
             return 0;
         }
         

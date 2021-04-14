@@ -79,6 +79,12 @@ a .fc-b, .fc-b{
     bottom:0;
     right:0;	
 }
+
+.rate{
+    cursor: pointer;
+}
+
+
 /* avatar */
 
 .stat-av{

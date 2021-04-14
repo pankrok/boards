@@ -134,38 +134,11 @@ class AdminSkinsController extends Controller
     public function reloadCssJs($request, $response)
     {
         $skinDir = $request->getParsedBody()['skin_dir'];
-        if (file_exists(MAIN_DIR . '/skins/' . $skinDir . '/skin.json')) {
-            $paths = [];
-            $skinData = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skinDir . '/skin.json'), true);
-            
-            foreach ($skinData['assets']['css'] as $v) {
-                $minifier = new Minify\CSS();
-                $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/css/'.$v);
-                $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css');
-                $vname = explode('.', $v)[0];
-                $paths['css'][$vname] =  '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
-            }
-                
-            foreach ($skinData['assets']['js'] as $v) {
-                $minifier = new Minify\JS();
-                $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
-                $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
-                $vname = explode('.', $v)[0];
-                $paths['js'][$vname] = '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
-            }
-            
-            if (!isset($paths['css'])) {
-                $paths['css'] = null;
-            }
-            if (!isset($paths['js'])) {
-                $paths['js'] = null;
-            }
-            
-            
-            file_put_contents(MAIN_DIR . '/skins/' . $skinDir . '/cache_assets.json', json_encode($paths));
+        if (self::reloadAssets($skinDir) === true) {
             $this->flash->addMessage('success', 'assets reloaded');
+        } else {
+            $this->flash->addMessage('danger', 'assets reload faild');
         }
-        
         return $response
                 ->withHeader('Location', $this->router->urlFor('admin.skinlist'))
                 ->withStatus(302);
@@ -238,13 +211,51 @@ class AdminSkinsController extends Controller
         $boardVersion = explode('.', base64_decode($this->settings['core']['version']));
         foreach ($skinVersion as $k => $v) {
             if ($v === $boardVersion[$k] || $v === '*') {
-               $return = true; 
+                $return = true;
             } else {
-               $return = false;
-               break;
+                $return = false;
+                break;
             }
         }
         
         return $return;
+    }
+    
+    public function reloadAssets($skinDir) : bool
+    {
+        if (file_exists(MAIN_DIR . '/skins/' . $skinDir . '/skin.json')) {
+            $paths = [];
+            $skinData = json_decode(file_get_contents(MAIN_DIR . '/skins/' . $skinDir . '/skin.json'), true);
+            
+            foreach ($skinData['assets']['css'] as $v) {
+                $minifier = new Minify\CSS();
+                $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/css/'.$v);
+                $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css');
+                $vname = explode('.', $v)[0];
+                $paths['css'][$vname] =  '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
+            }
+                
+            foreach ($skinData['assets']['js'] as $v) {
+                $minifier = new Minify\JS();
+                $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
+                $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
+                $vname = explode('.', $v)[0];
+                $paths['js'][$vname] = '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
+            }
+            
+            if (!isset($paths['css'])) {
+                $paths['css'] = null;
+            }
+            if (!isset($paths['js'])) {
+                $paths['js'] = null;
+            }
+            
+            
+            file_put_contents(MAIN_DIR . '/skins/' . $skinDir . '/cache_assets.json', json_encode($paths));
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

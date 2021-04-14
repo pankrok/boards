@@ -62,7 +62,7 @@ class ForgetPasswordController extends Controller
 
         if ($validation->faild()) {
             $this->flash->addMessage('danger', 'Something went wrong!');
-        }else{
+        } else {
             $user = UserModel::find($body['id']);
             $user->password = password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT);
             $user->lost_pw = '';

@@ -13,7 +13,7 @@ class MailboxModel extends Model
         [
             'user_id',
             'mailbox',
-			'message_id',
-            'unread'		
+            'message_id',
+            'unread'
         ];
 }

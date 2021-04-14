@@ -1,0 +1,128 @@
+{% extends 'templates/main.twig' %}
+
+
+{% block content %}
+<h2>{{ trans('admin.user.add') }}</h2>
+<div class="row">
+	<ul class="nav">
+	  <li class="nav-item">
+		<a class="nav-link active" href="{{ path_for('admin.users') }}">{{ trans('admin.back') }}</a>
+	  </li>
+	</ul>
+</div><hr />
+<form action="{{ path_for('admin.user.add.save') }}" method="post">
+
+		<div class="row">
+       
+		<div class="col-md-12">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">{{ trans('username') }}</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input class="form-control" type="text" name="username" value="">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input class="form-control" type="text" name="email" value="">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">{{ trans('Password') }}</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input class="form-control" type="text" name="password" value="">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">{{ trans('confirmed') }}</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                    <select class="form-control" name="confirmed">
+						<option value="1" selected>{{ trans('admin.yes') }}</option>
+						<option value="0">{{ trans('admin.no') }}</option>
+					</select>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Group</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <div class="form-group">
+						<select class="form-control" name="main_group">
+						{% for group in groups %}
+						  <option value="{{ group.id }}"{% if group.id == default_group%} selected{% endif %}>{{ group.grupe_name|raw }}</option>
+						{% endfor %}
+						</select>
+						</div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Warn level</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                     <input class="form-control" type="text" name="warn_level" value="0">
+                    </div>
+                  </div>
+				  <hr>
+				  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Banned</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                    <select class="form-control" name="banned">
+						<option value="1" >{{ trans('admin.yes') }}</option>
+						<option value="0" >{{ trans('admin.no') }}</option>
+					</select>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">2FA</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                    <select class="form-control" name="tfa">
+						<option value="1" >{{ trans('admin.yes') }}</option>
+						<option value="0" selected>{{ trans('admin.no') }}</option>
+					</select>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">Admin level</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                     <div class="form-group">
+						<select class="form-control" name="admin_lvl">
+						{% for i in 0..10 %}
+						  <option value="{{ i }}" {% if i == 0 %}selected{% endif %}>{{ i }}</option>
+						{% endfor %}
+						</select>
+						</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+</form>	
+		
+{% endblock %}

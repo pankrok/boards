@@ -6,7 +6,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use Application\Models\MailLogModel;
- /**
+
+/**
  * Mailer controller
  * @package BOARDS Forum
  */
@@ -49,7 +50,7 @@ class MailCore
         return $this->mailer;
     }
     
-    public function send(string $addres, string $username, string $subject,  string $template, array $variables) : bool
+    public function send(string $addres, string $username, string $subject, string $template, array $variables) : bool
     {
         try {
             $html = file_get_contents(MAIN_DIR."/public/mails/html_$template.twig");
@@ -68,20 +69,20 @@ class MailCore
                 'topic' => $subject,
                 'content_txt' => $this->mailer->AltBody,
                 'content_html' => $this->mailer->Body,
-                'log' => 'OK'		
+                'log' => 'OK'
             ]);
             return true;
         } catch (\Exception $e) {
-             MailLogModel::create([
+            MailLogModel::create([
                 'recipient' => $addres,
                 'is_send' => 0,
                 'topic' => $subject,
                 'content_txt' => $this->mailer->AltBody,
                 'content_html' => $this->mailer->Body,
-                'log' => $e->getMessage()	
+                'log' => $e->getMessage()
             ]);
             
             return false;
-        }   
+        }
     }
 }

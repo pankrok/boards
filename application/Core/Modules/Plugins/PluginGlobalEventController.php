@@ -2,7 +2,8 @@
 declare(strict_types=1);
 namespace Application\Core\Modules\Plugins;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 // use Slim\Routing\RouteContext;
 
 /**
@@ -10,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
 *
 **/
 
-class PluginGlobalEventController extends Event
+class PluginGlobalEventController extends EventDispatcher
 {
     
     /**

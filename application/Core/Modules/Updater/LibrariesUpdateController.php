@@ -35,10 +35,10 @@ class LibrariesUpdateController extends Controller
                 die();
             }
             
-            if ($v['md5'] === 'new' && $v['updated'] === 0) {             
+            if ($v['md5'] === 'new' && $v['updated'] === 0) {
                 $pathHandler = explode('/', substr($v['path'], 1));
-                $pathCheck = MAIN_DIR.'/';     
-                foreach ($pathHandler as $newPath) {    
+                $pathCheck = MAIN_DIR.'/';
+                foreach ($pathHandler as $newPath) {
                     $pathCheck .= $newPath;
                     
                     if (!is_dir($pathCheck)) {
@@ -52,11 +52,11 @@ class LibrariesUpdateController extends Controller
                 $h = file_get_contents($this->ServiceProvider->get('files_dir') .  $k);
                 file_put_contents(MAIN_DIR . $k, $h);
                 $files[$k]['updated'] = 1;
-            } elseif ($v['md5'] !== 'new' && $v['md5'] === 'del' && $v['updated'] === 0) {    
-                $this->log->debug('remove libraries file: ' . $k);    
+            } elseif ($v['md5'] !== 'new' && $v['md5'] === 'del' && $v['updated'] === 0) {
+                $this->log->debug('remove libraries file: ' . $k);
                 $backup = file_get_contents(MAIN_DIR . $k);
                 file_put_contents(MAIN_DIR .  $k . '.back', $backup);
-                unlink(MAIN_DIR . $k);         
+                unlink(MAIN_DIR . $k);
             } elseif ($v['md5'] !== 'new' && $v['md5'] !== 'del' && $v['updated'] === 0) {
                 $backup = file_get_contents(MAIN_DIR .  $k);
                 $md5 = md5($backup);

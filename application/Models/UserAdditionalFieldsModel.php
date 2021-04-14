@@ -13,6 +13,6 @@ class UserAdditionalFieldsModel extends Model
         [
             'user_id',
             'field_id',
-			'add_value'	
+            'add_value'
         ];
 }

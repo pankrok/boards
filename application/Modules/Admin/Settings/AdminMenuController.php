@@ -13,7 +13,7 @@ class AdminMenuController extends Controller
 {
     public function index($request, $response)
     {
-        $menu = MenuModel::get()->toArray();     
+        $menu = MenuModel::get()->toArray();
         $this->adminView->getEnvironment()->addGlobal('menu', $menu);
         $this->adminView->getEnvironment()->addGlobal('show_settings', true);
         return $this->adminView->render($response, 'menu_controller.twig');
@@ -39,7 +39,6 @@ class AdminMenuController extends Controller
         }
         
         if (isset($body['own_name']) && isset($body['own_url'])) {
-           
             $menu = MenuModel::create([
                 'url' => $body['own_url'],
                 'name' => $body['own_name'],

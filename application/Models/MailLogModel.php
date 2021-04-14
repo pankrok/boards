@@ -12,9 +12,9 @@ class MailLogModel extends Model
         [
             'recipient',
             'is_send',
-			'topic',
+            'topic',
             'content_txt',
             'content_html',
-            'log'		
+            'log'
         ];
 }

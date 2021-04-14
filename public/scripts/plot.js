@@ -1,6 +1,10 @@
-var editor = new Jodit("#quickReply", { autofocus: !0, height: "280", toolbarAdaptive: 1, allowResizeX: !1, allowResizeY: !1 });
-var aedit = new Jodit('#editPostJodit', { autofocus: !0, height: "280", width: "100%", toolbarAdaptive: 1, allowResizeX: !1, allowResizeY: !1 });
+if ($("#quickReply-btn").length) {
+    var editor = new Jodit("#quickReply", { autofocus: !0, height: "280", toolbarAdaptive: 1, allowResizeX: !1, allowResizeY: !1 });
+}
 
+if ($("#editPostJodit-btn").length) {
+    var aedit = new Jodit('#editPostJodit', { autofocus: !0, height: "280", width: "100%", toolbarAdaptive: 1, allowResizeX: !1, allowResizeY: !1 });
+}
 function postReply() {
     var o = $("#csrf_name").val(),
         t = $("#csrf_value").val();
@@ -13,7 +17,10 @@ function postReply() {
             console.log(o);
         },
         success: function (o) {
-            $("#csrf_name").val(o.csrf.csrf_name),
+            
+                $('#collapseTwo').collapse('hide');
+                editor.value = '';
+                $("#csrf_name").val(o.csrf.csrf_name),
                 $("#csrf_value").val(o.csrf.csrf_value),
                 $("#posts").append(o.response),
                 setTimeout(function () {
@@ -110,16 +117,75 @@ function editPost(id, len){
 				});	
 			
 		}
-
-$("#quickReply-btn").click(function () {
-    postReply();
-}),
+if ($("#quickReply-btn").length) {
+    $("#quickReply-btn").click(function () {
+        postReply();
+    });
+}
     $("#collapseTwo").on("show.bs.collapse", function () {
         $("html, body").animate({ scrollTop: $(document).height() }, 1200);
     });
 var link = window.location + "",
     data = link.split("#");
 $(function () {
+    
+    $( ".rate" ).mouseover(function(e) {
+        var rate = ($(e.target).data("rate"));
+        $( ".rate" ).each(function( index ) {
+            if (index >= (rate)) {
+                $( this ).removeClass('fas');
+                $( this ).addClass('far');
+            } else {
+                $( this ).removeClass('far');
+                $( this ).addClass('fas');
+            }
+        });
+    });
+    $("span#star-rating").mouseout(function() {
+        
+        $( ".rate" ).each(function( index ) {
+            if (index >= stars) {
+                $( this ).removeClass('fas');
+                $( this ).addClass('far');
+            } else {
+                $( this ).removeClass('far');
+                $( this ).addClass('fas');
+            }
+        });
+    });
+    
+    $( ".rate" ).click(function(e) {  
+
+console.log({ 
+                  "csrf_name" : $('#csrf_name').val(),
+				  "csrf_value" : $('#csrf_value').val(),
+                  "plot_id": $("#plot-id").data('plot_id'), 
+                  "rate": $(e.target).data('rate') 
+                });
+    
+        $.ajax({
+            
+          type: "POST",
+          url: ratePlot,
+          data: { 
+                  "csrf_name" : $('#csrf_name').val(),
+				  "csrf_value" : $('#csrf_value').val(),
+                  "plot_id": $("#plot-id").data('plot_id'), 
+                  "rate": $(e.target).data('rate') 
+                },
+          dataType: "json",
+          success: function(mydata){					
+					
+					$('#csrf_name').val(mydata['csrf']['csrf_name']);
+					$('#csrf_value').val(mydata['csrf']['csrf_value']);
+                    $('#js-modal-title').html('Ocena tematu');
+                    $('#js-modal-body').html(mydata['message']);
+                    $('#js-modal').modal('show');
+				  }
+        })
+        
+    });
+    
 	$('#hidePost').val(0)
     setTimeout(function () {
         scrollToAnchor(data[1]);

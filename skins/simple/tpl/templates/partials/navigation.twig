@@ -1,9 +1,9 @@
 <!-- navigation -->
-    <nav class="navbar navbar-expand-md navbar-light fixed-top px-lg-5">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top px-lg-5 d-none-loader">
       <span class="navbar-brand mb-0 h1"><i><a href="{{ path_for('home') }}">BOARDS Script</a></i></span>
-{% if boards_off and auth.admin > 0 %}
-<div class="position-fixed"><span class="badge badge-pill badge-info">Podglą nieaktywnego forum</span></div>
-{% endif %}
+        {% if boards_off and auth.admin > 0 %}
+        <div class="position-fixed"><span class="badge badge-pill badge-info">Podglą nieaktywnego forum</span></div>
+        {% endif %}
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

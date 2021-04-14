@@ -5,8 +5,8 @@
 		<hr /></div>
 		
 		<?php
-			include 'steps/step-'.$step.'.php';
-		?>	
+            include 'steps/step-'.$step.'.php';
+        ?>	
 
 		</div>
 	</div>
@@ -16,10 +16,12 @@
 			<div class="col-6 text-justify p-4">
 				<p><a href="<?php echo paginator()['pre']; ?>" class="btn left">BACK</a>
 			</div>
-			<?php if($next){ echo'
+			<?php if ($next) {
+            echo'
 				<div id="next" class="col-6 text-justify p-4" style="display: none;">
 			<p><a href="'. paginator()['next'].'" class="btn right">NEXT</a>
-			</div>'; }?>
+			</div>';
+        }?>
 		</div>
 	</div>
  </div>

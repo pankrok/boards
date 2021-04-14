@@ -2,7 +2,7 @@
 
 /**
 *
-*	Ceche Middleware
+*	Breadcrumbs Middleware
 *
 **/
 
@@ -32,8 +32,6 @@ class BreadcrumbsMiddleware extends Middleware
         $routeName = $routeContext->getRoutingResults()->getUri();
         
         if (!$breadcrumbs = $cache->receive($routeName.'-breadcrumbs')) {
-           
-            
             if ($name === 'page' || $name === 'category.getCategory' || $name === 'board.getBoard' || $name === 'board.getPlot' ||  $name === 'home') {
                 $atr['plot'] = $route->getArgument('plot_id') ?? null;
                 $atr['board'] = $route->getArgument('board_id') ?? null;
@@ -46,7 +44,7 @@ class BreadcrumbsMiddleware extends Middleware
                                     ->select('plots.plot_name', 'boards.board_name', 'categories.name', 'plots.id', 'plots.board_id', 'boards.category_id', 'boards.parent_id')
                                     ->get()->toArray()[0];
                                     
-                     $breadcrumbs = [
+                    $breadcrumbs = [
                         0 => [	'last' => 0,
                                 'path' => $this->container->get('router')->urlFor(
                                     'category.getCategory',
@@ -60,17 +58,18 @@ class BreadcrumbsMiddleware extends Middleware
                                     
                     if (isset($data['parent_id'])) {
                         $parentBoards = BoardsModel::find($data['parent_id']);
-                        array_push($breadcrumbs,  ['last' => 1,
+                        array_push($breadcrumbs, ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getBoard',
                                     ['board_id' => $parentBoards['id'],
                                     'board' => $this->container->get('urlMaker')->toUrl($parentBoards['board_name'])]
                                 ),
                                 'name' => $parentBoards['board_name']
-                            ]);   
+                            ]);
                     }
                     
-                    array_push($breadcrumbs,   
+                    array_push(
+                        $breadcrumbs,
                         ['last' => 0,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getBoard',
@@ -78,16 +77,19 @@ class BreadcrumbsMiddleware extends Middleware
                                     'board' => $this->container->get('urlMaker')->toUrl($data['board_name'])]
                                 ),
                                 'name' => $data['board_name']
-                        ]); 
-                    array_push($breadcrumbs,            
-                            ['last' => 1,
+                        ]
+                    );
+                    array_push(
+                        $breadcrumbs,
+                        ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getPlot',
                                     ['plot_id' => $data['id'],
                                     'plot' => $this->container->get('urlMaker')->toUrl($data['plot_name'])]
                                 ),
                                 'name' => $data['plot_name']
-                            ]);       
+                            ]
+                    );
                 }
                 if (isset($atr['board'])) {
                     $data = BoardsModel::where('boards.id', $atr['board'])
@@ -106,19 +108,20 @@ class BreadcrumbsMiddleware extends Middleware
                             ]
                         ];
                         
-                     if (isset($data['parent_id'])) {
+                    if (isset($data['parent_id'])) {
                         $parentBoards = BoardsModel::find($data['parent_id']);
-                        array_push($breadcrumbs,  ['last' => 1,
+                        array_push($breadcrumbs, ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getBoard',
                                     ['board_id' => $parentBoards['id'],
                                     'board' => $this->container->get('urlMaker')->toUrl($parentBoards['board_name'])]
                                 ),
                                 'name' => $parentBoards['board_name']
-                            ]);   
+                            ]);
                     }
                     
-                    array_push($breadcrumbs,   
+                    array_push(
+                        $breadcrumbs,
                         ['last' => 0,
                                 'path' => $this->container->get('router')->urlFor(
                                     'board.getBoard',
@@ -126,7 +129,8 @@ class BreadcrumbsMiddleware extends Middleware
                                     'board' => $this->container->get('urlMaker')->toUrl($data['board_name'])]
                                 ),
                                 'name' => $data['board_name']
-                        ]); 
+                        ]
+                    );
                 }
                 if (isset($atr['cat'])) {
                     $data = CategoryModel::where('categories.id', $atr['cat'])
@@ -145,19 +149,27 @@ class BreadcrumbsMiddleware extends Middleware
                         ];
                 }
             } elseif (explode('.', $name)[0] === 'admin') {
-                $i = 0; 
+                $i = 0;
                 if (strpos($routeName, 'settings')) {
                     $breadcrumbs[$i] = ['last' => 0,
-                                'path' => 'none',
-                                'name' => $this->container->get('translator')->get('admin.settings')
+                                'path' => $this->container->get('router')->urlFor('admin.config'),
+                                'name' => $this->container->get('translator')->get('admin.configuration')
                                 ];
                     $i++;
                 }
                 
-                if (strpos($routeName, 'users')) {
+                if (strpos($routeName, 'users') && !strpos($routeName, 'config')) {
                     $breadcrumbs[$i] = ['last' => 0,
-                                'path' => 'none',
-                                'name' => $this->container->get('translator')->get('admin.users')
+                                'path' => $this->container->get('router')->urlFor('admin.users.and.groups'),
+                                'name' => $this->container->get('translator')->get('admin.users and groups')
+                                ];
+                    $i++;
+                }
+                
+                if (strpos($routeName, 'skin') && !strpos($routeName, 'skinlist') && !strpos($routeName, 'addskin')) {
+                    $breadcrumbs[$i] = ['last' => 0,
+                                'path' => $this->container->get('router')->urlFor('admin.skinlist'),
+                                'name' => $this->container->get('translator')->get('admin.skinlist')
                                 ];
                     $i++;
                 }
@@ -165,14 +177,13 @@ class BreadcrumbsMiddleware extends Middleware
                 if ($name !== 'admin.home') {
                     $breadcrumbs[$i] = ['last' => 1,
                                     'path' => $this->container->get('router')->urlFor($name, $route->getArguments()),
-                                    'name' => $this->container->get('translator')->get('admin.'.$name)
+                                    'name' => $this->container->get('translator')->get($name)
                                     ];
                 }
-                
             } else {
                 $breadcrumbs[0] = ['last' => 1,
                                 'path' => $this->container->get('router')->urlFor($name, $route->getArguments()),
-                                'name' => $this->container->get('translator')->get('lang.'.$name)
+                                'name' => $this->container->get('translator')->get($name)
                                 ];
             }
             $cache->store($routeName.'-breadcrumbs', $breadcrumbs, 0);
@@ -180,9 +191,9 @@ class BreadcrumbsMiddleware extends Middleware
         
         $this->container->get('view')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);
         if (explode('.', $name)[0] !== 'admin') {
-             $this->container->get('view')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);    
+            $this->container->get('view')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);
         } else {
-             $this->container->get('adminView')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);
+            $this->container->get('adminView')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);
         }
         return $handler->handle($request);
     }

@@ -14,8 +14,8 @@ class AdminController
     {
         if ($c->get('auth')->checkAdmin() < 1) {
             echo $c->get('explorer')->showError(
-                'Unauthorized', 
-                401, 
+                'Unauthorized',
+                401,
                 'Access to this resource is denied your client has not supplied the correct authentication.'
             );
             die();

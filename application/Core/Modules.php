@@ -122,4 +122,8 @@ return function (App $app) {
     $container->set('AdminMailTemplateController', function ($container) {
         return new Application\Modules\Admin\MailTemplate\MailTemplateController($container);
     });
+    
+    $container->set('AdminLogController', function ($container) {
+        return new Application\Modules\Admin\Logs\AdminLogController($container);
+    });
 };

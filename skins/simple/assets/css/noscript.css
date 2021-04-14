@@ -1,3 +1,6 @@
 .load-overlay, .loading {
 	display: none !important;
 }
+.d-none-loader {
+    display: flex !important; 
+}

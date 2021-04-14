@@ -109,8 +109,9 @@ class PluginLoaderController
         
         $pluginName = "\\Plugins\\$pluginName\\$pluginName";
         $handler = $pluginName::activation();
-        if ( $handler === false) { die( $handler);
-            return false; 
+        if ($handler === false) {
+            die($handler);
+            return false;
         }
         $plugin->active = true;
         $plugin->save();

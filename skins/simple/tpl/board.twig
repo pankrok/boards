@@ -108,7 +108,7 @@
 							<div class="col-4 col-md-2 text-center">{{ plot.all_posts }} / {{ plot.views }}</div>
 							<div class="col-2 d-none d-md-block text-center">
 							{% for i in 1..5 %}
-								{% set starClass = (plot.stars >= i ? "fas fa-star" : "far fa-star")  %}
+								{% set starClass = (plot.stars|round >= i ? "fas fa-star" : "far fa-star")  %}
 								<i class="{{ starClass }}"></i>
 							{% endfor %}
 							

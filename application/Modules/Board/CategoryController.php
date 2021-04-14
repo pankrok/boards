@@ -25,8 +25,6 @@ class CategoryController extends Controller
                 $data = $cache['data'];
                 $category =  $cache['category'];
             }
-            
-           
         }
 
         $this->view->getEnvironment()->addGlobal('boards', $data);
@@ -56,22 +54,20 @@ class CategoryController extends Controller
                 'category' => $name,
                 'category_id' => $id,
                 ]));
-
     }
     
-    protected function getCategoryData($id) {
-     
+    protected function getCategoryData($id)
+    {
         $data = [];
         $boards = BoardsModel::where([['category_id', $id], ['active', '=', '1']])->get()->toArray();
         foreach ($boards as $k => $v) {
-            
             if (isset($data[$v['id']]['childboard'])) {
                 $data[$v['id']] += $v;
             } else {
                 $data[$v['id']] = $v;
             }
             $data[$v['id']]['url'] =  $this->router->urlFor('board.getBoard', [
-                'board' => $this->urlMaker->toUrl($v['board_name']), 
+                'board' => $this->urlMaker->toUrl($v['board_name']),
                 'board_id' => $v['id']
                 ]);
             $lastpost = PlotsModel::orderBy('updated_at', 'DESC')
@@ -108,7 +104,6 @@ class CategoryController extends Controller
                 
                 ]);
                 $data[$v['id']]['last_post_author'] = $this->group->getGroupDate(null, $lastpost['username'])['username'];
-
             } else {
                 $data[$v['id']]['posts_number'] = 0;
                 $data[$v['id']]['plots_number'] = 0;

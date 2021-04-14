@@ -6,11 +6,9 @@ namespace Application\Modules\Admin\MailTemplate;
 
 use Application\Core\AdminController as Controller;
 
-
 class MailTemplateController extends Controller
 {
- 
-    public function index($request, $response) 
+    public function index($request, $response)
     {
         $templateList = array_diff(scandir(MAIN_DIR . '/public/mails'), ['.','..']);
         $this->adminView->getEnvironment()->addGlobal('list', $templateList);

@@ -10,6 +10,7 @@
 </nav>
 <div class="p-2">
 <form action="{{ path_for('admin.edit.board') }}/{{ id }}" method="post" id="addBoard">
+<input type="hidden" name="board_id" value="{{ data.id }}">
   <div class="row">
 		<div class="form-group col-3">
 		<label for="SelectCategory">{{ trans('admin.select category') }}:</label>

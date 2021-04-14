@@ -16,7 +16,6 @@ use Application\Models\SecretModel;
 
 class Auth
 {
-    
     protected $tfa;
     protected $confirmReg;
     
@@ -92,7 +91,8 @@ class Auth
             return false;
         }
         
-        if(!$user->confirmed) {
+        if (!$user->confirmed && $this->confirmReg === 1) {
+            $_SESSION['ncuid'] = $user->id;
             return 'not confirmed account';
         }
         
@@ -102,13 +102,12 @@ class Auth
 
         if (isset($tfa)) {
             $secret = SecretModel::where('user_id', $user->id)->first();
-            if($this->tfa->google->verifyCode($secret->secret, $tfa) 
-            || $this->tfa->mail->verifyCode($secret->secret, $tfa)){
-        
-                    $_SESSION['user'] = $user->id;
-                    $_SESSION['tfa'] = null;
-                    unset($_SESSION['tfa']);
-                    return true;
+            if ($this->tfa->google->verifyCode($secret->secret, $tfa)
+            || $this->tfa->mail->verifyCode($secret->secret, $tfa)) {
+                $_SESSION['user'] = $user->id;
+                $_SESSION['tfa'] = null;
+                unset($_SESSION['tfa']);
+                return true;
             } else {
                 return false;
             }

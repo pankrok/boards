@@ -4,6 +4,8 @@
     <link href="{{ base_url() }}/public/css/croppie.min.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
+
+{% if auth.check %}
 {% if profile %}
 
 <div class="row my-2">
@@ -110,12 +112,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-lg-3 col-form-label form-control-label">{{ trans('email') }}</label>
-                            <div class="col-lg-9">
-                                <input name="email" class="form-control" type="email" value="{{ profile.email }}">
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label class="col-lg-3 col-form-label form-control-label">{{ trans('Website') }}</label>
                             <div class="col-lg-9">
                                 <input name="website" class="form-control" type="text" value="{{ additional.website }}">
@@ -205,9 +201,7 @@
             <li class="list-group-item py-1"><span class="float-left">{{ trans('name') }}</span> <span class="float-right">{{ additional.name }}</span></li>
             <li class="list-group-item py-1"><span class="float-left">{{ trans('surname') }}</span> <span class="float-right">{{ additional.surname }}</span></li>
             <li class="list-group-item py-1"><span class="float-left">{{ trans('from') }}</span> <span class="float-right">{{ additional.location }}</span></li>
-            <li class="list-group-item py-1"><span class="float-left">{{ trans('sex') }}</span> <span class="float-right">{{ trans(additional.sex) }}</span></li>
-            <li class="list-group-item py-1"><span class="float-left">{{ trans('email') }}</span> <span class="float-right">{{ profile.email }}</span></li>
-            
+            <li class="list-group-item py-1"><span class="float-left">{{ trans('sex') }}</span> <span class="float-right">{{ trans(additional.sex) }}</span></li>        
           </ul>
           </div>
       </div>
@@ -229,6 +223,18 @@
         </div>
      </div>
   {% endif %}
+    {% else %}
+        <div class="row">
+            <div class="col-auto mx-auto">
+
+              <div class="alert alert-primary" role="alert">
+                {{ trans('this page is only for logged users') }}
+              </div>
+               
+              </div>
+
+        </div>
+    {% endif %}
         </div>
     </div>
 
@@ -241,7 +247,7 @@
     <div class="modal-dialog" role="document">
     <div class="modal-content text-center ">
       <div class="modal-header bg-light">
-      <h5 class="modal-title " id="changeAvatar">Change Avatar</h5>
+      <h5 class="modal-title">{{ trans('change avatar') }}</h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -259,10 +265,10 @@
   </div>
   <!-- Modal change avatar -->
 {% endif %}
-	<!-- Custom styles for this template -->
-	<link href="{{ assets }}/css/dropzone.css" rel="stylesheet">
-  <script src="{{ base_url() }}/public/scripts/dropzone.js"></script>
-  <script src="{{ base_url() }}/public/scripts/croppie.min.js"></script>
+
+<link href="{{ assets }}/css/dropzone.css" rel="stylesheet">
+<script src="{{ base_url() }}/public/scripts/dropzone.js"></script>
+<script src="{{ base_url() }}/public/scripts/croppie.min.js"></script>
 {{ skin_assets.js.userpanel|raw }}
 
 {% endblock %}

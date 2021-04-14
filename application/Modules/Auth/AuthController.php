@@ -68,14 +68,15 @@ class AuthController extends Controller
          
         if ($validation->faild() && isset($request->getParsedBody()['tfa'])) {
             $auth = $this->auth->attempt(
-            ['username', $request->getParsedBody()['login']],
-            null,
-            $request->getParsedBody()['tfa']);
+                ['username', $request->getParsedBody()['login']],
+                null,
+                $request->getParsedBody()['tfa']
+            );
         } elseif ($validation->faild() && !isset($request->getParsedBody()['tfa'])) {
             $auth = $this->auth->attempt(
                 ['username', $request->getParsedBody()['login']],
                 $request->getParsedBody()['password']
-            );       
+            );
         } else {
             $auth = $this->auth->attempt(
                 ['email', $request->getParsedBody()['login']],
@@ -97,8 +98,18 @@ class AuthController extends Controller
         ->withStatus(302);
         }
 
-        if ($auth === 'banned' || $auth === 'not confirmed account' ) {
-            $this->flash->addMessage('danger', "You are $auth!");
+        if ($auth === 'banned') {
+            $this->flash->addMessage('danger', 'You are ' . $auth);
+
+            return $response
+            ->withHeader('Location', $this->router->urlFor('auth.signin'))
+            ->withStatus(302);
+        }
+        
+        if ($auth === 'not confirmed account') {
+            
+            $auth .= '<br /><a href="'.$this->router->urlFor('auth.resend').'">resend code</a>';
+            $this->flash->addMessage('danger', 'You are ' . $auth);
 
             return $response
             ->withHeader('Location', $this->router->urlFor('auth.signin'))
@@ -138,14 +149,14 @@ class AuthController extends Controller
     **/
     
     public function twoFactorAuth($request, $response, $arg)
-    {    
-        if(isset($_SESSION['tfa'])){
+    {
+        if (isset($_SESSION['tfa'])) {
             $secret = SecretModel::where('user_id', $_SESSION['tfa'])->first()->secret;
             $user = UserModel::find($_SESSION['tfa']);
         }
-        if(!isset($arg['mail'])){
+        if (!isset($arg['mail'])) {
             $this->tfa->google->getCode($secret);
-        }else{
+        } else {
             $code = $this->tfa->mail->getCode($secret);
             $this->mailer->send(
                 $user['email'],
@@ -199,8 +210,16 @@ class AuthController extends Controller
         $_SESSION["captcha"] = null;
         $captcha = (md5($request->getParsedBody()['board_captcha']) !== $data);
         $passlenght = strlen($request->getParsedBody()['password']);
+        $usernamelenght = strlen($request->getParsedBody()['username']);
         if (32 < $passlenght || $passlenght < 8) {
             $this->flash->addMessage('danger', 'Password must be bettwen 8 and and 32 characters');
+            return $response
+            ->withHeader('Location', $this->router->urlFor('auth.signup'))
+            ->withStatus(302);
+        }
+        
+        if (32 < $usernamelenght || $usernamelenght < 4) {
+            $this->flash->addMessage('danger', 'Username must be bettwen 4 and and 32 characters');
             return $response
             ->withHeader('Location', $this->router->urlFor('auth.signup'))
             ->withStatus(302);
@@ -226,7 +245,6 @@ class AuthController extends Controller
         $additionalFields = AdditionalFieldsModel::get()->toArray();
         if ($additionalFields !== null) {
             foreach ($additionalFields as $k => $field) {
-                
                 $fieldName = $this->urlMaker->toUrl($field['add_name']);
                 if ($field['add_require'] === 1 &&  $request->getParsedBody()[$fieldName] === null) {
                     $this->flash->addMessage('danger', 'fill require fields');
@@ -236,7 +254,14 @@ class AuthController extends Controller
                 }
                 $userAdditionalFields[$field['id']] = $request->getParsedBody()[$fieldName];
             }
-        }    
+        }
+        
+        if (UserModel::where('username', $this->purifier->purify($request->getParsedBody()['username']))->first() !== null) {
+            $this->flash->addMessage('danger', 'Username already exist!');
+            return $response
+            ->withHeader('Location', $this->router->urlFor('auth.signup'))
+            ->withStatus(302);
+        }
         
         $user = UserModel::create([
             'email' => $this->purifier->purify($request->getParsedBody()['email']),
@@ -250,30 +275,29 @@ class AuthController extends Controller
                 UserAdditionalFieldsModel::create([
                     'user_id' => $user->id,
                     'field_id' => $k,
-                    'add_value' => $v	
+                    'add_value' => $v
                 ]);
             }
         }
         
-        if (intval($this->settings['board']['confirm_reg']) !== 1 ) {
+        if (intval($this->settings['board']['confirm_reg']) !== 1) {
             $this->flash->addMessage('info', 'Account created.');
             $auth = $this->auth->attempt(
                 ['username', $request->getParsedBody()['username']],
                 $request->getParsedBody()['password']
             );
-            
         } else {
             $user->lostpw = bin2hex(random_bytes(32));
             $url = self::base_url(true) . $this->router->urlFor('auth.confirm', ['code' => $user->lostpw]);
             $urlCode = self::base_url(true) . $this->router->urlFor('auth.confirm');
             $user->save();
             $this->mailer->send(
-                $user->email, 
-                $user->username,  
-                $this->translator->get('lang.confirm account'), 
-                'reg_confirm', 
+                $user->email,
+                $user->username,
+                $this->translator->get('lang.confirm account'),
+                'reg_confirm',
                 ['url' => $url, 'code' => $user->lostpw, 'url_code' => $urlCode, 'username' => $user->username]
-            ); 
+            );
             $this->flash->addMessage('info', 'activation email has been send');
             return $response
             ->withHeader('Location', $this->router->urlFor('home'))
@@ -333,7 +357,6 @@ class AuthController extends Controller
     
     public function confirmAccount($request, $response, $arg)
     {
-
         if ($arg['code'] !== null || $request->getQueryParams()['code'] !== null) {
             $code = $arg['code'] ?? $request->getQueryParams()['code'];
             if (($user = UserModel::where('lostpw', $code)->first()) !== null) {
@@ -347,8 +370,29 @@ class AuthController extends Controller
                 ->withHeader('Location', $this->router->urlFor('home'))
                 ->withStatus(302);
             }
-            
-        }   
+        }
         return $this->view->render($response, 'auth/confirm_account.twig');
     }
+    
+    public function resendActiveMail($request, $response)
+    {
+        $user = UserModel::find($_SESSION['ncuid']);
+        unset($_SESSION['ncuid']);
+        $user->lostpw = bin2hex(random_bytes(32));
+        $url = self::base_url(true) . $this->router->urlFor('auth.confirm', ['code' => $user->lostpw]);
+        $urlCode = self::base_url(true) . $this->router->urlFor('auth.confirm');
+        $user->save();
+        $this->mailer->send(
+            $user->email,
+            $user->username,
+            $this->translator->get('lang.confirm account'),
+            'reg_confirm',
+            ['url' => $url, 'code' => $user->lostpw, 'url_code' => $urlCode, 'username' => $user->username]
+        );
+        $this->flash->addMessage('info', 'activation email has been send');
+        return $response
+        ->withHeader('Location', $this->router->urlFor('home'))
+        ->withStatus(302);
+    }   
+        
 }

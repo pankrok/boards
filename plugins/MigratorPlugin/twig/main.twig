@@ -1,0 +1,69 @@
+{% if connection %}
+
+<div class="alert alert-success" role="alert" >
+	{{ trans('Plugin is connected to MYBB database') }}!
+</div>
+
+ <button class="btn btn-primary float-right" type="button" id="migration-start"  data-toggle="modal" data-target="#migrationModal">Migrate</button>
+<button id="migration-status-button" class="btn btn-primary float-right" type="button" data-toggle="modal" data-target="#migrationModal" style="display:none;" >{{ trans('show migration status') }}</button>
+
+{% else %}
+
+<div class="alert alert-warning" role="alert" >
+	{{ trans('Plugin is not connected to MYBB database') }}!
+</div>
+
+<form action="#" method="post">
+<div class="form-group row">
+    <div class="form-group col-6">
+        <label for="host">{{ trans('Address') }}</label>
+        <input type="text" name="host" class="form-control" id="host" aria-describedby="host" placeholder="{{ trans('Enter database host') }}">
+    </div>
+    <div class="form-group col-6">
+        <label for="db">{{ trans('Name') }}</label>
+        <input type="text" name="base" class="form-control" id="db" aria-describedby="database" placeholder="{{ trans('Enter database name') }}">
+    </div>
+    <div class="form-group col-6">
+        <label for="user">{{ trans('User') }}</label>
+        <input type="text" name="user" class="form-control" id="user" aria-describedby="user" placeholder="{{ trans('Enter database user') }}">
+    </div>
+    <div class="form-group col-6">
+        <label for="pass">{{ trans('Password') }}</label>
+        <input type="password" name="pass" class="form-control" id="pass" aria-describedby="pass" placeholder="{{ trans('Enter database password') }}">
+    </div>
+    <div class="form-group col">
+        <label for="pref">{{ trans('Prefix') }}</label>
+        <input type="text" name="pref" class="form-control" id="pref" aria-describedby="pref" placeholder="{{ trans('Enter database prefix') }}">
+    </div>
+    
+ </div>
+ <button class="btn btn-primary float-right" type="submit">{{ trans('admin.submit') }}</button>
+</form>
+
+
+{% endif %}
+
+<script>
+var ajax_migration_url = "{{ path_for('admin.plugins.ext', {'pluginName':'MigratorPlugin'}) }}";
+</script>
+<script src="{{ base_url() }}/plugins/MigratorPlugin/scripts/migration.js"></script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="migrationModal" tabindex="-1" role="dialog" aria-labelledby="migrationModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="migrationModalLabel">{{ trans('migration progress') }}</h5>
+      </div>
+      <div class="modal-body">
+        <div class="progress">
+          <div id="migration-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+        </div>
+        <div class="alert alert-danger mt-2" role="alert">
+          <b>{{ trans('dont close browser card until migration ends') }}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

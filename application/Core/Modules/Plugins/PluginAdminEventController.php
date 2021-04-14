@@ -2,7 +2,7 @@
 
 namespace Application\Core\Modules\Plugins;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Slim\Routing\RouteContext;
 
 /**
@@ -10,7 +10,7 @@ use Slim\Routing\RouteContext;
 *
 **/
 
-class PluginAdminEventController extends Event
+class PluginAdminEventController extends EventDispatcher
 {
     
     /**

@@ -1,0 +1,26 @@
+{
+    "groups": {
+        "done": "yes",
+        "count": 22
+    },
+    "users": {
+        "done": 1,
+        "count": 201
+    },
+    "categories": {
+        "done": "0",
+        "count": 0
+    },
+    "forums": {
+        "done": "0",
+        "count": 0
+    },
+    "plots": {
+        "done": "0",
+        "count": 0
+    },
+    "posts": {
+        "done": "0",
+        "count": 0
+    }
+}

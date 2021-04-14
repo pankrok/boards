@@ -6,7 +6,6 @@ namespace Application\Core\Modules\Explorer;
 
 class Explorer
 {
-    
     private $dirArray;
     
     public function __construct($container)
@@ -56,8 +55,9 @@ class Explorer
     public function saveToJson(string $dir, string $file, $data)
     {
         return file_put_contents(
-            sprintf($this->dirArray[$dir], $file), 
-            json_encode($data, JSON_PRETTY_PRINT));
+            sprintf($this->dirArray[$dir], $file),
+            json_encode($data, JSON_PRETTY_PRINT)
+        );
     }
     
     public function showError(string $message, int $code = 200, $html = '') : string
@@ -66,6 +66,6 @@ class Explorer
         $data = self::getFileContent('public', 'pages/error.html');
         $style = self::getFileContent('public', 'pages/style.css');
         $message = sprintf($data, $style, $message, $code, $html);
-        return $message;   
+        return $message;
     }
 }

@@ -38,8 +38,8 @@ class SkinsUpdateController extends Controller
             
             if ($v['md5'] == 'new' && $v['updated'] == 0) {
                 $pathHandler = explode('/', substr($v['path'], 1));
-                $pathCheck = MAIN_DIR.'/';         
-                foreach ($pathHandler as $newPath) {    
+                $pathCheck = MAIN_DIR.'/';
+                foreach ($pathHandler as $newPath) {
                     $pathCheck .= $newPath;
                     
                     if (!is_dir($pathCheck)) {

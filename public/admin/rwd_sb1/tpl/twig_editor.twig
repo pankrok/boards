@@ -5,15 +5,51 @@
 
 <h1>Edycja pliku: {{ attribute(list, id) }}</h1>
 <div class="row">
+<div class="col float-right">
+<form class="float-right" action="{{ path_for('admin.skin.file.delete') }}" method="post">
+        <input type="hidden" name="file_type" value="{{ type }}">
+		<input type="hidden" name="twig_id" value="{{ id }}">
+		<input type="hidden" name="skin_id" value="{{ skin_id }}">
+		<span class="p-2 float-right"  data-toggle="tooltip" data-placement="top" title="{{ trans('admin.delete file') }}">
+			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete">
+			  <i class="fas fa-trash"></i>
+			</button>
+		</span>
+		
+		<!-- Modal -->
+			<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="saveTplModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="saveTplModalLabel">{{ trans('admin.delete') }}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					Are you sure wanna delete in {{ attribute(list, id) }}?
+				  </div>
+				  <div class="modal-footer">
+					<button type="submit" class="btn btn-danger">{{ trans('admin.delete') }}</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+</form>
+</div>
+</div>
+<div class="row">
 	<div class="col-sm col-md-3">
 		<div class="list-group vh-100 overflow-auto">
 		{% for key, val in list %}
-		  <a href="{{ path_for('admin.skin.'~type~'.edit', {'skin_id': skin_id, 'id': key}) }}" class="list-group-item list-group-item-action" {% if key == id %}active{% endif %}>{{ val }}</a>
+		  <a href="{{ path_for('admin.skin.'~type~'.edit', {'skin_id': skin_id, 'id': key}) }}" class="list-group-item list-group-item-action" {% if key == id %}active{% endif %}>{{ val }}
+          </a>
 		  {% endfor %} 
 		</div>
 	</div>
 	<div class="col">
 		<form action="{{ path_for('admin.skin.twig.save') }}" method="post">
+        <input type="hidden" name="file_type" value="{{ type }}">
 		<input type="hidden" name="twig_id" value="{{ id }}">
 		<input type="hidden" name="skin_id" value="{{ skin_id }}">
 		<textarea name="code" id="editor">{{ code }}</textarea>
@@ -37,7 +73,7 @@
 					Are you sure wanna save changes in {{ attribute(list, id) }}?
 				  </div>
 				  <div class="modal-footer">
-					<button type="submint" class="btn btn-success">{{ trans('admin.save') }}</button>
+					<button type="submit" class="btn btn-success">{{ trans('admin.save') }}</button>
 				  </div>
 				</div>
 			  </div>
@@ -55,19 +91,5 @@
 
 <link rel="stylesheet" href="{{ base_url() }}/public/css/jodit.min.css">
 <script src="{{base_url() }}/public/scripts/jodit.min.js"></script>
-<script>
-
-var editor = new Jodit('#editor', {
-	langusage: 'pl',
-    autofocus: true,
-	height: "auto",
-	"defaultMode": "2",
-	"buttons": "|,,|,|,|,|,|,undo,redo,|",
-	toolbarAdaptive: true,
-	allowResizeX: false,
-    allowResizeY: true
-});
-
-
-</script>
+<script src="{{base_url() }}/public/admin/rwd_sb1/js/editor.js"></script>
 {% endblock %}

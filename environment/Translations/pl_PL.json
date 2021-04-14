@@ -126,5 +126,17 @@
     "Two factor code from": "Kod dwuetapowej weryfikacji z",
     "Password must be bettwen 8 and and 32 characters": "Ilo\u015b\u0107 znak\u00f3w w ha\u015ble musi si\u0119 mie\u015bci\u0107 w przedziale 8 - 32",
     "childboards": "Subfora",
-    "edit shout": "Edycja wiadomo\u015bci na czacie."
+    "edit shout": "Edycja wiadomo\u015bci na czacie.",
+    "Username already exist!": "Ta nazwa użytkownika jest już zajęta.",
+    "Username must be bettwen 4 and and 32 characters": "Nazwa użytkownika musi mieć od 4 do 32 znaków.",
+    "username": "Użytkownik",
+    "confirmed": "Potwierdzony",
+    "Email already exist!": "Ten email jest już zajęty",
+    "change avatar": "Zmień avatar",
+    "this page is only for logged users": "Ta strona jest dostępna tylko dla zalogowanych użytkowników",
+    "password must not contain whitespace": "Hasło nie może zawierać spacji",
+    "This email is in database": "Ten email jest już zajęty",
+    "You already rate this topic": "Już oceniłeś ten temat",
+    "You have to log in for rate topics!": "Musisz być zalogowany żeby ocenić temat",
+    "You rate topics!": "Oceniłeś temat"
 }

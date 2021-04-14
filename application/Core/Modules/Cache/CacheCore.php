@@ -64,8 +64,7 @@ class CacheCore
             self::getDir() . md5($fname) . $this->extension,
             $content
         )) {
-            if (file_exists(MAIN_DIR . $this->mainDir . 'cache[0].cache')) 
-            {
+            if (file_exists(MAIN_DIR . $this->mainDir . 'cache[0].cache')) {
                 $list = unserialize(file_get_contents(MAIN_DIR . $this->mainDir . 'cache[0].cache'));
             }
             if (@is_array($list)) {

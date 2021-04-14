@@ -10,19 +10,21 @@
 		<input type="text" class="form-control" id="pageName" name="name" value="{{ data.name }}">
 		{% if data.id %}<input type="hidden" class="form-control" id="pageId" name="id" value="{{ data.id }}">{% endif %}
 	  </div>
-	  <div class="form-check col">
-		<input type="checkbox" class="form-check-input" id="Active" name="active" {% if data.active == true %}checked{% endif %}>
-		<label class="form-check-label" for="Acrive" >Active {{data.active}}</label>
+	  <div class="form-check col m-auto">
+        <label class="control control-checkbox" for="active">{{ trans('admin.active') }}
+			<input type="checkbox" id="active" class="form-check-input" name="active" {% if data.active == true or data.id == null %}checked{% endif %}>
+			<div class="control_indicator mt-1"></div>
+		</label>
 	  </div>
   </div> 
   {% if not data.system %}
   <div class="form-group">
-    <label for="PageContent">Content</label>
+    <label for="PageContent">{{ trans('admin.content') }}</label>
     <textarea class="form-control" id="PageContent" rows="3" name="content">{{ data.content }}</textarea>
   </div>
   {% endif %}
   <div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">{{ trans('submit') }}</button>
    </div>
 </form>
 </div>

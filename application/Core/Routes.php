@@ -26,6 +26,7 @@ $app->group('/plot', function (RouteCollectorProxy $plot) {
     $plot->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
     $plot->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
     $plot->post('/lockplot', 'PlotController:lockPlot')->setName('board.lock.plot');
+    $plot->post('/rate-plot', 'PlotController:ratePlot')->setName('board.rate.plot');
 });
 #sign
 $app->group('/auth', function (RouteCollectorProxy $auth) {
@@ -33,6 +34,7 @@ $app->group('/auth', function (RouteCollectorProxy $auth) {
     $auth->get('/signin/tfa[/{mail}]', 'AuthController:twoFactorAuth')->setName('auth.signin.tfa');
     $auth->post('/signin', 'AuthController:postSignIn')->setName('auth.post.signin');
     $auth->get('/signup', 'AuthController:getSignUp')->setName('auth.signup');
+    $auth->get('/resend', 'AuthController:resendActiveMail')->setName('auth.resend');
     $auth->get('/confirm-account[/{code}]', 'AuthController:confirmAccount')->setName('auth.confirm');
     $auth->post('/signup', 'AuthController:postSignUp')->setName('auth.post.signup');
     $auth->get('/logout', 'AuthController:getSignOut')->setName('auth.signout');
@@ -55,18 +57,17 @@ $app->group('/user', function (RouteCollectorProxy $user) {
     $user->get('[/{username}/{uid}]', 'UserPanelController:getProfile')->setName('user.profile');
     $user->post('[/{username}/{uid}]', 'UserPanelController:postProfilePicture')->setName('user.postPicture');
     $user->post('/changedata', 'UserPanelController:postChangeData')->setName('user.postChangeData');
-    
 });
 #userlist
 $app->get('/userlist[/{page}]', 'UserlistController:getList')->setName('userlist');
 
 #mailbox
 $app->group('/mailbox', function (RouteCollectorProxy $mailbox) {
-   $mailbox->map(['GET', 'POST'], '/{folder}', 'MessageController:index')->setname('mailbox'); 
-   $mailbox->get('/{folder}/message/{id}', 'MessageController:getMessage')->setname('mailbox.message'); 
-   $mailbox->post('/send/message', 'MessageController:sendMessage')->setname('mailbox.send'); 
-   $mailbox->post('/delete/message', 'MessageController:deleteMessage')->setname('mailbox.delete'); 
-   $mailbox->post('/move/moveMessage', 'MessageController:moveMessage')->setname('mailbox.move'); 
+    $mailbox->map(['GET', 'POST'], '/{folder}', 'MessageController:index')->setname('mailbox');
+    $mailbox->get('/{folder}/message/{id}', 'MessageController:getMessage')->setname('mailbox.message');
+    $mailbox->post('/send/message', 'MessageController:sendMessage')->setname('mailbox.send');
+    $mailbox->post('/delete/message', 'MessageController:deleteMessage')->setname('mailbox.delete');
+    $mailbox->post('/move/moveMessage', 'MessageController:moveMessage')->setname('mailbox.move');
 });
 
 #skin chang
@@ -80,7 +81,10 @@ $app->get('/setskin/{skin}', 'SkinController:change')->setName('changeskin');
 $adm = $container->get('settings')['core']['admin'];
 $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
     $admin->get('[/]', 'AdminHomeController:index')->setName('admin.home');
+    $admin->get('/configuration', 'AdminHomeController:config')->setName('admin.config');
     $admin->get('/auth/tfa[/{mail}]', 'AdminHomeController:tfa')->setName('admin.home.tfa');
+    $admin->get('/logs[/{page}[/{items}]]', 'AdminLogController:index')->setName('admin.logs');
+    $admin->post('/logs/set-item', 'AdminLogController:setItem')->setName('admin.logs.set.item');
 
     $admin->get('/reload/plugins', 'AdminHomeController:pluginReload')->setName('admin.reload.plugins'); // reload plugins
     $admin->get('/active', 'AdminHomeController:plugin');
@@ -120,10 +124,10 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
         });
       
         $adminSkin->get('/edit/twig/{skin_id}[/{id}]', 'AdminSkinEditorController:twigEditor')->setName('admin.skin.twig.edit');
-        $adminSkin->post('/twig/save', 'AdminSkinEditorController:twigSave')->setName('admin.skin.twig.save');
-    
         $adminSkin->get('/edit/css/{skin_id}[/{id}]', 'AdminSkinEditorController:cssEditor')->setName('admin.skin.css.edit');
         $adminSkin->get('/edit/js/{skin_id}[/{id}]', 'AdminSkinEditorController:jsEditor')->setName('admin.skin.js.edit');
+        $adminSkin->post('/twig/save', 'AdminSkinEditorController:twigSave')->setName('admin.skin.twig.save');
+        $adminSkin->post('/delete/file', 'AdminSkinEditorController:deleteFile')->setName('admin.skin.file.delete');
     });
   
     $admin->group('/plugins', function (RouteCollectorProxy $adminPlug) {
@@ -165,9 +169,12 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
     });
     
     $admin->group('/users', function (RouteCollectorProxy $adminUser) {
+        $adminUser->get('/config', 'AdminUserController:usersConfig')->setName('admin.users.and.groups');
         $adminUser->get('/list[/{page}]', 'AdminUserController:index')->setName('admin.users');
         $adminUser->get('/edit/{id}', 'AdminUserController:editUser')->setName('admin.user.edit');
         $adminUser->post('/save', 'AdminUserController:saveUserData')->setName('admin.user.save');
+        $adminUser->get('/add-user', 'AdminUserController:addUser')->setName('admin.user.add');
+        $adminUser->post('/post/add-user', 'AdminUserController:addUserPost')->setName('admin.user.add.save');
         $adminUser->post('/delete', 'AdminUserController:deleteUser')->setName('admin.user.delete');
         $adminUser->get('/groups[/{page}]', 'AdminGroupController:index')->setName('admin.groups');
         $adminUser->get('/group/add', 'AdminGroupController:addGroup')->setName('admin.groups.add');
@@ -175,8 +182,6 @@ $app->group('/' .$adm, function (RouteCollectorProxy $admin) {
         $adminUser->post('/group/manage', 'AdminGroupController:groupPost')->setName('admin.groups.post');
         $adminUser->post('/group/delete', 'AdminGroupController:deleteGroup')->setName('admin.groups.delete');
     });
-  
-    $admin->get('/update', 'AdminUpdateController:index')->setName('admin.update.deprecated');
 });
 
 if ($container->get('settings')['cache']['active']) {

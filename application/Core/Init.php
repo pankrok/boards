@@ -115,8 +115,8 @@ $container->set('UnreadController', function ($container) {
 $container->set('tfa', function ($container) {
     $name = $container->get('settings')['board']['main_page_name'];
     $tfa = new \stdClass();
-    $tfa->google = new RobThree\Auth\TwoFactorAuth( $name, 6, 30, 'sha1' );
-    $tfa->mail   = new RobThree\Auth\TwoFactorAuth( $name, 6, 300, 'sha1' );
+    $tfa->google = new RobThree\Auth\TwoFactorAuth($name, 6, 30, 'sha1');
+    $tfa->mail   = new RobThree\Auth\TwoFactorAuth($name, 6, 300, 'sha1');
     return $tfa;
 });
 
@@ -129,7 +129,7 @@ $container->set('view', function ($container) {
         $twigSettings['debug'] = false;
     }
     
-    $view = new \Slim\Views\Twig($skin . '/tpl', [
+    $view = \Slim\Views\Twig::create($skin . '/tpl', [
         'cache' => (bool)$twigSettings['cache'] ? $skin . '/cache/twig' : false,
         'debug' => (bool)$twigSettings['debug'],
     ]);
@@ -175,7 +175,7 @@ $container->set('view', function ($container) {
     
     $view->getEnvironment()->addGlobal('flash', $container->get('flash'));
     $view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
-    
+    //$view->getEnvironment()->addGlobal('csrf', $container->get('csrf')->generateToken());
     return $view;
 });
 
@@ -185,7 +185,7 @@ $container->set('adminView', function ($container) {
     if (!isset($twigSettings['debug'])) {
         $twigSettings['debug'] = false;
     }
-    $view = new \Slim\Views\Twig(
+    $view = \Slim\Views\Twig::create(
         [
             $explorer->get('adminTwig', $twigSettings['skin']),
             $explorer->get('plugins'),
@@ -194,7 +194,7 @@ $container->set('adminView', function ($container) {
             'cache' => false,
             'debug' => (bool)$twigSettings['debug'],
         ]
-    ); 
+    );
     
     $router = $container->get('router');
     
@@ -227,7 +227,16 @@ $container->set('auth', function ($container) {
 });
 
 $container->set('validator', function () {
-    return new Application\Core\Modules\Validation\Validator;
+    
+    $v = new Application\Core\Modules\Validation\Validator();
+    
+    Respect\Validation\Factory::setDefaultInstance(
+    (new Respect\Validation\Factory())
+        ->withRuleNamespace('Application\\Core\\Modules\\Validation\\Rules')
+        ->withExceptionNamespace('Application\\Core\\Modules\\Validation\\Exceptions')
+    );
+    return $v;
+    
 });
 
 $container->set('csrf', function ($container) {
@@ -243,7 +252,7 @@ $container->set('captcha', function ($container) use ($routeParser) {
     return new LordDashMe\SimpleCaptcha\Captcha();
 });
 
-$container->set('event', function ($container) { 
+$container->set('event', function ($container) {
     return new Application\Core\Modules\Plugins\PluginController($container);
 });
 
@@ -257,12 +266,9 @@ $middleware($app);
 $modules = require 'Modules.php';
 $modules($app);
 
-v::with('Application\\Core\\Modules\\Validation\\Rules\\');
-
 require 'Routes.php';
 
 $pluginsTrans = $container->get('event')->getTranslationPaths();
 foreach ($pluginsTrans as $pluginTrans) {
     $container->get('translator')->addJsonPath($pluginTrans);
 }
-

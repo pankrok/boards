@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 ini_set('display_errors', 'on');
-DEFINE('MAIN_DIR', __DIR__  );
+DEFINE('MAIN_DIR', __DIR__);
 DEFINE('BOARDS', 'BOARDS');
 
 use DI\Container;

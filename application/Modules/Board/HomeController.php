@@ -72,7 +72,6 @@ class HomeController extends Controller
         $handler = \Application\Models\BoardsModel::where('active', '1')->orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
         
         foreach ($handler as $k => $v) {
-            
             $lastpost = \Application\Models\PlotsModel::orderBy('updated_at', 'DESC')
                                                     ->where('board_id', '=', $v['id'])
                                                     ->leftJoin('users', 'users.id', 'plots.author_id')
@@ -104,7 +103,6 @@ class HomeController extends Controller
             $boards[$v['category_id']][$v['id']]['posts_number'] =  $postsNo;
             $boards[$v['category_id']][$v['id']]['url'] = self::base_url() . '/board/' . $this->urlMaker->toUrl($v['board_name'])	. '/' . $v['id'];
             if (isset($lastpost)) {
-                
                 $boards[$v['category_id']][$v['id']]['last_post'] = true;
                 $boards[$v['category_id']][$v['id']]['plot_name'] = (strlen($lastpost['plot_name']) > 10) ? substr($lastpost['plot_name'], 0, 7).'...' : $lastpost['plot_name'];
                 $boards[$v['category_id']][$v['id']]['last_post_url'] = $this->router->urlFor('board.getPlot', [
@@ -119,7 +117,7 @@ class HomeController extends Controller
                 ]);
                 $boards[$v['category_id']][$v['id']]['last_post_avatar'] = $lastpost['_38'];
             } else {
-                $boards[$v['category_id']][$v['id']]['last_post'] = false;          
+                $boards[$v['category_id']][$v['id']]['last_post'] = false;
             }
             
             if ($boards[$v['category_id']][$v['id']]['parent_id'] !== null) {
@@ -133,5 +131,4 @@ class HomeController extends Controller
         
         return $boards;
     }
-    
 };

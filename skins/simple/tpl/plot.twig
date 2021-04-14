@@ -6,14 +6,14 @@
 
 {% block content %}
 
-	<div class="row">
+	<div id="plot-id" class="row" data-plot_id="{{ plot.plot_id }}"> 
 	{% include 'templates/partials/modules.twig' %}
 	<!-- main row -->
 	
-	<div id="posts" class="col-lg order-1">
+	<div class="col-lg order-1">
 	 <div class="row">
     {% include 'templates/partials/inside-modules.twig' %}
-    <div class="col order-1">		
+    <div id="posts" class="col order-1">		
 		<!-- Main Plot -->
 		<!-- paginator -->
 		{% include 'templates/partials/pagination.twig' %}	
@@ -23,6 +23,12 @@
 			<strong>{% if locked %}<i class="fas fa-lock text-danger mx-2" data-toggle="tooltip" data-placement="top" title="{{ trans('locked') }}"></i> {% endif %}
                     {% if hidden %}<i class="far fa-eye-slash text-info mx-2" data-toggle="tooltip" data-placement="top" title="{{ trans('hidden') }}"></i> {% endif %}
                     {{ title }}
+                    <span id="star-rating" class="mx-2 float-right">
+                    {% for i in 1..5 %}
+                        {% set starClass = (stars|round >= i ? "fas fa-star rate" : "far fa-star rate")  %}
+                        <i class="{{ starClass }}" data-rate="{{ i }}"></i>
+					{% endfor %}
+                    </span>
             </strong>{% if auth.admin %} 
 			<button type="button" class="btn btn-outline-warning btn-sm float-right mx-2" data-toggle="modal" data-target="#editPlotModal">
 			  {{ trans('edit') }}
@@ -209,5 +215,7 @@
 var urlForReply = "{{ path_for('board.replyPost') }}";
 var urlEditPost = "{{ path_for('board.edit') }}";
 var likePost = "{{ path_for('board.likeit') }}";
+var ratePlot = "{{ path_for('board.rate.plot') }}";
+var stars = {{ stars|round }};
 </script>
 {% endblock %}

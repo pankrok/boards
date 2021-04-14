@@ -23,6 +23,11 @@ class AdminUserController extends Controller
         return $this->adminView->render($response, 'users_list.twig');
     }
     
+    public function usersConfig($request, $response)
+    {
+        return $this->adminView->render($response, 'usersAndGroups.twig');
+    }
+    
     public function editUser($request, $response, $arg)
     {
         $userdata = UserModel::where('users.id', $arg['id'])
@@ -46,16 +51,23 @@ class AdminUserController extends Controller
         $user = UserModel::find($body['id']);
         
         foreach ($body as $k => $v) {
-            if ($_SESSION['user'] == $body['id'] && $k == 'admin_lvl') {
+
+            if ($_SESSION['user'] === intval($body['id']) && intval($body['admin_lvl']) !== $user->admin_lvl) {
                 $this->flash->addMessage('warning', 'you cant edit admin level of yourself!');
                 return $response->withHeader('Location', $this->router->urlFor('admin.user.edit', ['id' => $user->id]))
                 ->withStatus(302);
             }
             if ($k != 'id') {
-                if ($k == 'banned' && $_SESSION['user'] == $body['id']) {
+                if ($body['banned'] === '1' && $_SESSION['user'] === intval($body['id'])) {
                     $this->flash->addMessage('warning', 'you cant ban yourself!');
                 } else {
-                    $user->$k = $v;
+                    if ($k === 'password' && $v !== '') {
+                        $user->$k = password_hash($v, PASSWORD_DEFAULT);
+                    }
+                    
+                    if ($k !== 'password') {
+                        $user->$k = $v;
+                    }
                 }
             }
         }
@@ -77,6 +89,53 @@ class AdminUserController extends Controller
         $this->flash->addMessage($message[0], $message[1]);
         return $response->withHeader('Location', $this->router->urlFor('admin.users'))
                 ->withStatus(302);
+    }
+    
+    public function addUser($request, $response)
+    {
+        $this->adminView->getEnvironment()->addGlobal('default_group', $this->settings['board']['default_group']);
+        $this->adminView->getEnvironment()->addGlobal('groups', GroupsModel::get());    
+        return $this->adminView->render($response, 'user_add.twig');
+    }
+    
+    public function addUserPost($request, $response)
+    {
+        if (UserModel::where('username', $this->purifier->purify($request->getParsedBody()['username']))->first() !== null) {
+            $this->flash->addMessage('danger', 'Username already exist!');
+            return $response
+            ->withHeader('Location', $this->router->urlFor('admin.user.add'))
+            ->withStatus(302);
+        }
+        
+         if (UserModel::where('email', $this->purifier->purify($request->getParsedBody()['email']))->first() !== null) {
+            $this->flash->addMessage('danger', 'Email already exist!');
+            return $response
+            ->withHeader('Location', $this->router->urlFor('admin.user.add'))
+            ->withStatus(302);
+        }
+        
+        foreach ($request->getParsedBody() as $k => $v) {
+            if ($v === '') {
+                 $this->flash->addMessage('warning', "$k cannot be empty!");
+                return $response
+                ->withHeader('Location', $this->router->urlFor('admin.user.add'))
+                ->withStatus(302);     
+            }
+        }
+        
+        $user = UserModel::create([
+            'email' => $this->purifier->purify($request->getParsedBody()['email']),
+            'username' => $this->purifier->purify($request->getParsedBody()['username']),
+            'password' => password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT),
+            'warn_level' => $request->getParsedBody()['warn_level'],
+            'banned' => $request->getParsedBody()['banned'],
+            'tfa' => $request->getParsedBody()['tfa'],
+            'admin_lvl' => $request->getParsedBody()['admin_lvl'],
+            'main_group' => $request->getParsedBody()['main_group'],
+        ]);
+        
+        return $response->withHeader('Location', $this->router->urlFor('admin.user.edit', ['id' => $user->id]))
+                ->withStatus(302); 
     }
     
     protected function getUsers($currentPage)

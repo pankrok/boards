@@ -19,13 +19,15 @@ return function (App &$app) {
     $app->add(new Application\Middleware\ModulesMiddleware($container));
     $app->add(new Application\Middleware\EventMiddleware($container));
     $app->add(new Application\Middleware\MessageMiddleware($container));
+    $app->add(new Application\Middleware\AdminLogMiddleware($container));
+    $app->add(new Application\Middleware\CsrfMiddleware($container));
 
     $app->addRoutingMiddleware();
     
     $errHandler = new ErrorController($app->getCallableResolver(), $app->getResponseFactory());
     $errHandler->setLevel($container->get('settings')['core']['log_level']);
     $errHandler->registerErrorRenderer('text/html', ErrorMessageController::class);
-    
+
     $errorMiddleware = $app->addErrorMiddleware($debug, true, true);
     $errorMiddleware->setDefaultErrorHandler($errHandler);
     $app->addErrorMiddleware($debug, true, true);

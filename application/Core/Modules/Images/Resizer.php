@@ -27,7 +27,7 @@ class Resizer
         $targetFile = self::generateRandomString();
         
         $info = getimagesize(MAIN_DIR. $this->_imageDir .$file);
-         if (!isset($info['mime'])) {
+        if (!isset($info['mime'])) {
             throw new \Exception('Unknown mime type' . json_encode($info));
         }
         $mime = $info['mime'];

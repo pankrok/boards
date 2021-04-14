@@ -8,7 +8,7 @@ use Application\Core\Controller;
 use Illuminate\Database\Capsule\Manager as DB;
 
 class DatabaseUpdateController extends Controller
-{ 
+{
     public function start()
     {
         $this->log->info('Update database');
@@ -26,11 +26,10 @@ class DatabaseUpdateController extends Controller
         $replace = [$dbSettings['database'], $dbSettings['prefix']];
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
-                
-                if($line !== '' && substr($line , 0, 2) !== '--') {
+                if ($line !== '' && substr($line, 0, 2) !== '--') {
                     $sql = str_replace($find, $replace, $line);
-                    try {              
-                        DB::statement($sql); 
+                    try {
+                        DB::statement($sql);
                         usleep(10000);
                     } catch (\Exception $e) {
                         $this->log->error('DB UPDATE ERROR:'.$e->getMessage());
@@ -45,5 +44,5 @@ class DatabaseUpdateController extends Controller
 
         $status['DatabaseUpdate']['updated'] = 1;
         file_put_contents($this->ServiceProvider->get('update_status'), json_encode($status, JSON_PRETTY_PRINT));
-    }    
+    }
 }

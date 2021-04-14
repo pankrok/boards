@@ -15,22 +15,26 @@ class AdminHomeController extends Controller
 {
     public function index($request, $response, $arg)
     {
-        $this->adminView->getEnvironment()->addGlobal('info' , self::boardStats());
+        $this->adminView->getEnvironment()->addGlobal('info', self::boardStats());
         return $this->adminView->render($response, 'home.twig');
+    }
+    
+    public function config($request, $response, $arg)
+    {
+        return $this->adminView->render($response, 'config.twig');
     }
     
     public function tfa($request, $response, $arg)
     {
-        
-        if(isset($_SESSION['tfa'])){
+        if (isset($_SESSION['tfa'])) {
             $secret = SecretModel::where('user_id', $_SESSION['tfa'])->first()->secret;
             $user = UserModel::find($_SESSION['tfa'])->toArray()    ;
         }
         
-        if(!isset($arg['mail'])){
+        if (!isset($arg['mail'])) {
             $this->tfa->google->getCode($secret);
             $this->adminView->getEnvironment()->addGlobal('mail', true);
-        }else{
+        } else {
             $code = $this->tfa->mail->getCode($secret);
             $this->mailer->send(
                 $user['email'],
@@ -40,19 +44,19 @@ class AdminHomeController extends Controller
                 ['code' => $code]
             );
         }
-        $this->adminView->getEnvironment()->addGlobal('admin2fa' , true);
+        $this->adminView->getEnvironment()->addGlobal('admin2fa', true);
         $this->adminView->getEnvironment()->addGlobal('username', $user['username']);
         return $this->adminView->render($response, 'home.twig');
     }
     
     private function boardStats() : array
-    {   
+    {
         $sec = 60;
         $min = 60;
         $hour = 24;
         $day = 1;
         $days = 29;
-        $results = DB::select( DB::raw("select version()") );
+        $results = DB::select(DB::raw("select version()"));
         $mysql_version =  $results[0]->{'version()'};
         $mariadb_version = '';
         if (strpos($mysql_version, 'Maria') !== false) {
@@ -61,8 +65,8 @@ class AdminHomeController extends Controller
         }
         
         if (!$stats = $this->cache->receive('board-stats')) {
-            for( $i = 0; $i < 30; $i++) {       
-                $date = date("Y-m-d", time() - (($days-$i) * $sec * $min * $hour * $day)).' 23:59:59';                   
+            for ($i = 0; $i < 30; $i++) {
+                $date = date("Y-m-d", time() - (($days-$i) * $sec * $min * $hour * $day)).' 23:59:59';
                 $perDate = date("Y-m-d", time() - (($days-$i) * $sec * $min * $hour * $day));
                 $stats['plots'][$i] = PlotsModel::where('created_at', '<', $date)->count();
                 $stats['posts'][$i]  = PostsModel::where('created_at', '<', $date)->count();

@@ -34,6 +34,7 @@ class UpdateController extends Controller
             }
             $return = self::checkUpdate();
         }
+        $this->log->debug(file_get_contents($this->ServiceProvider->get('update_list')));
         echo $return;
         return $response;
     }
@@ -197,7 +198,7 @@ class UpdateController extends Controller
             }
         }
         
-        $files = json_decode(file_get_contents($this->ServiceProvider->get('lib_ini')), true);  
+        $files = json_decode(file_get_contents($this->ServiceProvider->get('lib_ini')), true);
         if (!empty($files)) {
             foreach ($files as $k => $v) {
                 $this->log->debug('delete libs backup file: '. $k . '.back');
@@ -207,8 +208,8 @@ class UpdateController extends Controller
             }
         }
         
-        $files = json_decode(file_get_contents($this->ServiceProvider->get('skin_ini')), true);  
-        if (!empty($files)) {        
+        $files = json_decode(file_get_contents($this->ServiceProvider->get('skin_ini')), true);
+        if (!empty($files)) {
             foreach ($files as $k => $v) {
                 $this->log->debug('delete skins backup file: '. $k . '.back');
                 if (file_exists(MAIN_DIR  . $k . '.back')) {
@@ -236,7 +237,7 @@ class UpdateController extends Controller
         try {
             self::deleteDir($this->ServiceProvider->get('tmp'));
         } catch (\Exception $e) {
-            $this->log->error('tmp directory error: ' . $e->getMessage());    
+            $this->log->error('tmp directory error: ' . $e->getMessage());
         }
         $this->log->info('cleaning cache');
         $this->cache->clearCache();
@@ -272,13 +273,11 @@ class UpdateController extends Controller
         
         $files = array_diff(scandir($dirPath), ['.', '..']);
         foreach ($files as $file) {
-         
-            if(is_dir("$dirPath/$file")) {
+            if (is_dir("$dirPath/$file")) {
                 self::deleteDir("$dirPath/$file");
             } else {
                 unlink("$dirPath/$file");
             }
-
         }
         
         rmdir($dirPath);

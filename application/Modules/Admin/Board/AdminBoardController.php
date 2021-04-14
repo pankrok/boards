@@ -85,7 +85,7 @@ class AdminBoardController extends Controller
         $body = $request->getParsedBody();
         isset($body['visability']) ? $visability = 1 : $visability = 0;
         if ($body['parent_id'] !== '') {
-            $body['cat_id'] = BoardsModel::find($body['parent_id'])['category_id']; 
+            $body['cat_id'] = BoardsModel::find($body['parent_id'])['category_id'];
         } else {
             $body['parent_id'] = null;
         }
@@ -134,11 +134,11 @@ class AdminBoardController extends Controller
         if ($body) {
             isset($body['visability']) ? $visability = 1 : $visability = 0;
             $board->board_name = $body['name'];
-            $board->board_description = $body['desc']; 
+            $board->board_description = $body['desc'];
             if ($body['parent_id'] !== '') {
                 $isParent = BoardsModel::where('parent_id', $arg['id'])->count();
                 if ($isParent === 0) {
-                    $body['cat_id'] = BoardsModel::find($body['parent_id'])['category_id']; 
+                    $body['cat_id'] = BoardsModel::find($body['parent_id'])['category_id'];
                 } else {
                     unset($body['parent_id']);
                     $this->flash->addMessage('danger', 'parent cannot be childboard!');
@@ -156,7 +156,7 @@ class AdminBoardController extends Controller
             return $response
               ->withHeader('Location', $this->router->urlFor('admin.edit.board', ['id' => $arg['id']]))
               ->withStatus(302);
-        }      
+        }
         $this->adminView->getEnvironment()->addGlobal('categories', self::getCategories());
         $this->adminView->getEnvironment()->addGlobal('parents', self::getParentBoards());
         $this->adminView->getEnvironment()->addGlobal('data', $board->toArray());
@@ -195,7 +195,6 @@ class AdminBoardController extends Controller
         $boards = null;
         $handler = \Application\Models\BoardsModel::orderBy('category_id')->orderBy('board_order', 'DESC')->get()->toArray();
         foreach ($handler as $k => $v) {
-            
             if (isset($v['parent_id'])) {
                 $boards[$v['category_id']][$v['parent_id']]['childboards'][$v['id']] = $v;
                 unset($boards[$v['category_id']][$v['id']]);

@@ -91,12 +91,11 @@ class ChatboxController extends Controller
         $shout = ChatboxModel::where('id', $body['shout_id'])->first();
         $return['csrf'] = self::csftToken();
         if ($this->auth->checkAdmin() > 1 || $shout->user_id === $this->auth->check()) {
-           $shout->content = $return['content'] = $this->purifier->purify($body['shout_content']);
-           $shout->save();
-           $return['info'] = 'Shout edit success!';
-           
+            $shout->content = $return['content'] = $this->purifier->purify($body['shout_content']);
+            $shout->save();
+            $return['info'] = 'Shout edit success!';
         } else {
-           $return['info'] = 'Shout edit not autorized!';
+            $return['info'] = 'Shout edit not autorized!';
         }
         
         $return['id'] = $body['shout_id'];

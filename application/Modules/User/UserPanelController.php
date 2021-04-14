@@ -52,10 +52,10 @@ class UserPanelController extends Controller
     public function getProfile($request, $response, $arg)
     {
         if (is_numeric($arg['uid'])) {
-            if (isset($_SESSION['user']) && $arg['uid'] == $_SESSION['user']) {         
+            if (isset($_SESSION['user']) && $arg['uid'] == $_SESSION['user']) {
                 if (isset($_SESSION['set-tfa'])) {
                     $_SESSION['set-tfa'] = null;
-                    unset($_SESSION['set-tfa']); 
+                    unset($_SESSION['set-tfa']);
                     $this->view->getEnvironment()->addGlobal('card', 'tfa');
                 }
                 
@@ -68,10 +68,10 @@ class UserPanelController extends Controller
                             ->select('users.*', 'images._150')
                             ->find($arg['uid']);
             
-			if(!isset($data)){
-				throw new \Slim\Exception\HttpNotFoundException($request);
-			}
-			
+            if (!isset($data)) {
+                throw new \Slim\Exception\HttpNotFoundException($request);
+            }
+            
             $posts = PostsModel::orderBy('created_at', 'desc')
                                 ->leftJoin('plots', 'posts.plot_id', '=', 'plots.id')
                                 ->select('posts.*', 'plots.plot_name')
@@ -97,12 +97,11 @@ class UserPanelController extends Controller
             $additionalData = self::getUserdata($arg['uid']);
     
             if ($data['tfa'] === 1) {
-                
                 $secret = SecretModel::where('user_id', $data['id'])->first()->secret;
                 $qc = '<img src="' . $this->tfa->google->getQRCodeImageAsDataUri($data->username, $secret) . '">';
                 $this->view->getEnvironment()->addGlobal('sec', [
                     'secret' => $secret,
-                    'qc' => $qc                    
+                    'qc' => $qc
                     ]);
             }
             if (isset($additionalData)) {
@@ -127,7 +126,7 @@ class UserPanelController extends Controller
             $user->avatar = null;
             $user->save();
             $delete->delete();
-            $this->cache->eraseAll();
+            $this->cache->clearCache();
         }
             
         // handle single input with single file upload
