@@ -25,7 +25,7 @@ Boards are an open source discussion software that is simple to use and extended
 ## Setup
 Download package and install libraries via composer `composer install`.
 Open script in your browser and fallow install wizard
-> [DEMO](https://boards.s89.eu/) 
+> [DEMO](https://boards.s89.eu/forum) 
 
 ## Features
 
