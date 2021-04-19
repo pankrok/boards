@@ -154,15 +154,7 @@ $(function () {
         });
     });
     
-    $( ".rate" ).click(function(e) {  
-
-console.log({ 
-                  "csrf_name" : $('#csrf_name').val(),
-				  "csrf_value" : $('#csrf_value').val(),
-                  "plot_id": $("#plot-id").data('plot_id'), 
-                  "rate": $(e.target).data('rate') 
-                });
-    
+    $( ".rate" ).click(function(e) {      
         $.ajax({
             
           type: "POST",

@@ -124,6 +124,10 @@ class PlotController extends Controller
             $this->cache->deleteExpired();
         }
         
+        if ($plot_data['hidden'] == 1 && $this->auth->checkAdmin() < 1) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }
+        
         if ($this->auth->check()
             && $paginator->getCurrentPage() == ceil($paginator->getTotalItems()/$paginator->getItemsPerPage())
             && (self::lastPost($arg['plot_id']) > self::lastSeenPost($arg['plot_id']))) {
@@ -311,14 +315,9 @@ class PlotController extends Controller
     
     public function ratePlot($request, $response)
     {
-        $body = $request->getParsedBody();
-        if(!isset($body['plot_id'])) {
-            throw new \Exception('No body in request plot rating, query was: '. json_encode($body['plot_id']));
-            return false;
-        }
-        
         $message = 'You have to log in for rate topics!';
         if ($this->auth->check() !== false) {
+            $body = $request->getParsedBody();
             if (RatesModel::where([
                 ['user_id', $_SESSION['user']],
                 ['plot_id', $body['plot_id']]

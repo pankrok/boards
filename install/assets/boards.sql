@@ -3,11 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql.ct8.pl
--- Czas generowania: 13 Kwi 2021, 13:28
+-- Czas generowania: 19 Kwi 2021, 13:03
 -- Wersja serwera: 5.7.33-log
 -- Wersja PHP: 7.1.33
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -338,9 +337,9 @@ CREATE TABLE `brd_plots` (
 CREATE TABLE `brd_plugins` (
   `id` int(11) NOT NULL,
   `plugin_name` varchar(255) NOT NULL,
-  `active` tinyint(1) NOT NULL,
-  `install` tinyint(1) NOT NULL,
-  `version` varchar(255) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `install` tinyint(1) NOT NULL DEFAULT '0',
+  `version` varchar(255) DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -732,7 +731,7 @@ ALTER TABLE `brd_boards`
 -- AUTO_INCREMENT dla tabeli `brd_boxes`
 --
 ALTER TABLE `brd_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_categories`
@@ -750,7 +749,7 @@ ALTER TABLE `brd_chatbox`
 -- AUTO_INCREMENT dla tabeli `brd_costum_boxes`
 --
 ALTER TABLE `brd_costum_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_groups`
@@ -846,7 +845,7 @@ ALTER TABLE `brd_skins`
 -- AUTO_INCREMENT dla tabeli `brd_skins_boxes`
 --
 ALTER TABLE `brd_skins_boxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT dla tabeli `brd_userdata`
@@ -976,7 +975,6 @@ ALTER TABLE `brd_users`
 ALTER TABLE `brd_user_additional_fields`
   ADD CONSTRAINT `brd_user_additional_fields_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `brd_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_additional_fields_ibfk_2` FOREIGN KEY (`field_id`) REFERENCES `brd_additional_fields` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -4,12 +4,13 @@
         {% if boards_off and auth.admin > 0 %}
         <div class="position-fixed"><span class="badge badge-pill badge-info">Podglą nieaktywnego forum</span></div>
         {% endif %}
-
+       
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+         
         <span class="navbar-toggler-icon"></span>
     
       </button>
-    
+    {% if unread and auth.check %}<span class="d-md-none menu-badge badge badge-pill badge-success fs-12 position-absolute">{{ unread }}</span> {% endif %}
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">

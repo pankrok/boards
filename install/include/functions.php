@@ -118,10 +118,9 @@ function createAdmin()
             'main_group' => 1,
             'admin_lvl' => 10,
             'confirmed' => 1,
-            'created_at' => date("Y-m-d H:i:s")
     ];
     
-    $query = "INSERT INTO ".$sql['prefix']."users (email, username, password, main_group, admin_lvl, confirmed, created_at) VALUES (:email, :username, :password, :main_group, :admin_lvl, :confirmed, :created_at)";
+    $query = "INSERT INTO ".$sql['prefix']."users (email, username, password, main_group, admin_lvl, confirmed) VALUES (:email, :username, :password, :main_group, :admin_lvl, :confirmed)";
     $stmt= $pdo->prepare($query);
     $stmt->execute($data);
 }
@@ -134,4 +133,30 @@ function createCFG()
     $_POST['main_page_name'] ? $cfg['board']['main_page_name'] = $_POST['main_page_name'] : $cfg['board']['main_page_name'] = 'BOARDS';
     
     return file_put_contents(MAIN_DIR.'/environment/Config/settings.json', json_encode($cfg, JSON_PRETTY_PRINT));
+}
+
+function checkReq()
+{
+    extension_loaded('gd') ? $gd = true : $gd = false;
+    $phpv = phpversion();
+    $php = explode('.', $phpv);
+    $php_check = false;
+    if (intval($php[0]) === 8) {
+       $php_check = true;
+    }    
+    if (intval($php[0]) === 7 && intval($php[1]) === 4) {
+       $php_check = true ;
+    }
+    
+    $curl =  function_exists('curl_version');
+    $check = [
+        'php' => $phpv,
+        'php_check' => $php_check,
+        'gd' => $gd,
+        'curl' => $curl,
+    ];
+    
+    
+    
+    return $check;
 }

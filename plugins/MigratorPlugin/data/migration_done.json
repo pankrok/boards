@@ -1,11 +1,11 @@
 {
     "groups": {
-        "done": "yes",
-        "count": 22
+        "done": "0",
+        "count": 0
     },
     "users": {
-        "done": 1,
-        "count": 201
+        "done": "0",
+        "count": 0
     },
     "categories": {
         "done": "0",

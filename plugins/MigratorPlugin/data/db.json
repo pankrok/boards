@@ -1,10 +1,10 @@
 {
     "driver": "mysql",
-    "host": "localhost",
-    "database": "mybb",
-    "username": "root",
+    "host": "",
+    "database": "",
+    "username": "",
     "password": "",
     "charset": "utf8",
     "collation": "utf8_general_ci",
-    "prefix": "mybb_"
+    "prefix": ""
 }

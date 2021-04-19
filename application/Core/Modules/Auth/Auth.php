@@ -30,15 +30,15 @@ class Auth
     * @return boolen
     **/
   
-    public function user()
+    public function user() : array
     {
         if (isset($_SESSION['user'])) {
             $a = UserModel::leftJoin('images', 'images.id', '=', 'users.avatar')->select('users.*', 'images._38', 'images._85', 'images._150')->find($_SESSION['user'])->makeHidden(['password']);
-            if ($a) {
-                $a->toArray();
-            }
-            return $a;
+            if (is_object($a)) {              
+                return $a->toArray();
+            }     
         }
+        return [];
     }
     
     /**
@@ -46,14 +46,14 @@ class Auth
       * @return boolen
       **/
   
-    public function check()
+    public function check() : int
     {
-        return isset($_SESSION['user']) ?  $_SESSION['user'] : false;
+        return isset($_SESSION['user']) ?  $_SESSION['user'] : 0;
     }
   
-    public function checkAdmin()
+    public function checkAdmin() : int
     {
-        return isset($_SESSION['user']) ? UserModel::select('admin_lvl')->find($_SESSION['user'])->toArray()['admin_lvl'] : false;
+        return isset($_SESSION['user']) ? UserModel::select('admin_lvl')->find($_SESSION['user'])->toArray()['admin_lvl'] : 0;
     }
   
     public function checkBan()

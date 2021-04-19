@@ -84,7 +84,10 @@ a .fc-b, .fc-b{
     cursor: pointer;
 }
 
-
+.menu-badge {
+    right: 60px;
+    top: 5px;
+}
 /* avatar */
 
 .stat-av{
