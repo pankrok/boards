@@ -6,7 +6,7 @@
 		<input type="hidden" id="skin_name" name="skin_name" value="{{ skin }}"><b>{{ skin }}</b>
 	</div>
 	<div class="col-auto">
-		<button class="btn btn-outline-success btn-sm" type="submint">{{ trans('admin.install') }}</button>
+		<button class="btn btn-outline-success btn-sm" type="submint">{{ trans('install') }}</button>
 	</div>
 
 </div>
@@ -15,7 +15,7 @@
 {% if not skins %}
 
 <div class="alert alert-warning" role="alert">
-  <strong>{{ trans('admin.All skins are installed in your board') }}.</strong>
+  <strong>{{ trans('All skins are installed in your board') }}.</strong>
 </div>
 
 {% endif %}

@@ -1,0 +1,45 @@
+{% for board in boards %}
+<div class="box">
+<div id="board-{{ board.id }}" class="box-body">
+    <div class="row flex-align-center my2 text-center">
+        <div class="col-1 col-sm-2">
+            <i class=" fas fa-comment fa-2x"></i>
+        </div>
+        <div class="col-8    col-sm-8">
+            <div class="row flex-align-center text-center">
+                <div class="col-10 text-left">
+                    <div class="box-header border-0">
+                        <h3><a href="{{ board.url }}">{{ board.board_name |raw }}</a></h3>
+                    </div>
+                    <div class="box-body">    
+                        <div class="row text-left">
+                            {% for childboard in board.childboard %} 
+                            <div class="col-4">
+                                <a href="{{ childboard.url }}"><i class="fas fa-arrow-right"></i> {{childboard.board_name|raw}}</a>
+                            </div>
+                            {% endfor %}{# for childboard in board.childboard #} 
+                            <div class="col-12">{{ board.board_description | raw }}</div>
+                        </div>   
+                    </div>
+                </div>
+                <div class="col-2 d-sm-none">    
+                    <strong>{{ board.plots_number }} <i class="fas fa-comments"></i> /  {{ board.posts_number }} <i class="fas fa-comment-dots"></i></strong>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 col-sm-2">
+        <div class="row flex-dir-row flex-justify-center">
+        <div class="flex-dir-column p1 d-sm-none text-right">
+                <div class="m1"><strong style="text-shadow: 1px 1px 10px red; color: red; font-weight: bold;"><i class="fas fa-circle-notch fa-spin"></i> PanKrok</strong></span></div>
+                <div class="m1">Ostatni temat: abc</div>
+            </div>
+            <div class="flex-dir-row p1">
+                <img class="avatar avatar-sm" src="https://crooket.ct8.pl/public/upload/avatars/mqv1IWuc_150.png" alt="Message User Image">
+            </div>
+            
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endfor %}{# for board in boards #}

@@ -1,0 +1,17 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+<div id="page-id" class="box" data-plot_id="{{ plot.plot_id }}">
+    <div class="box-header">
+        <div class="row flex-1 row flex-1 flex-align-center">
+            <h1>{{ page.name|raw }}</h1>
+        </div>
+    </div>
+    <div class="box-body">
+        {{ page.content|raw }}
+    </div>
+</div>
+{% endblock %}
+{% endembed %}
+{% endblock %}

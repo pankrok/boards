@@ -10,7 +10,15 @@ use Application\Models\AdminLogModel;
 class AdminLogController extends Controller
 {
     public function index($request, $response, $arg)
-    {    
+    {
+        if (!isset($arg['page'])) {
+            $arg['page'] = 0;
+        }
+        
+        if (!isset($arg['items'])) {
+            $arg['items'] = 20;
+        }
+
         $data = self::getLogs($arg['page'], $arg['items']);
         $this->adminView->getEnvironment()->addGlobal('logs', $data['logs']);
         $this->adminView->getEnvironment()->addGlobal('paginator', $data['paginator']);
@@ -27,15 +35,15 @@ class AdminLogController extends Controller
     
     protected function getLogs($page, $items)
     {
-        if ($items === null ) {
+        if ($items === null) {
             $items = 20;
         }
         
-        if ($page === null ) {
+        if ($page === null) {
             $page = 1;
         }
         
-        if ($items > 100 ) {
+        if ($items > 100) {
             $items = 100;
         }
         

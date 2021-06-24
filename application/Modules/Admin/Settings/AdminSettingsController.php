@@ -51,7 +51,7 @@ class AdminSettingsController extends Controller
         $body = $request->getParsedBody();
         $message = '';
         if (isset($body['objects'])) {
-            $this->cache->clearCache();
+            $this->cache->clear();
             $message .= $this->translator->get('admin.object cache removed');
         }
         if (isset($body['skins'])) {

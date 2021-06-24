@@ -27,12 +27,12 @@ class ModulesMiddleware extends Middleware
         $route = $routeContext->getRoute();
         $name = $route->getName();
 
-        if (explode('.', $name)[0] === 'admin' && !in_array($name, $routeArray)) {
+        if (explode('.', $name)[0] === 'admin' && !in_array($name, $routeArray, true)) {
             return $handler->handle($request);
         }
         
-        $this->container->get('cache')->setName('box-controller');
-        if (!$boxes = $this->container->get('cache')->receive($name)) {
+        $this->container->get('cache')->setPath('box-controller');
+        if (!$boxes = $this->container->get('cache')->get($name)) {
             $positions = ['top', 'left', 'right', 'bottom', 'iTop', 'iBottom'];
             $activeSkin = SkinsModel::where('active', 1)->select('id')->first()->toArray()['id'];
         
@@ -61,7 +61,7 @@ class ModulesMiddleware extends Middleware
                 }
             }
                             
-            $this->container->get('cache')->store($name, $boxes, 0);
+            $this->container->get('cache')->set($name, $boxes, 0);
         }
 
         $this->container->get('view')->getEnvironment()->addGlobal('modules', $boxes);

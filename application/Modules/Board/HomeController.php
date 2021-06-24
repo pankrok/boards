@@ -9,17 +9,17 @@ use Application\Core\Controller as Controller;
 class HomeController extends Controller
 {
     public function index($request, $response, $arg)
-    {
+    {        
         $cache = $request->getAttribute('cache');
         if (!isset($cache)) {
             $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
             $name = $routeContext->getRoute()->getName();
             $routeName = $routeContext->getRoutingResults()->getUri();
-            $this->cache->setName($name);
+            $this->cache->setPath($name);
             
             $categories = self::getCategories();
             $boards = self::getBoards();
-            $this->cache->store($routeName, ['categories' => $categories, 'boards' => $boards], $this->settings['cache']['cache_time']);
+            $this->cache->set($routeName, ['categories' => $categories, 'boards' => $boards], $this->settings['cache']['cache_time']);
         } else {
             $categories = $cache['categories'];
             $boards 	= $cache['boards'];
@@ -48,7 +48,7 @@ class HomeController extends Controller
         $this->view->getEnvironment()->addGlobal('online', $this->OnlineController->getOnlineList());
         $this->view->getEnvironment()->addGlobal('stats', $this->StatisticController->getStats());
         $this->event->addGlobalEvent('home.loaded');
-        return $this->view->render($response, 'home.twig');
+        return $this->view->render($response, 'pages/home/index.twig');
         ;
     }
     
@@ -73,7 +73,7 @@ class HomeController extends Controller
         
         foreach ($handler as $k => $v) {
             $lastpost = \Application\Models\PlotsModel::orderBy('updated_at', 'DESC')
-                                                    ->where('board_id', '=', $v['id'])
+                                                    ->where([['hidden', 0],['board_id', '=', $v['id']]])
                                                     ->leftJoin('users', 'users.id', 'plots.author_id')
                                                     ->leftJoin('images', 'images.id', 'users.avatar')
                                                     ->select('plots.*', 'users.username', 'images._38')
@@ -104,11 +104,11 @@ class HomeController extends Controller
             $boards[$v['category_id']][$v['id']]['url'] = self::base_url() . '/board/' . $this->urlMaker->toUrl($v['board_name'])	. '/' . $v['id'];
             if (isset($lastpost)) {
                 $boards[$v['category_id']][$v['id']]['last_post'] = true;
-                $boards[$v['category_id']][$v['id']]['plot_name'] = (strlen($lastpost['plot_name']) > 10) ? substr($lastpost['plot_name'], 0, 7).'...' : $lastpost['plot_name'];
+                $boards[$v['category_id']][$v['id']]['plot_name'] = (strlen($lastpost['plot_name']) > 10) ? substr($lastpost['plot_name'], 0, 8).'...' : $lastpost['plot_name'];
                 $boards[$v['category_id']][$v['id']]['last_post_url'] = $this->router->urlFor('board.getPlot', [
                     'plot' => $this->urlMaker->toUrl($lastpost['plot_name']),
                     'plot_id' => $lastpost['id'],
-                    'page' => \Application\Models\PlotsModel::where('board_id', '=', $v['id'])->count(),
+                    'page' => ceil(\Application\Models\PlotsModel::where('board_id', '=', $v['id'])->count() / $this->settings['pagination']['plots']),
                 ]) .'#post-' . $lastpost['id'];
                 
                 $boards[$v['category_id']][$v['id']]['last_post_author_url'] = $this->router->urlFor('user.profile', [

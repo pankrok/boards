@@ -48,7 +48,7 @@ class AuthController extends Controller
   
     public function getSignIn($request, $response)
     {
-        return $this->view->render($response, 'auth/signin.twig');
+        return $this->view->render($response, 'pages/auth/signin.twig');
     }
     
     
@@ -63,7 +63,7 @@ class AuthController extends Controller
     public function postSignIn($request, $response)
     {
         $validation = $this->validator->validate($request, [
-        'login' =>   v::notEmpty()->email()
+            'login' =>   v::notEmpty()->email()
         ]);
          
         if ($validation->faild() && isset($request->getParsedBody()['tfa'])) {
@@ -107,7 +107,6 @@ class AuthController extends Controller
         }
         
         if ($auth === 'not confirmed account') {
-            
             $auth .= '<br /><a href="'.$this->router->urlFor('auth.resend').'">resend code</a>';
             $this->flash->addMessage('danger', 'You are ' . $auth);
 
@@ -153,6 +152,7 @@ class AuthController extends Controller
         if (isset($_SESSION['tfa'])) {
             $secret = SecretModel::where('user_id', $_SESSION['tfa'])->first()->secret;
             $user = UserModel::find($_SESSION['tfa']);
+            $this->view->getEnvironment()->addGlobal('username', $user['username']);
         }
         if (!isset($arg['mail'])) {
             $this->tfa->google->getCode($secret);
@@ -161,13 +161,12 @@ class AuthController extends Controller
             $this->mailer->send(
                 $user['email'],
                 $user['username'],
-                $this->translator->get('lang.Two factor code from') . $this->settings['board']['main_page_name'],
+                $this->translator->get('Two factor code from') . ' ' . $this->settings['board']['main_page_name'],
                 '2fa',
-                ['code' => $code]
+                ['code' => $code, 'main_name' => $this->settings['board']['main_page_name']]
             );
-        }
-        $this->view->getEnvironment()->addGlobal('username', $user['username']);
-        return $this->view->render($response, 'auth/2fa.twig');
+        }   
+        return $this->view->render($response, 'pages/auth/2fa.twig');
     }
     
     /**
@@ -193,7 +192,7 @@ class AuthController extends Controller
         $this->view->getEnvironment()->addGlobal('captcha', $captcha);
         $this->view->getEnvironment()->addGlobal('additionalFields', $additionalFields);
         
-        return $this->view->render($response, 'auth/signup.twig');
+        return $this->view->render($response, 'pages/auth/signup.twig');
     }
 
     /**
@@ -294,9 +293,9 @@ class AuthController extends Controller
             $this->mailer->send(
                 $user->email,
                 $user->username,
-                $this->translator->get('lang.confirm account'),
+                $this->translator->get('confirm account on forum :') .' '. $this->settings['board']['main_page_name'],
                 'reg_confirm',
-                ['url' => $url, 'code' => $user->lostpw, 'url_code' => $urlCode, 'username' => $user->username]
+                ['url' => $url, 'code' => $user->lostpw, 'url_code' => $urlCode, 'username' => $user->username, 'base_url' => self::base_url(true), 'main_name' => $this->settings['board']['main_page_name']]
             );
             $this->flash->addMessage('info', 'activation email has been send');
             return $response
@@ -363,9 +362,7 @@ class AuthController extends Controller
                 $user->confirmed = 1;
                 $user->lostpw = '';
                 $user->save();
-                
-                $this->flash->addMessage('success', 'account is activtion success, you can log in now');
-                
+                $this->flash->addMessage('success', 'account activation was successful, you can login');            
                 return $response
                 ->withHeader('Location', $this->router->urlFor('home'))
                 ->withStatus(302);
@@ -393,6 +390,5 @@ class AuthController extends Controller
         return $response
         ->withHeader('Location', $this->router->urlFor('home'))
         ->withStatus(302);
-    }   
-        
+    }
 }

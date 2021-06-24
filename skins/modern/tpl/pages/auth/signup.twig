@@ -1,0 +1,192 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+
+	<div class="box">
+        <div class="box-header">
+            <div class="float-left"><h1><i class="fas fa-user-plus"></i> {{ trans('Sign up') }}</h1></div>
+            
+        </div>
+				<div class="box-body">
+				<form action="{{ path_for('auth.signup') }}" method="post">
+					<div class="row">
+						<div class="col-12">
+								<div class="card m-2">
+								  <div class="card-header">
+									{{ trans('Account details') }}
+								  </div>
+								  <div class="card-body">
+									<div class="row">
+									  <div class="col-12">
+										<div class="form-group">
+										<label for="username">{{ trans('Login') }}</label>
+										<input type="text" name="username" id="username"  class="form-control {{ errors.username ? 'is-invalid' : ''}}" value="{{ old.username }}">
+										<span class="invalid-feedback">{{ trans(errors.username | first) }}</span>
+										</div>
+									  </div>
+									  <div class="col-6">
+									  <div class="form-group">
+										<label for="email">{{ trans('Email address') }}</label>
+										<input type="text" name="email" id="email"  class="form-control {{ errors.email ? 'is-invalid' : ''}}" value="{{ old.email }}">
+										<span class="invalid-feedback">{{ trans(errors.email | first) }}</span>
+									  </div>
+									  </div>
+									  <div class="col-6">
+									  <div class="form-group">
+										<label for="vemail">{{ trans('Confirm Email address') }}</label>
+										<input type="text" name="vemail" id="vemail"  class="form-control {{ errors.vemail ? 'is-invalid' : ''}}" value="">
+										<span class="invalid-feedback">{{ trans(errors.vemail | first) }}</span>
+									  </div>
+									  </div>
+									  <div class="col-6">
+									  <div class="form-group">
+										<label for="password">{{ trans('Password') }}</label>
+										<input type="password" name="password" id="password"  class="form-control {{ errors.password ? 'is-invalid' : ''}}" value="">
+										<span class="invalid-feedback">{{ trans(errors.password | first) }}</span>
+									  </div>
+									  </div>
+									  <div class="col-6">
+									  <div class="form-group">
+										<label for="vpassword">{{ trans('Confirm Password') }}</label>
+										<input type="password" name="vpassword" id="vpassword"  class="form-control {{ errors.vpassword ? 'is-invalid' : ''}}" value="">
+										<span class="invalid-feedback">{{ trans(errors.vpassword | first) }}</span>
+									  </div>
+									  </div>
+									
+									 <div class="col-6">
+									  <div class="form-group">
+										<label for="captchaCode">{{ trans('Captcha') }}</label>
+										<div class="row">
+										<div id="captcha" class="row flex-justify-center">{{ captcha.image | raw }}</div>
+										<div class="col-6 m-auto">{{ captcha.input | raw }}
+										<small id="captcha-ref-btn" class="form-text text-muted text-center">{{ trans('refresh captcha') }}</a></small>
+										</div>		
+										</div>
+									  </div>
+									</div>
+									<div class="col-6">
+									
+									  <div class="form-group">
+									  <label for="recommended">{{ trans('Referrer') }}</label>
+                                        <div class="autoComplete_wrapper">
+                                            <input id="autoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off">
+                                        </div>
+										<!-- <input id="autocomplete-dynamic-users" name="recommended" type="text" class="form-control" id="Polecający" aria-describedby="{{ trans('Referrer') }}" placeholder="{{ trans('Referrer') }}"> -->
+										<small id="Polecający" class="form-text text-muted">Jeśli ktoś polecił Ci forum, wpisz tutaj jego login. Jeśli nie - pozostaw to pole puste.</small>
+									  </div>
+									</div>
+									</div>
+								  </div>
+								</div>
+		
+							</div>
+							
+                            {% if additionalFields %}
+                            
+                            <div class="col-12">
+                                <div class="box">
+                                    <div class="box-body">
+                                        {% for field in additionalFields %}
+                                            {% if field.add_type == 'checkbox' %}
+                                            <div class="form-group">
+                                                <label class="control control-checkbox" for="{{ field.add_name }}">{{ trans('addit.'~field.add_name) }}
+                                                    <input type="{{ field.add_type }}" class="form-check-input" id="{{ field.add_name }}" name="{{ toUrl(field.add_name) }}">
+                                                    <div class="control_indicator mt-1"></div>{% if field.description %}
+                                                    <small class="form-text text-muted">{{ trans('addit.'~field.description) }}</small>
+                                                    {% endif %}
+                                                </label>            
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+						<div class="col-md-12 mx-auto text-center my-1">
+						<button type="submint" class="btn btn-dark">{{ trans('Sign up') }}</button>
+                      
+						</div>
+					</div>
+					</form>	
+				</div>	
+	</div>
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block endBodyBlock %}
+<script>
+let autoCompleteJS;
+document.getElementById("autoComplete").addEventListener('keyup',function (e) {
+    if(e.target.value.length === 3) {
+        B.ajax({
+          method: "POST",
+		  url: "{{ path_for('auth.hint') }}",
+		  data: {
+            recommended: 	e.target.value,
+		  },
+		  type: 'json',
+		  error: function(mydata){
+              alert('error');
+                console.log(mydata);
+		  },
+		  success: function(mydata){
+                B.getScript(B.scripts + 'autoComplete.min.js', 1, function(){
+                    document.getElementById('autoComplete').focus();
+                    autoCompleteJS = new autoComplete({
+                        data: {
+                            src: mydata.username,
+                            cache: false,
+                        },
+                        resultItem: {
+                            highlight: true
+                        },
+                        events: {
+                            input: {
+                                selection: (event) => {
+                                    const selection = event.detail.selection.value;
+                                    autoCompleteJS.input.value = selection;
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+    
+        });
+    } else if(e.target.value.length < 3) { console.log(e.target.value.length );
+        autoCompleteJS = null;
+    }
+});
+document.getElementById("captcha-ref-btn").addEventListener('click', function() {
+    let a = document.getElementById("csrf_name").value,
+        c = document.getElementById("csrf_value").value;
+    B.ajax({
+        method: "POST",
+        url: "{{ path_for('auth.ref.captcha') }}",
+        data: { csrf_name: a, csrf_value: c },
+        dataType: "json",
+        error: function (a) {
+            console.log(a);
+        },
+        success: function (a) {
+            let captcha = document.getElementById('captcha');
+        
+            document.getElementById("csrf_name").value = a.csrf.csrf_name;
+            document.getElementById("csrf_value").value = a.csrf.csrf_value;
+
+            captcha.classList.toggle('hide-captcha');
+
+            setTimeout(function(){
+                document.getElementById('captchaImg').remove();
+                B.appendHtml(captcha, a.captcha); 
+                captcha.classList.toggle('hide-captcha');                
+            }, 300);
+        }
+    });
+});
+
+</script>
+{% endblock %}

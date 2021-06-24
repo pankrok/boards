@@ -72,7 +72,16 @@ $container->set('mailer', function ($container) {
 
 $container->set('cache', function ($container) {
     $cacheSettings = $container->get('settings')['cache'];
-    return new Application\Core\Modules\Cache\CacheCore($cacheSettings);
+    $cacheSettings['cache_dir'] = $cacheSettings['cache_dir'];
+    if ($cacheSettings['type'] === 'file') {
+        return new Application\Core\Modules\SimpleCache\FileCache($cacheSettings);
+    }
+    
+    if ($cacheSettings['type'] === 'memcached') {
+        $memcache = new Application\Core\Modules\SimpleCache\MemCache($cacheSettings);
+        $memcache->init($cacheSettings['memcached']);
+        return $memcache;
+    }
 });
 
 $container->set('images', function ($container) {
@@ -94,7 +103,9 @@ $container->set('translator', function ($container) {
         new \Illuminate\Filesystem\Filesystem(),
         MAIN_DIR . '/environment/Translations'
     );
-    $loader->addJsonPath(MAIN_DIR . '/environment/Translations');
+    $loader->addJsonPath(MAIN_DIR . '/environment/Translations/boards');
+	$loader->addJsonPath(MAIN_DIR . '/environment/Translations/admin');
+    
     $translator = new \Illuminate\Translation\Translator($loader, $_SESSION['lang'] ?? $fallback);
     $translator->setFallback($fallback);
     return $translator;
@@ -175,7 +186,7 @@ $container->set('view', function ($container) {
     
     $view->getEnvironment()->addGlobal('flash', $container->get('flash'));
     $view->getEnvironment()->addGlobal('setString', $container->get('urlMaker'));
-    //$view->getEnvironment()->addGlobal('csrf', $container->get('csrf')->generateToken());
+    $view->getEnvironment()->addGlobal('csrf', $container->get('csrf')->generateToken());
     return $view;
 });
 
@@ -207,7 +218,7 @@ $container->set('adminView', function ($container) {
     }
     
     $filter = new \Twig\TwigFilter('base64_decode', function ($string) {
-        return base64_decode($string);
+        return base64_decode($string, true);
     });
 
     $lock = file_exists($explorer->get('config', 'lock'));
@@ -227,16 +238,14 @@ $container->set('auth', function ($container) {
 });
 
 $container->set('validator', function () {
-    
     $v = new Application\Core\Modules\Validation\Validator();
     
     Respect\Validation\Factory::setDefaultInstance(
-    (new Respect\Validation\Factory())
+        (new Respect\Validation\Factory())
         ->withRuleNamespace('Application\\Core\\Modules\\Validation\\Rules')
         ->withExceptionNamespace('Application\\Core\\Modules\\Validation\\Exceptions')
     );
     return $v;
-    
 });
 
 $container->set('csrf', function ($container) {

@@ -37,13 +37,13 @@ class PluginLoaderController
         $this->version = $version;
         
         
-        if (!$cacheData = $cache->receive('Plugins')) {
+        if (!$cacheData = $cache->get('Plugins')) {
             $allFiles = scandir(MAIN_DIR.'/plugins/');
             $files = array_diff($allFiles, ['.', '..']);
             
             $plugins = PluginsModel::get()->toArray();
             foreach ($plugins as $val) {
-                if (!array_search($val['plugin_name'], $files)) {
+                if (!array_search($val['plugin_name'], $files, true)) {
                     PluginsModel::find($val['id'])->delete();
                 }
             }
@@ -72,8 +72,8 @@ class PluginLoaderController
     **/
     public function reloadPluginsList()
     {
-        if ($this->cache->receive('Plugins')) {
-            $this->cache->erase('Plugins');
+        if ($this->cache->get('Plugins')) {
+            $this->cache->delete('Plugins');
         }
         
     
@@ -82,7 +82,7 @@ class PluginLoaderController
         
         $plugins = PluginsModel::get()->toArray();
         foreach ($plugins as $val) {
-            if (!array_search($val['plugin_name'], $files)) {
+            if (!array_search($val['plugin_name'], $files, true)) {
                 PluginsModel::find($val['id'])->delete();
             }
         }
@@ -117,7 +117,7 @@ class PluginLoaderController
         $plugin->save();
         
         $this->cache->clearTwigCache($this->skin);
-        $this->cache->clearCache();
+        $this->cache->clear();
         return true;
     }
     
@@ -133,7 +133,7 @@ class PluginLoaderController
         $plugin->save();
         
         $this->cache->clearTwigCache($this->skin);
-        $this->cache->clearCache();
+        $this->cache->clear();
         return true;
     }
     
@@ -180,7 +180,7 @@ class PluginLoaderController
         $plugin->save();
         
         $this->cache->clearTwigCache($this->skin);
-        $this->cache->clearCache();
+        $this->cache->clear();
         return true;
     }
     
@@ -196,6 +196,6 @@ class PluginLoaderController
         $plugin->save();
         
         $this->cache->clearTwigCache($this->skin);
-        $this->cache->clearCache();
+        $this->cache->clear();
     }
 }

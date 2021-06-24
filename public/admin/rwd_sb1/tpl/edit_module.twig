@@ -3,12 +3,12 @@
 <div class="row">
 			
 			<div class="col">
-			<a class="btn btn-secondary float-left" href="{{ path_for('admin.modules.skin.get', {'route': 'home', 'id': skin_id}) }}">{{ trans('admin.back') }}</a>
+			<a class="btn btn-secondary float-left" href="{{ path_for('admin.modules.skin.get', {'route': 'home', 'id': skin_id}) }}">{{ trans('back') }}</a>
 			</div>
 			{% if module.box.costum and module.costum_box.id %}
 			<div class="col">
 				<button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#deleteModal">
-				  {{ trans('admin.delete') }}
+				  {{ trans('delete') }}
 				</button>
 			</div>
 			{% endif %}
@@ -26,26 +26,26 @@
 		<div class="col-sm col-md-7">
 			<div class="row">
 			  <div class="form-group col-sm col-md-6">
-				<label for="module_name_prefix">{{ trans('admin.Module name prefix') }}</label>
+				<label for="module_name_prefix">{{ trans('Module name prefix') }}</label>
 				<input type="text" class="form-control" id="module_name_prefix" name="module_name_prefix" value="{{ module.costum_box.name_prefix }}">
 			  </div>
 			  <div class="form-group col-sm col-md-6">
-				<label for="module_name">{{ trans('admin.Module name') }} *</label>
+				<label for="module_name">{{ trans('Module name') }} *</label>
 				<input type="text" class="form-control" id="module_name" name="module_name" value="{{ module.costum_box.name | raw }}">
 			  </div>
 			  <div class="form-group col-sm col-md-12">
-				<label for="position">{{ trans('admin.Module Position') }}</label>
+				<label for="position">{{ trans('Module Position') }}</label>
 				<select class="form-control" id="position" name="position">
-				  <option value="top" {% if module.skin_boxes.side == "top" %}selected{% endif %}>{{ trans('admin.top') }}</option>
-				  <option value="bottom" {% if module.skin_boxes.side == "bottom" %}selected{% endif %}>{{ trans('admin.bottom') }}</option>
-				  <option value="left" {% if module.skin_boxes.side == "left" %}selected{% endif %}>{{ trans('admin.left') }}</option>
-				  <option value="right" {% if module.skin_boxes.side == "right" %}selected{% endif %}>{{ trans('admin.right') }}</option>
-                  <option value="iTop" {% if module.skin_boxes.side == "iTop" %}selected{% endif %}>{{ trans('admin.inside-top') }}</option>
-				  <option value="iBottom" {% if module.skin_boxes.side == "iBottom" %}selected{% endif %}>{{ trans('admin.inside-bottom') }}</option>
+				  <option value="top" {% if module.skin_boxes.side == "top" %}selected{% endif %}>{{ trans('top') }}</option>
+				  <option value="bottom" {% if module.skin_boxes.side == "bottom" %}selected{% endif %}>{{ trans('bottom') }}</option>
+				  <option value="left" {% if module.skin_boxes.side == "left" %}selected{% endif %}>{{ trans('left') }}</option>
+				  <option value="right" {% if module.skin_boxes.side == "right" %}selected{% endif %}>{{ trans('right') }}</option>
+                  <option value="iTop" {% if module.skin_boxes.side == "iTop" %}selected{% endif %}>{{ trans('inside-top') }}</option>
+				  <option value="iBottom" {% if module.skin_boxes.side == "iBottom" %}selected{% endif %}>{{ trans('inside-bottom') }}</option>
 				</select>
 			  </div>
 			  <div class="form-group col-sm col-md-12">
-				<label for="htmlcode">{{ trans('admin.Module HTML') }}</label>
+				<label for="htmlcode">{{ trans('Module HTML') }}</label>
 				<textarea class="form-control" id="module_html" name="module_html"></textarea>
 				<span id="module_html_data" style="display: none;">{{ module.costum_box.html | raw }}</span>
 			  </div>
@@ -56,22 +56,22 @@
 			{% for key, val in module.skin_boxes.active %}
 			<div class="col-sm col-md-6">
 				<div class="form-group">
-				<label for="{{ key }}">{{ trans('admin.active') }}: {{ trans('admin.'~key) }}</label>
+				<label for="{{ key }}">{{ trans('active') }}: {{ trans(''~key) }}</label>
 				<select class="form-control" id="{{ key }}" name="{{ key }}">
-				  <option {% if val %}selected{% endif %} value="1">{{ trans('admin.yes') }}</option>
-				  <option {% if not val %}selected{% endif %} value="0">{{ trans('admin.no') }}</option>
+				  <option {% if val %}selected{% endif %} value="1">{{ trans('yes') }}</option>
+				  <option {% if not val %}selected{% endif %} value="0">{{ trans('no') }}</option>
 				</select>
 				</div>
 			</div>
 			{% endfor %}
 			<div class="col-sm col-md-6 m-auto">
 				 <div class="form-group">
-						<label for="box_order">{{ trans('admin.order') }}</label>
+						<label for="box_order">{{ trans('order') }}</label>
 						<input type="text" class="form-control" id="box_order" name="box_order" value="{{ module.skin_boxes.box_order }}">
 					  </div>
 			</div>
 			<div class="col-sm col-md-12 m-auto">
-				<button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+				<button type="submit" class="btn btn-success float-right">{{ trans('submit') }}</button>
 			</div>
 			</div>
 		</div>
@@ -80,7 +80,7 @@
 		
 		
 	{% else %}
-		<h1> {{trans('admin.'~module.box.engine) }} </h1>
+		<h1> {{trans(''~module.box.engine) }} </h1>
 		
 		<form action="{{ path_for('admin.modules.skin.save') }}" method="post">
 		<input type="hidden" name="costum_box_id" value="system">
@@ -91,14 +91,14 @@
 		<div class="col-sm col-md-7">
 			<div class="row">
 			  <div class="form-group col-sm col-md-12">
-				<label for="position">{{ trans('admin.Module Position') }}</label>
+				<label for="position">{{ trans('Module Position') }}</label>
 				<select class="form-control" id="position" name="position">
-				  <option value="top" {% if module.skin_boxes.side == "top" %}selected{% endif %}>{{ trans('admin.top') }}</option>
-				  <option value="bottom" {% if module.skin_boxes.side == "bottom" %}selected{% endif %}>{{ trans('admin.bottom') }}</option>
-				  <option value="left" {% if module.skin_boxes.side == "left" %}selected{% endif %}>{{ trans('admin.left') }}</option>
-				  <option value="right" {% if module.skin_boxes.side == "right" %}selected{% endif %}>{{ trans('admin.right') }}</option>
-                  <option value="iTop" {% if module.skin_boxes.side == "iTop" %}selected{% endif %}>{{ trans('admin.inside-top') }}</option>
-				  <option value="iBottom" {% if module.skin_boxes.side == "iBottom" %}selected{% endif %}>{{ trans('admin.inside-bottom') }}</option>
+				  <option value="top" {% if module.skin_boxes.side == "top" %}selected{% endif %}>{{ trans('top') }}</option>
+				  <option value="bottom" {% if module.skin_boxes.side == "bottom" %}selected{% endif %}>{{ trans('bottom') }}</option>
+				  <option value="left" {% if module.skin_boxes.side == "left" %}selected{% endif %}>{{ trans('left') }}</option>
+				  <option value="right" {% if module.skin_boxes.side == "right" %}selected{% endif %}>{{ trans('right') }}</option>
+                  <option value="iTop" {% if module.skin_boxes.side == "iTop" %}selected{% endif %}>{{ trans('inside-top') }}</option>
+				  <option value="iBottom" {% if module.skin_boxes.side == "iBottom" %}selected{% endif %}>{{ trans('inside-bottom') }}</option>
 				</select>
 			  </div>
 			</div>
@@ -108,22 +108,22 @@
 			{% for key, val in module.skin_boxes.active %}
 			<div class="col-sm col-md-6">
 				<div class="form-group">
-				<label for="{{ key }}">{{ trans('admin.active') }}: {{ trans('admin.'~key) }}</label>
+				<label for="{{ key }}">{{ trans('active') }}: {{ trans(''~key) }}</label>
 				<select class="form-control" id="{{ key }}" name="{{ key }}">
-				  <option {% if val %}selected{% endif %} value="1">{{ trans('admin.yes') }}</option>
-				  <option {% if not val %}selected{% endif %} value="0">{{ trans('admin.no') }}</option>
+				  <option {% if val %}selected{% endif %} value="1">{{ trans('yes') }}</option>
+				  <option {% if not val %}selected{% endif %} value="0">{{ trans('no') }}</option>
 				</select>
 				</div>
 			</div>
 			{% endfor %}
 			<div class="col-sm col-md-6 m-auto">
 				 <div class="form-group">
-						<label for="box_order">{{ trans('admin.order') }}</label>
+						<label for="box_order">{{ trans('order') }}</label>
 						<input type="text" class="form-control" id="box_order" name="box_order" value="{{ module.skin_boxes.box_order }}">
 					  </div>
 			</div>
 			<div class="col-sm col-md-12 m-auto">
-				<button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+				<button type="submit" class="btn btn-success float-right">{{ trans('submit') }}</button>
 			</div>
 			</div>
 		</div>
@@ -155,7 +155,7 @@ editor.setEditorValue($("#module_html_data").html());
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">{{ trans('admin.delete box?') }}</h5>
+        <h5 class="modal-title" id="deleteModalLabel">{{ trans('delete box?') }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

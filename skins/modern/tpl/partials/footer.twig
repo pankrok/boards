@@ -1,0 +1,14 @@
+<footer class="footer">
+  <span class="fc-g">Powered by: <strong><a href="https://boards.s89.eu">BOARDS SCRIPT</a>	</strong></span>
+</footer>
+{# assets #}
+<script>
+let ajaxUrl = "{{ path_for('ajax') }}";
+</script>
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<script src="{{ assets }}/scripts/init.min.js"></script>
+<script async src="{{ assets }}/scripts/boards.js"></script>
+<script async src="{{ assets }}/scripts/messenger.js"></script>
+{{ skin_assets.css.main|raw }} 
+{{ skin_assets.css.chat|raw }} 
+{{ skin_assets.js.main|raw }} 

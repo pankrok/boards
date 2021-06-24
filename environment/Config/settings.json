@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "MC4xLjc",
+        "version": "MC4xLjEw",
         "show_version": "1",
         "log_level": "0",
         "debug": "0",
@@ -29,14 +29,19 @@
     },
     "cache": {
         "active": "1",
-        "cache_time": "90",
+        "cache_time": "300",
         "cache_dir": "\/environment\/Cache\/objects\/",
-        "cache_ext": ".c"
+        "cache_ext": ".c",
+        "type": "file",
+        "memcached": {
+            "server": "localhost",
+            "port": 53987
+        }
     },
     "twig": {
         "debug": "0",
         "cache": "1",
-        "skin": "simple"
+        "skin": "modern"
     },
     "pagination": {
         "boards": "10",

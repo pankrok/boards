@@ -2,24 +2,24 @@
      {% for skin in skins %}
 	<div class="col-auto p-2">
 	<div class="card {% if skin.active %}border border-success{% endif %}" style="width: 18rem;">
-	{% if skin.active %}<span class="badge badge-pill badge-success m-2 position-absolute">{{ trans('admin.is active') }}</span>{% endif %}
+	{% if skin.active %}<span class="badge badge-pill badge-success m-2 position-absolute">{{ trans('is active') }}</span>{% endif %}
     <div class="crop">
 	  <img class="card-img-top" src="{{ base_url() }}/skins/{{ skin.dirname }}/{{ skin.dirname }}.png" alt="{{ skin.name }}">
     </div>
 	  <div class="card-body">
-			<h5 class="card-title ml-3">{{ skin.name }} <button type="button" class="btn btn-outline-dark float-right" data-toggle="modal" data-target="#renameSkin{{ skin.id }}">
+			<h5 class="card-title ml-3">{{ skin.name }} <button type="button" class="btn btn-outline-dark float-right"  data-toggle="modal" data-target="#renameSkin{{ skin.id }}">
 				<i class="fas fa-edit"></i>
 			</button></h5> 
 			
-		<p class="card-text text-center">{{ trans('admin.version') }}: <i>{{ skin.version }}</i>, author: <i>{{ skin.author }}</i></p>
+		<p class="card-text text-center">{{ trans('version') }}: <i>{{ skin.version }}</i>, author: <i>{{ skin.author }}</i></p>
 		<form action="{{ path_for('admin.default.skin.post') }}" method="post">
 		<div class="row p-2">
 			<div class="col-4 text-center">
 				<input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}">
 				<button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" 
-				{% if skin.active %}title="{{ trans('admin.is active')}}" disabled
+				{% if skin.active %}title="{{ trans('is active')}}" disabled
 				{% else %}
-				title="{{ trans('admin.set as default')}}" 
+				title="{{ trans('set as default')}}" 
 				{% endif %}>
 					<i class="far fa-check-circle"></i>
 				</button>
@@ -27,11 +27,11 @@
 			</div>
 			
 			<div class="col-4 text-center">
-				<a class="btn btn-primary" href="{{ path_for('admin.modules.skin.get', {'id': skin.id, 'route': 'home'}) }}"  data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.edit modules')}}"><i class="fas fa-columns"></i></a>
+				<a class="btn btn-primary" href="{{ path_for('admin.modules.skin.get', {'id': skin.id, 'route': 'home'}) }}"  data-toggle="tooltip" data-placement="bottom" title="{{ trans('edit modules')}}"><i class="fas fa-columns"></i></a>
 			</div>
 			<div class="col-4 text-center">
 				<form action="{{ path_for('admin.add.skin.reload') }}" method="post"><input type="hidden" id="skin_name" name="skin_dir" value="{{ skin.dirname }}">
-				<button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.reload assets') }}">
+				<button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="{{ trans('reload assets') }}">
 					<i class="fas fa-sync"></i>
 				</button>
 				</form>
@@ -41,28 +41,28 @@
 			<div class="col-4 text-center">
 			<form action="{{ path_for('admin.skin.copy') }}" method="post">
 			<input type="hidden" name="skin_id" value="{{ skin.id }}">
-			<button type="submit" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.make copy') }}">
+			<button type="submit" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="{{ trans('make copy') }}">
 					<i class="fas fa-clone"></i>
 				</button>
 			</div>
 			</form>
 			<div class="col-4 text-center"> 
 
-			<a href="{{ path_for('admin.skin.twig.edit', {'skin_id': skin.id}) }}" class="btn btn-dark" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.edit template') }}">
+			<a href="{{ path_for('admin.skin.twig.edit', {'skin_id': skin.id}) }}" class="btn btn-dark" data-toggle="tooltip" data-placement="bottom" title="{{ trans('edit template') }}">
 					<i class="fas fa-code"></i>
 				</a>
 			</div>
 			<div class="col-4 text-center">
 				<form action="{{ path_for('admin.delete.skin.post') }}" method="post"><input type="hidden" id="skin_id" name="skin_id" value="{{ skin.id }}">
-				<button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="{{ trans('admin.delete') }}">
+				<button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="bottom" title="{{ trans('delete') }}">
 					<i class="fas fa-trash"></i>
 				</button>
 			</div>
 			<div class="col-12 pt-2 text-center">
 			<div class="form-check">
-				  <input class="form-check-input" type="checkbox" value="1" id="confirm_delete" name="confirm_delete">
-				  <label class="form-check-label" for="confirm_delete">
-					{{ trans('admin.confirm delete') }}
+				  <input class="form-check-input" type="checkbox" value="1" id="confirm_delete_{{skin.id}}" name="confirm_delete">
+				  <label class="form-check-label" for="confirm_delete_{{skin.id}}">
+					{{ trans('confirm delete') }}
 				  </label>
 				</div>
 			</div>
@@ -77,7 +77,7 @@
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content">
 		  <div class="modal-header">
-			<h5 class="modal-title" id="renameSkinLabel{{ skin.id }}">Rename skin</h5>
+			<h5 class="modal-title" id="renameSkinLabel{{ skin.id }}">{{ trans('rename skin') }}</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
@@ -90,7 +90,7 @@
 			  </div>
 		  </div>
 		  <div class="modal-footer">
-			<button type="submit" class="btn btn-success">Save changes</button>
+			<button type="submit" class="btn btn-success">{{ trans('save') }}</button>
 		  </div></form>
 		</div>
 	  </div>

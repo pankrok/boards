@@ -1,7 +1,7 @@
 {% extends 'templates/main.twig' %}
 
 {% block content %}
-<h1>{{ trans('admin.logs') }}</h1>
+<h1>{{ trans('logs') }}</h1>
 
 <div class="col mx-5 px-5 my-2">
 <div id="accordion">
@@ -14,8 +14,8 @@
         <div class="row">
             <div class="col">#{{ log.id }}</div>
             <div class="col">Admin ID: {{ log.admin_id }}</div>
-            <div class="col">{{ trans('admin.object') }}: {{ myLog.route }} </div>
-            <div class="col">{{ trans('admin.date') }}: {{ log.created_at }}</div>
+            <div class="col">{{ trans('object') }}: {{ myLog.route }} </div>
+            <div class="col">{{ trans('date') }}: {{ log.created_at }}</div>
         </div>
         </button>
       </h5>

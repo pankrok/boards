@@ -20,7 +20,7 @@ class ServiceController extends Controller
         $this->url = 'https://' . unserialize(file_get_contents(MAIN_DIR . '/environment/Config/updates.dat'))['host'] . '/updates/%s';
         $this->services = [
             'lock' 				=> MAIN_DIR . '/environment/Config/lock',
-            'version' 			=> base64_decode($this->settings['core']['version']),
+            'version' 			=> base64_decode($this->settings['core']['version'], true),
             'update_version' 	=> MAIN_DIR.'/environment/Update/tmp/version.txt',
             'status' => MAIN_DIR . '/environment/Update/status.json',
             'update_status' => MAIN_DIR . '/environment/Update/tmp/status.json',

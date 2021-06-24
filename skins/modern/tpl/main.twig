@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pl">
+{% include 'partials/head.twig' %}
+{% block headBlock %}{% endblock %}
+<body>
+{% include 'partials/loader.twig' %}
+	{% if boards_off and auth.admin < 1 %}
+		{% include 'partials/boards_off.twig' %}
+	{% else %}
+        {% include 'partials/header.twig' %}
+        {% block content %}{% endblock %}     
+	{% endif %}
+{% include 'partials/footer.twig' %}	
+{% include 'boxes/modals/signin.twig' %}
+{% block endBodyBlock %}{% endblock %}
+</body>
+</html>
+

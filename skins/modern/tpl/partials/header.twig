@@ -1,0 +1,75 @@
+<header>
+<nav>
+<div class="header">
+    <div class="top-nav">
+      <a href="{{ path_for('home') }}" class="logo"><i class="fas fa-clipboard-list"></i> Boards</a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      
+      <ul class="menu float-right drop-down">
+        <div id="menu-ico" class="flex-mobile">
+        {% if auth.check %}
+            {% if mod.notifications %}<li id="bell"><a href="#"><i class="far fa-bell fa-lg" ></i></a></li>{% endif %}
+            <li id="message"><a href="#"><i id="messenger-ico" class="far fa-envelope fa-lg"></i></a></li>
+        {% else %}    
+            <li id="signin"><a href="{{ path_for('auth.signin') }}"  data-toggle="#signInModal" data-prevent="true"><i class="fas fa-sign-in-alt fa-lg" data-toggle="#signInModal" data-prevent="true"></i></a></li>
+            <li id="signup"><a href="{{ path_for('auth.signup') }}"><i class="fas fa-user-plus fa-lg"></i></a></li>
+        {% endif %}
+            <li id="darkmode" > <button id="theme-toggle" class="btn btn-dark header-btn"><i class="fas fa-moon"></i></li>
+        </div>
+        {% if auth.check %}
+        <div class="d-sm-block">
+        <li>
+            <a href="#">
+                Szukaj
+            </a>
+        </li>
+        {% for link in menus %}
+        <li>
+            <a href="{{ link.url }}">
+                {{ link.name|raw }}
+            </a>
+        </li>
+    {% endfor %}
+        </div>
+        <li><a id="main-menu-dropdown" class="nav-button" href="#work" data-toggle="#menu-dropdown">{{ auth.user.username }}</a>
+        <ul id="menu-dropdown" class="menu-dropdown" data-visibility="hide">
+            <li class="d-sm-block"><a id="menu-back" href="#">Powrót</a></li>
+            <li class="title">Zawartość</li>
+            <li><a href="{{ path_for('user.profile', {'username': setString.toUrl(auth.user.username), 'uid':auth.user.id }) }}"><i class="fas fa-user"></i> Profil</a></li>
+            {% if mod.attachments %}<li><a href="#"><i class="fas fa-link"></i> Moje załączniki</a></li>{% endif %}
+            {% if mod.settings %}<li class="title">Ustawienia</li>
+            {% if mod.notifications %}<li><a href="#"><i class="fas fa-eye"></i> Obserwowana zawartość</a></li>{% endif %}
+            <li><a href="#"><i class="fas fa-cog"></i> Ustawienia konta</a></li>{% endif %}
+            {% if auth.admin %}
+            <li class="title">Administracja</li>
+            <li><a href="{{ path_for('admin.home') }}"><i class="fas fa-user-shield"></i> ACP</a></li>
+            {% endif %}
+            <li class="line"></li>
+            
+            <li><a href="{{ path_for('auth.signout') }}" class="logout"><i class="fas fa-power-off"></i> Wyloguj się</a></li>
+        </ul>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+</div>
+<div id="main-menu" class="bottom-nav d-sm-none flex-0 flex-align-center flex-justify-space-between">
+    <ul class="menu_container list_reset">
+     {% for link in menus %}
+        <li>
+            <a href="{{ link.url }}">
+                {{ link.name|raw }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+    <div class="menu_container">
+       {% include 'boxes/search/box.twig' %}
+        
+    </div>
+    
+
+</div>
+</nav>
+</header>

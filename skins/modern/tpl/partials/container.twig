@@ -1,0 +1,26 @@
+<div class="container">
+    {% include 'partials/breadcrumbs.twig' %}
+    {% include 'partials/flash.twig' %} 
+    {% if modules.top %}
+    <div class="row flex-0">
+        {% include 'partials/modules_top.twig' %}    
+    </div>
+    {% endif %}
+    <div class="row">
+        {% include 'partials/modules_left.twig' %}
+        <div class="col-auto">
+        {% include 'partials/modules_inside_top.twig' %} 
+        {% block container %}{% endblock %}
+        {% include 'partials/modules_inside_bottom.twig' %} 
+        </div>
+    {% include 'partials/modules_right.twig' %} 
+    </div>
+    {% if modules.bottom %}
+    <div class="row flex-0">
+    {% include 'partials/modules_bottom.twig' %}    
+    </div>
+    {% endif %}
+    {% if auth.check > 0 %}
+        {% include 'boxes/messenger/messenger.twig' %} 
+    {% endif %}
+</div>

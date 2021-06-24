@@ -1,4 +1,5 @@
 var editor = new Jodit('#editor', {
+    "toolbar": false,
 	langusage: 'pl',
     autofocus: true,
 	height: "auto",

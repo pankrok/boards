@@ -4,16 +4,16 @@
 
 
 {% block content %}
-<h1>{{ trans('admin.configuration') }}</h1>
+<h1>{{ trans('configuration') }}</h1>
 <div class="row">
     <div class="col mx-5 px-5 my-2">
         <div class="list-group">
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.get.settings') }}"><span class="fas fa-cog mr-3"></span> {{trans('admin.settings') }}</a>
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.menu') }}"><span class="fas fa-ellipsis-h mr-3"></span> {{trans('admin.menu') }}</a>
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.mail.settings') }}"><span class="fas fa-envelope mr-3"></span> {{trans('admin.mail config') }}</a>
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.mail.template.list') }}"><span class="far fa-file-alt mr-3"></span> {{trans('admin.mail.template.list') }}</a>
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.cache') }}"><span class="fas fa-database mr-3"></span> {{trans('admin.cache') }}</a>
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.update') }}"><span class="fas fa-arrow-circle-up mr-3"></span> {{trans('admin.update') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.get.settings') }}"><span class="fas fa-cog mr-3"></span> {{trans('settings') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.menu') }}"><span class="fas fa-ellipsis-h mr-3"></span> {{trans('menu') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.mail.settings') }}"><span class="fas fa-envelope mr-3"></span> {{trans('mail config') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.mail.template.list') }}"><span class="far fa-file-alt mr-3"></span> {{trans('mail.template.list') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.cache') }}"><span class="fas fa-database mr-3"></span> {{trans('cache') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.update') }}"><span class="fas fa-arrow-circle-up mr-3"></span> {{trans('update') }}</a>
         </div>
     </div>
 </div>

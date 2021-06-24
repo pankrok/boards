@@ -1,0 +1,13 @@
+<head>
+<meta charset="utf-8">
+    <script>
+        let assets = "{{ assets }}";
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i,900,900is" rel="preload" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i,900,900i" href="style.css"></noscript>
+   
+    {{ skin_assets.css.loader|raw }} 
+    {{ skin_assets.js.darkmode|raw }} 
+</head>

@@ -64,7 +64,7 @@ class AdminHomeController extends Controller
             $mysql_version = '';
         }
         
-        if (!$stats = $this->cache->receive('board-stats')) {
+        if (!$stats = $this->cache->get('board-stats')) {
             for ($i = 0; $i < 30; $i++) {
                 $date = date("Y-m-d", time() - (($days-$i) * $sec * $min * $hour * $day)).' 23:59:59';
                 $perDate = date("Y-m-d", time() - (($days-$i) * $sec * $min * $hour * $day));
@@ -93,11 +93,11 @@ class AdminHomeController extends Controller
             $stats['users_per_day'] = json_encode($stats['users_per_day']);
         }
 
-        $stats['version'] = base64_decode($this->settings['core']['version']);
+        $stats['version'] = base64_decode($this->settings['core']['version'], true);
         $stats['php_version'] = phpversion();
         $stats['mysql_version'] = $mysql_version;
         
-        $this->cache->store('board-stats', $stats, 3600);
+        $this->cache->set('board-stats', $stats, 3600);
         return $stats;
     }
 };

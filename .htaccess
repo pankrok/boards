@@ -1,3 +1,4 @@
+AddType application/x-httpd-php74 .php
 RewriteEngine On
 
 RewriteRule ^updater updater.php [QSA,L]

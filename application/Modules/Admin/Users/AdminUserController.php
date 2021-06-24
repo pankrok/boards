@@ -51,7 +51,6 @@ class AdminUserController extends Controller
         $user = UserModel::find($body['id']);
         
         foreach ($body as $k => $v) {
-
             if ($_SESSION['user'] === intval($body['id']) && intval($body['admin_lvl']) !== $user->admin_lvl) {
                 $this->flash->addMessage('warning', 'you cant edit admin level of yourself!');
                 return $response->withHeader('Location', $this->router->urlFor('admin.user.edit', ['id' => $user->id]))
@@ -94,7 +93,7 @@ class AdminUserController extends Controller
     public function addUser($request, $response)
     {
         $this->adminView->getEnvironment()->addGlobal('default_group', $this->settings['board']['default_group']);
-        $this->adminView->getEnvironment()->addGlobal('groups', GroupsModel::get());    
+        $this->adminView->getEnvironment()->addGlobal('groups', GroupsModel::get());
         return $this->adminView->render($response, 'user_add.twig');
     }
     
@@ -107,7 +106,7 @@ class AdminUserController extends Controller
             ->withStatus(302);
         }
         
-         if (UserModel::where('email', $this->purifier->purify($request->getParsedBody()['email']))->first() !== null) {
+        if (UserModel::where('email', $this->purifier->purify($request->getParsedBody()['email']))->first() !== null) {
             $this->flash->addMessage('danger', 'Email already exist!');
             return $response
             ->withHeader('Location', $this->router->urlFor('admin.user.add'))
@@ -116,10 +115,10 @@ class AdminUserController extends Controller
         
         foreach ($request->getParsedBody() as $k => $v) {
             if ($v === '') {
-                 $this->flash->addMessage('warning', "$k cannot be empty!");
+                $this->flash->addMessage('warning', "$k cannot be empty!");
                 return $response
                 ->withHeader('Location', $this->router->urlFor('admin.user.add'))
-                ->withStatus(302);     
+                ->withStatus(302);
             }
         }
         
@@ -132,10 +131,11 @@ class AdminUserController extends Controller
             'tfa' => $request->getParsedBody()['tfa'],
             'admin_lvl' => $request->getParsedBody()['admin_lvl'],
             'main_group' => $request->getParsedBody()['main_group'],
+            'confirmed' => $request->getParsedBody()['confirmed'],
         ]);
         
         return $response->withHeader('Location', $this->router->urlFor('admin.user.edit', ['id' => $user->id]))
-                ->withStatus(302); 
+                ->withStatus(302);
     }
     
     protected function getUsers($currentPage)

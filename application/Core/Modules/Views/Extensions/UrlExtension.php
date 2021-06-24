@@ -26,7 +26,8 @@ class UrlExtension extends AbstractExtension
             new TwigFunction('json_decode', [$this, 'jsonDecode']),
             new TwigFunction('json_encode', [$this, 'jsonEncode']),
             new TwigFunction('toUrl', [$this, 'toUrl']),
-            new TwigFunction('stripTags', [$this, 'stripTags'])
+            new TwigFunction('stripTags', [$this, 'stripTags']),
+            new TwigFunction('avatar', [$this, 'avatar'])
         ];
     }
     
@@ -59,5 +60,15 @@ class UrlExtension extends AbstractExtension
     public function stripTags($arg)
     {
         return strip_tags($arg);
+    }
+    
+    public function avatar($img)
+    {
+        if (isset($img)) {
+           $img =  $this->base_url . '/public/upload/avatars/'.$img;
+        } else {
+            $img =  $this->base_url . '/public/img/avatar.png';
+        }
+        return $img;
     }
 }

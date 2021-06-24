@@ -8,17 +8,17 @@
 	<div class="col-sm col-md-auto">
 		<div class="dropdown">
 		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			{{ trans('admin.modules') }}
+			{{ trans('modules') }}
 		  </button>
 		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 			{% for box in modules %}
-					<a class="dropdown-item" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': box.id }) }}">{% if box.name %}{{box.name}}{% else %}{{ trans('admin.'~box.engine) }}{% endif %}</a>
+					<a class="dropdown-item" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': box.id }) }}">{% if box.name %}{{box.name}}{% else %}{{ trans(''~box.engine) }}{% endif %}</a>
 			{% endfor %}			
 		  </div>
 		</div>
 	</div>
 	<div class="col-sm col-md-auto">
-		<a class="btn btn-secondary" href="{{ path_for('admin.modules.skin.new', {'skin_id': id}) }}"">{{ trans('admin.add new module') }}</a>
+		<a class="btn btn-secondary" href="{{ path_for('admin.modules.skin.new', {'skin_id': id}) }}"">{{ trans('add new module') }}</a>
 	</div>
 	</div>
 <div class="row p-2">
@@ -48,7 +48,7 @@
 		  </button>
 		  </form>
 		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
-			{% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+			{% if module.name %}{{ module.name }}{% else %}{{ trans(''~module.engine) }}{% endif %}
 		  </a>
 		  </span>
 		{% endfor %}
@@ -65,7 +65,7 @@
 		  </button>
 		  </form>
 		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
-		  {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+		  {% if module.name %}{{ module.name }}{% else %}{{ trans(''~module.engine) }}{% endif %}
 		  </a>
 		  </span>
 		{% endfor %}
@@ -85,7 +85,7 @@
               </button>
               </form>
               <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
-              {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+              {% if module.name %}{{ module.name }}{% else %}{{ trans(''~module.engine) }}{% endif %}
               </a>
               </span>
 		{% endfor %}
@@ -105,7 +105,7 @@
               </button>
               </form>
               <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
-              {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+              {% if module.name %}{{ module.name }}{% else %}{{ trans(''~module.engine) }}{% endif %}
               </a>
               </span>
 		{% endfor %}
@@ -124,7 +124,7 @@
 		  </button>
 		  </form>
 		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
-		  {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+		  {% if module.name %}{{ module.name }}{% else %}{{ trans(''~module.engine) }}{% endif %}
 		  </a>
 		  </span>
 		{% endfor %}
@@ -141,7 +141,7 @@
 		  </button>
 		  </form>
 		  <a class="text-white" href="{{ path_for('admin.modules.skin.edit', {'skin_id': id, 'id': module.box_id }) }}">
-		  {% if module.name %}{{ module.name }}{% else %}{{ trans('admin.'~module.engine) }}{% endif %}
+		  {% if module.name %}{{ module.name }}{% else %}{{ trans(''~module.engine) }}{% endif %}
 		  
 		  </a>	
 		  </span>

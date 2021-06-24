@@ -39,7 +39,7 @@ class PluginController
         $this->dispacher = new \Symfony\Component\EventDispatcher\EventDispatcher();
         $this->globalEvent = new PluginGlobalEventController($container);
         $this->adminEvent = new PluginAdminEventController($container);
-        $this->pluginLoader = new PluginLoaderController($container->get('cache'), $container->get('settings')['twig']['skin'], base64_decode($container->get('settings')['core']['version']));
+        $this->pluginLoader = new PluginLoaderController($container->get('cache'), $container->get('settings')['twig']['skin'], base64_decode($container->get('settings')['core']['version'], true));
         self::$tplDir = $container->get('settings')['twig']['skin'];
         
         if ($container->get('settings')['plugins']['active'] === 1) {
@@ -67,7 +67,7 @@ class PluginController
     
     public function addAdminEvent($eventName)
     {
-        $this->dispacher->dispatch( $this->adminEvent, $eventName);
+        $this->dispacher->dispatch($this->adminEvent, $eventName);
     }
     
     public function getPluginLoader()

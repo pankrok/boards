@@ -1,0 +1,46 @@
+{% if childboards %}
+    <div class="box">
+         <div class="box-header">
+            <strong>{{ trans('childboards') }}</strong>
+        </div>
+		{% for childboard in childboards %}
+        <div id="board-{{ childboard.id }}" class="box-body">
+            <div class="row flex-align-center my2 text-center">
+                <div class="col-1 col-sm-2">
+                            <i class=" fas fa-comment fa-2x"></i>
+                 </div>
+                <div class="col-8 col-sm-8">
+                    <div class="row flex-align-center text-center">
+                        <div class="col-10 text-left">
+                            <div class="box-header border-0">
+                                <strong><a href="{{ childboard.url }}">{{ childboard.board_name |raw }}</a></strong>
+                            </div>
+                            <div class="box-body">    
+                                    <div class="col-12">
+										{{ childboard.board_description | raw }}
+									</div>
+                                </div>   
+                            </div>   
+                        <div class="col-2 d-sm-none">    
+                            <strong>{{ childboard.plots_number }} <i class="fas fa-comments"></i> /  {{ childboard.posts_number }} <i class="fas fa-comment-dots"></i></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 col-sm-2">
+				{% if childboard.last_post_url %}
+                <div class="row flex-dir-row flex-justify-center">
+				<div class="flex-dir-column p1 d-sm-none text-right">
+						<div class="m1"> <a href="{{ childboard.last_post_author_url }}"> {{ childboard.last_post_author | raw }}</a></div>
+						<div class="m1"><a href="{{ childboard.last_post_url }}">{{ childboard.plot_name }}</a></div>
+					</div>
+					<div class="flex-dir-row p1">
+						<img class="avatar avatar-sm" src="{{ avatar(childboard.last_post_avatar) }}" alt="Message User Image">
+					</div>
+				</div>
+				{% endif %}{# if childboard.last_post_url #}
+                </div>
+            </div>
+        </div>
+        {% endfor %}{# for childboard in childboards #}
+    </div>
+{% endif %}

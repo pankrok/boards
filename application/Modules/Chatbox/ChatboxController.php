@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Application\Modules\Chatbox;
 
 use Application\Models\ChatboxModel;
@@ -49,6 +51,10 @@ class ChatboxController extends Controller
     
     public function postChatMessage($request, $response)
     {
+        if ($response === null) {
+           $response = new \Slim\Psr7\Response(); 
+        }
+        
         $this->auth->checkBan();
         $base_url = self::base_url();
         $user = UserModel::leftJoin('images', 'users.avatar', '=', 'images.id')
@@ -77,7 +83,7 @@ class ChatboxController extends Controller
                 'updated_at' =>		$shout->created_at,
                 'content' =>		$shout->content]);
             
-            $data['shout'] = $this->view->fetch('templates/partials/boxes/oneShout.twig');
+            $data['shout'] = $this->view->fetch('boxes/chatbox/shout.twig');
         }
             
         $response->getBody()->write(json_encode($data));
@@ -87,6 +93,10 @@ class ChatboxController extends Controller
     
     public function editMessage($request, $response)
     {
+        if ($response === null) {
+           $response = new \Slim\Psr7\Response(); 
+        }
+        
         $body = $request->getParsedBody();
         $shout = ChatboxModel::where('id', $body['shout_id'])->first();
         $return['csrf'] = self::csftToken();
@@ -106,6 +116,10 @@ class ChatboxController extends Controller
     
     public function loadMoreMessages($request, $response)
     {
+        if ($response === null) {
+           $response = new \Slim\Psr7\Response(); 
+        }
+        
         $base_url = self::base_url();
         $i = 1;
         
@@ -145,7 +159,7 @@ class ChatboxController extends Controller
                 'content' =>		$shout->content]);
             
             
-            $data['chatbox'][$i] = $this->view->fetch('templates/partials/boxes/oneShout.twig');
+            $data['chatbox'][$i] = $this->view->fetch('boxes/chatbox/shout.twig');
             $i++;
         }
         
@@ -156,6 +170,9 @@ class ChatboxController extends Controller
     
     public function checkNewMessage($request, $response)
     {
+        if ($response === null) {
+           $response = new \Slim\Psr7\Response(); 
+        }
         $base_url = self::base_url();
         $i = 0;
         $last = null;
@@ -186,7 +203,7 @@ class ChatboxController extends Controller
                 'updated_at' =>		$shout->created_at,
                 'content' =>		$shout->content]);
                     
-                $data['chatbox'][$i] = $this->view->fetch('templates/partials/boxes/oneShout.twig');
+                $data['chatbox'][$i] = $this->view->fetch('boxes/chatbox/shout.twig');
                 $i++;
             }
         }

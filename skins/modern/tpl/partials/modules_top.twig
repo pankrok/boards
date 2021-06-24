@@ -1,0 +1,7 @@
+<!-- top module -->
+<div class="col-12">
+{% for sidebar in modules.top %}
+    {% include 'boxes/modules/'~sidebar.engine~'.twig' %}
+{% endfor %}
+</div>
+<!-- /top module -->

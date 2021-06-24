@@ -54,6 +54,4 @@ class ErrorController extends ErrorHandler
                 $this->_logger = new \Monolog\Handler\StreamHandler(MAIN_DIR.'/environment/Logs/critical.log.txt', Logger::CRITICAL);
         }
     }
-    
-
 }

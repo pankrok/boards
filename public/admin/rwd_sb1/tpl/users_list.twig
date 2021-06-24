@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<h2>{{ trans('admin.admin.users') }} </h2>
+<h2>{{ trans('admin.users') }} </h2>
 
         <ul class="list-group my-5">
 			{% for user in users %}
@@ -38,7 +38,7 @@
 			{% endfor %}
 		</ul>
         <a type="button" class="btn btn-info float-right" href="{{ path_for('admin.user.add') }}">
-				  {{ trans('admin.user.add') }}
+				  {{ trans('user.add') }}
 				</a>
 		{% include 'templates/partials/paginator.twig' %}	
 {% endblock %}

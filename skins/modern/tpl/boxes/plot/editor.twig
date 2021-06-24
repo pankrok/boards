@@ -1,0 +1,14 @@
+{% if (auth.check and locked == 0) or auth.admin   %}
+<div class="col-12">
+    <div class="box" id="box-editor">
+        <div class="box-body" > 
+            <button id="replyPost" type="button" class="btn btn-dark text-right" data-action="showEditor">{{ trans('reply') }}</button></div>
+            <div class="row d-none" id="editorContainer">
+             <div class="col-12"><textarea id="editor" name="editor"></textarea></div>
+             
+             <div class="col-12 text-right my2"><button type="button" class="btn btn-green" data-action="post"  data-ajax="reply">{{ trans('send post') }}</button></div>
+             {{ csrf.field | raw }}
+        </div>
+    </div>
+</div>
+{% endif %}

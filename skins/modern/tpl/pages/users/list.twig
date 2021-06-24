@@ -1,0 +1,40 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+<div id="page-id" class="box" data-plot_id="{{ plot.plot_id }}">
+    <div class="box-header">
+        <div class="row flex-1 row flex-1 flex-align-center">
+            <h1>{{ page.name|raw }}</h1>
+        </div>
+    </div>
+    <div class="box-body">
+    {% if users %}
+		<div class="box-header"><i class="fas fa-users"></i> Użytkownicy</div>
+		<div class="box-body">
+					<div class="row w100">
+						{% for user in users %}
+						<div class="col-4">
+                            <div class="row flex-dir-row flex-justify-center flex-align-center">
+                                <div class="flex-dir-row p1">
+                                    <img src="{{ user.avatar }}" class="rounded-circle avatar-md" alt="{{ user.username }}" >
+                                </div>
+                                <div class="flex-dir-column p1">
+                                    <div class="m1"><a href="{{ user.url }}">{{ user.username_html |raw }}</a></div>
+                                    <div class="m1">{{ user.group_name |raw }}</div>
+                                </div>
+                                 <div class="flex-dir-column p1">
+                                    <div class="m1">od: {{ user.created_at }}</a></div>
+                                    <div class="m1">aktywny: {{ user.last_active|date("Y-m-d H:m:i") }}</div>
+                                </div>
+                            </div>
+						</div>
+						{% endfor %}							
+				</div>
+		</div>
+		{% endif %}
+    </div>
+</div>
+{% endblock %}
+{% endembed %}
+{% endblock %}

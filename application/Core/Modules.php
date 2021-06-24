@@ -21,6 +21,10 @@ return function (App $app) {
         return new Application\Modules\Messages\MessageController($container);
     });
     
+    $container->set('MessengerController', function ($container) {
+        return new Application\Modules\Messages\MessengerController($container);
+    });
+    
     $container->set('PageController', function ($container) {
         return new Application\Modules\Board\PageController($container);
     });
@@ -37,8 +41,16 @@ return function (App $app) {
         return new Application\Modules\Board\PlotController($container);
     });
     
+    $container->set('PlotDataController', function ($container) {
+        return new Application\Modules\Board\Data\PlotDataController($container);
+    });
+    
     $container->set('UserPanelController', function ($container) {
         return new Application\Modules\User\UserPanelController($container);
+    });
+    
+    $container->set('SearchController', function ($container) {
+        return new Application\Modules\Board\SearchController($container);
     });
     
     $container->set('AuthController', function ($container) {
@@ -67,6 +79,10 @@ return function (App $app) {
     
     $container->set('OnlineController', function ($container) {
         return new Application\Modules\User\OnlineController($container);
+    });
+    
+    $container->set('AjaxController', function ($container) {
+        return new Application\Modules\Ajax\AjaxController($container);
     });
     
     # Admin controllers section

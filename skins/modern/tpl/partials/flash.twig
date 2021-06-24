@@ -1,0 +1,35 @@
+
+
+{% if flash.getMessage('danger') %}
+
+<div class="row flex-0">
+    <div class="my2 alert danger" data-visibility="show">
+    <span class="close float-right" data-toggle=".alert">&times;</span>
+        <div class="alert-body">{{ flash.getMessage('danger') | first }}</div>
+    </div>
+</div>
+
+{% endif %}
+
+
+{% if flash.getMessage('info') %}
+
+<div class="row flex-0">
+    <div class="my2 alert info" data-visibility="show">
+    <span class="close float-right" data-toggle=".alert">&times;</span>
+        <div class="alert-body">{{ flash.getMessage('info') | first }}</div>
+    </div>
+</div>
+
+{% endif %}
+
+{% if flash.getMessage('success') %}
+
+<div class="row flex-0">
+    <div class="my2 alert success" data-visibility="show">
+    <span class="close float-right" data-toggle=".alert">&times;</span>
+        <div class="alert-body">{{ flash.getMessage('success') | first }}</div>
+    </div>
+</div>
+
+{% endif %}

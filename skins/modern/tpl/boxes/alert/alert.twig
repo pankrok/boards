@@ -1,0 +1,8 @@
+<div class="row flex-0">
+    <div class="my2 alert {{ alert.type }}" data-visibility="show" data-remove="true">
+    {% if alert.close %}
+    <span class="close float-right" data-toggle=".alert">&times;</span>
+    {% endif %}
+        <div class="alert-body text-center"><strong>{{ alert.body }}</strong></div>
+    </div>
+</div>

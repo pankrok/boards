@@ -1,0 +1,20 @@
+<div class="box">
+    <div class="box-header">
+    <!-- <button class="btn btn-light float-right dropdown" data-dropdown="chatbox-body"> -->
+        <!-- <i class="fas fa-toggle-on" data-dropdown="chatbox-body"></i> -->
+    <!-- </button> -->
+    <h2>Chatbox</h2>
+    </div>
+    <div id="chatbox-body" class="box-body chatbox">
+        <button class="btn btn-dark mx-auto" id="load-more-shouts" data-load-shouts="true">{{ trans('load more shouts') }}</button>
+        <ul id="shouts" class="list-group list-group-flush">	
+        {% for shout in chatbox %}
+           {% include('boxes/chatbox/shout.twig') %}
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="box-footer d-block">
+        <input type="text" class="combine" id="chat-input" name="chat-message" placeholder="write something">
+        <button type="submit" class="btn btn-dark combine-submit" data-chat-post="true">{{ trans('send') }} <i class="fab fa-telegram-plane"></i></button>
+    </div>
+</div>

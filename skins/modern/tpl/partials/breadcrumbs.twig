@@ -1,0 +1,8 @@
+<div class="d-sm-none flex-0 breadcrumbs br1 p3 flex-align-center">
+    <a href="{{ path_for('home') }}"><i class="fas fa-home"></i> Home</a>
+    {% if breadcrumbs %}
+		{% for breadcrumb in breadcrumbs %}
+		 > <a href="{{ breadcrumb.path }}">{{ stripTags(breadcrumb.name) }}</a>	
+		{% endfor %}
+	{% endif %}
+</div>

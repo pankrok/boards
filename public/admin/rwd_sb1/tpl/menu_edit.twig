@@ -3,15 +3,15 @@
 
 {% block content %}
 <nav class="nav">
-  <a class="nav-link active" href="{{ path_for('admin.menu') }}">{{ trans('admin.back') }}</a>
+  <a class="nav-link active" href="{{ path_for('admin.menu') }}">{{ trans('back') }}</a>
 </nav>
 <h1>Menu link: {{ menu.name|raw }}</h1>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active" id="infopages-tab" data-toggle="tab" href="#infopages" role="tab" aria-controls="infopages" aria-selected="true">{{ trans('admin.menu links') }}</a>
+    <a class="nav-link active" id="infopages-tab" data-toggle="tab" href="#infopages" role="tab" aria-controls="infopages" aria-selected="true">{{ trans('menu links') }}</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="own-url-tab" data-toggle="tab" href="#own-url" role="tab" aria-controls="own-url" aria-selected="false">{{trans('admin.advance url') }}</a>
+    <a class="nav-link" id="own-url-tab" data-toggle="tab" href="#own-url" role="tab" aria-controls="own-url" aria-selected="false">{{trans('advance url') }}</a>
   </li>
 </ul>
 
@@ -24,7 +24,7 @@
 	{% if not menu %}
 	<div class="col">
 	   <div class="form-group">
-			<label for="exampleFormControlSelect1">{{ trans('admin.page') }}</label>
+			<label for="exampleFormControlSelect1">{{ trans('page') }}</label>
 			<select class="form-control" name="name">
 			{% for link in links %}
 			  <option value="{{ link.url }};{{ link.name }}">{{ link.name|raw }}</option>
@@ -37,12 +37,12 @@
 	{% endif %}
 	<div class="col">
 		<div class="form-group">
-			<label for="exampleFormControlInput1">{{ trans('admin.order') }}</label>
+			<label for="exampleFormControlInput1">{{ trans('order') }}</label>
 			<input type="text" class="form-control" value="{{ menu.url_order }}" name="url_order">
 		 </div>
 	</div>
 	</div>	
-		 <button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+		 <button type="submit" class="btn btn-success float-right">{{ trans('submit') }}</button>
 	</form>
 </div>
 
@@ -50,18 +50,18 @@
     <form action="{{ path_for('admin.menu.manage') }}" method="post">
         <div class="row my-2">
             <div class="col">
-                <input type="text" class="form-control" name="own_name" value="{{ menu.name }}" placeholder="{{ trans('admin.url name') }}">	
+                <input type="text" class="form-control" name="own_name" value="{{ menu.name }}" placeholder="{{ trans('url name') }}">	
             </div>
             <div class="col">
-                <input type="text" class="form-control" name="own_url" value="{{ menu.url }}" placeholder="{{ trans('admin.url') }}">	
+                <input type="text" class="form-control" name="own_url" value="{{ menu.url }}" placeholder="{{ trans('url') }}">	
             </div>
             <div class="col">
-                <input type="text" class="form-control" value="{{ menu.url_order }}" name="url_order" placeholder="{{ trans('admin.order') }}">
+                <input type="text" class="form-control" value="{{ menu.url_order }}" name="url_order" placeholder="{{ trans('order') }}">
             </div>
             <input type="hidden" name="id" value="{{ menu.id }}">
     
         </div>
-        <button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>        
+        <button type="submit" class="btn btn-success float-right">{{ trans('submit') }}</button>        
     </form>
 </div>	
 {% endblock %}

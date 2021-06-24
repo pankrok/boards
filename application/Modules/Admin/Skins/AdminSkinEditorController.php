@@ -6,6 +6,7 @@ namespace Application\Modules\Admin\Skins;
 
 use Application\Core\AdminController as Controller;
 use Application\Models\SkinsModel;
+use Application\Models\SkinsBoxesModel;
 use MatthiasMullie\Minify;
 
 class AdminSkinEditorController extends Controller
@@ -21,7 +22,7 @@ class AdminSkinEditorController extends Controller
 
         $count = strlen(MAIN_DIR);
         foreach ($files as $k => $v) {
-            $v = explode('/', $v);
+            $v = explode('tpl', $v);
             $list[$k] = end($v);
         }
         
@@ -50,7 +51,9 @@ class AdminSkinEditorController extends Controller
         $this->flash->addMessage('success', 'Skin save success!');
         
         return $response
-          ->withHeader('Location', $router
+          ->withHeader(
+              'Location',
+              $router
           )->withStatus(302);
     }
     
@@ -72,7 +75,9 @@ class AdminSkinEditorController extends Controller
         $this->flash->addMessage('success', 'File delete success!');
         
         return $response
-          ->withHeader('Location', $router
+          ->withHeader(
+              'Location',
+              $router
           )->withStatus(302);
     }
     
@@ -197,7 +202,7 @@ class AdminSkinEditorController extends Controller
           ->withStatus(302);
     }
     
-    protected function getDirContents($dir, $dirs = false, $file = true, &$results = array())
+    protected function getDirContents($dir, $dirs = false, $file = true, &$results = [])
     {
         $files = scandir($dir);
 
@@ -243,18 +248,30 @@ class AdminSkinEditorController extends Controller
                 copy($dir.$fd, $nd);
             }
         }
-        
-        @rename($dirNew.'/'.$skinDir->name.'.png', $dirNew.'/'.$newSkinDir.'.png');
-        @rename($dirNew.'/'.$skinDir->name.'.jpg', $dirNew.'/'.$newSkinDir.'.jpg');
-        
-        
-        SkinsModel::create([
-            'name' => $skinDir->name . ' copy',
+            
+        $newId = SkinsModel::count()+1;
+        $newSkin = SkinsModel::create([
+            'name' => $skinDir->name . ' copy #' . $newId,
             'dirname' => $newSkinDir,
             'author' => $skinDir->author,
             'version' => $skinDir->version,
             'active' => 0
         ]);
+        
+        $boxes = SkinsBoxesModel::where('skin_id', $body['skin_id'])->get()->toArray();
+        foreach ($boxes as $box) {
+            $box['skin_id'] = $newSkin->id;
+            SkinsBoxesModel::create($box);
+        }
+        
+        $skinSettings = json_decode(file_get_contents($dirNew.'/skin.json'), true);
+        $skinSettings['name'] = $newSkin->name;
+        
+        @rename($dirNew.'/'.$skinDir->dirname.'.png', $dirNew.'/'.$newSkinDir.'.png');
+        @rename($dirNew.'/'.$skinDir->dirname.'.jpg', $dirNew.'/'.$newSkinDir.'.jpg');
+        
+        file_put_contents($dirNew.'/skin.json', json_encode($skinSettings, JSON_PRETTY_PRINT));
+        
         $this->cache->cleanAllSkinsCache();
         
         return $response

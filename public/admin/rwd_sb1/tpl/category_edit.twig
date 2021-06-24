@@ -3,7 +3,7 @@
 
 {% block content %}
 <nav class="nav">
-  <a class="nav-link active" href="{{ path_for('admin.boards') }}">{{ trans('admin.back') }}</a>
+  <a class="nav-link active" href="{{ path_for('admin.boards') }}">{{ trans('back') }}</a>
 </nav>
 	  
 	  
@@ -12,23 +12,23 @@
     <input type="hidden" name="category_id" value="{{ category.id }}">
 	  <div class="row">
 		<div class="col p-1">
-		  <small id="nameHelp" class="form-text text-muted text-center">{{ trans('admin.category name') }}.</small>
-		  <input type="text"  aria-describedby="nameHelp" class="form-control" placeholder="{{ trans('admin.category name') }}" name="name" value="{{ category.name }}">
+		  <small id="nameHelp" class="form-text text-muted text-center">{{ trans('category name') }}.</small>
+		  <input type="text"  aria-describedby="nameHelp" class="form-control" placeholder="{{ trans('category name') }}" name="name" value="{{ category.name }}">
 		
 		</div>
 		<div class="col p-1">
-		 <small id="orderHelp" class="form-text text-muted text-center">{{ trans('admin.order') }}.</small>
-		  <input type="text" aria-describedby="orderHelp" class="form-control" placeholder="{{ trans('admin.order') }}" name="order" value="{{ category.category_order }}">
+		 <small id="orderHelp" class="form-text text-muted text-center">{{ trans('order') }}.</small>
+		  <input type="text" aria-describedby="orderHelp" class="form-control" placeholder="{{ trans('order') }}" name="order" value="{{ category.category_order }}">
 		 
 		</div>
 		<div class="col p-1 mx-4 mt-4">
-			<label class="control control-checkbox" for="active">{{ trans('admin.active') }}
+			<label class="control control-checkbox" for="active">{{ trans('active') }}
 				<input type="checkbox" id="active" class="form-check-input" name="visability" {% if category.active %}checked{% endif %}>
 				<div class="control_indicator mt-1"></div>
 			</label>
 		</div>
 		<div class="col mt-3 p-1">
-		  <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
+		  <button type="submit" class="btn btn-primary">{{ trans('submit') }}</button>
 		</div>
 	  
 	  

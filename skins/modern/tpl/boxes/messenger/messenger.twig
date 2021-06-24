@@ -1,0 +1,89 @@
+<div id="boards-messenger" style="background-image: url({{ base_url() }}/public/img/envlop.png); transform: translate3d(0px, 0px, 0px);" class="boards-messenger-smooth">
+    <span id="boards-messenger-badge" class="badge badge-pill badge-success fs-12 position-absolute" style="display: none;"></span>
+</div>
+<div id="boards-messenger-snippet" class="row chat-module br1 d-none">
+      <!-- DIRECT CHAT PRIMARY -->
+      <div class="chat-box chat-box-primary direct-chat direct-chat-primary">
+        <div class="chat-box-header with-border">
+          <h3 class="chat-box-title">Direct Chat</h3>
+    
+          <div class="chat-box-tools pull-right">
+            {# <button type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="minimalise"><i class="fa fa-minus"></i> #}
+            </button>
+            <button id="msg-manager-btn" type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="conversation manager"><i class="fa fa-plus"></i>
+            </button>
+            <button id="msg-list-btn" type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="conversations list" title="Contacts" data-widget="chat-pane-toggle">
+              <i class="fa fa-comments"></i></button>
+            {# <button type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="close"><i class="fa fa-times"></i></button> #}
+          </div>
+        </div>
+        <!-- /.chat-box-header -->
+        <div class="chat-box-body">
+          <!-- Conversations are loaded here -->
+          <div class="direct-chat-messages">
+          </div>
+          <!--/.direct-chat-messages-->
+   
+   {# xxx #}
+   
+    <!-- Contacts are loaded here -->
+          <div id="msg-list" class="direct-chat-contacts direct-chat-contacts-open">
+            
+            <ul id="msg-list-ul" class="clear contacts-list">
+            
+              <li data-msg-list-id="1">
+                <span class="row" href="#">
+                  <img class="contacts-list-img" src="https://bootdey.com/img/Content/user_1.jpg">
+    
+                  <div class="contacts-list-info">
+                        <span class="contacts-list-name">
+                          Count Dracula
+                          <small class="contacts-list-date pull-right">2/28/2015</small>
+                        </span>
+                    <span class="contacts-list-msg">How have you been? I was...</span>
+                  </div>
+                  <!-- /.contacts-list-info -->
+                </span>
+              </li>
+              <!-- End Contact Item -->
+            </ul>
+            <!-- /.contatcts-list -->
+          </div>
+          <!-- /.direct-chat-pane -->
+          <!-- Contacts manager are loaded here -->
+          <div id="msg-manager" class="direct-chat-contacts">
+           
+            <div class="col-12">
+            <form id="msg-manager-form" action="#" method="post">
+                    <div class="row flex-align-center">
+                        <input type="text" id="msg-find-user" name="message" placeholder="{{ trans('find user') }}" class="combine">
+                        <button id="msg-start-chat" type="button" class="btn btn-dark combine-submit">{{ trans('start chat') }}</button>          
+                    </div>
+                
+            </div>
+            <div id="msg-userlist" class="col-12">
+
+            </div>
+            </form>
+              <!-- End Contact Item -->
+            <!-- /.contatcts-list -->
+          </div>
+          <!-- /contact manager end -->
+   
+   {# XXX #}
+   
+          <!-- /.direct-chat-pane -->
+        </div>
+        <!-- /.chat-box-body -->
+        <div class="chat-box-footer">
+          <form action="#" method="post">
+            <div class="row flex-align-center">
+                    <input id="msg-chat-input" type="text" name="message" placeholder="Type Message ..." class="combine">
+                    <button id="msg-chat-btn" type="submit" class="btn btn-dark combine-submit">Send <i class="fab fa-telegram-plane"></i></button>          
+            </div>
+          </form>
+        </div>
+        <!-- /.chat-box-footer-->
+      </div>
+      <!--/.direct-chat -->
+</div>

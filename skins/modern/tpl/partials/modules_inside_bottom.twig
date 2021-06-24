@@ -1,0 +1,9 @@
+{% if modules.iBottom %}
+	<!-- inside bottom module -->
+	<div class="col-12">
+	{% for module in modules.iBottom %}
+		{% include 'boxes/modules/'~module.engine~'.twig' %}
+	{% endfor %}
+	</div>
+	<!-- /inside bottom module -->
+{% endif %}

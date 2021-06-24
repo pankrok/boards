@@ -1,0 +1,19 @@
+<div id="{{ name }}" class="modal" data-toggle="#{{ name }}" data-visibility="hide">
+  <div class="modal-content">
+  {% if alert %}
+    {% include 'boxes/alert/alert.twig' %}
+    {% else %}
+      <div class="box">
+        <div class="box-header">
+            <span class="close float-right mt1" data-toggle="#{{ name }}">&times;</span>
+            <h3>{{ trans(name) }}</h3>
+        </div>
+        <div class="box-body">
+            
+            {{ body }}
+           
+      </div>
+      </div>
+ {% endif %}
+</div>
+</div>

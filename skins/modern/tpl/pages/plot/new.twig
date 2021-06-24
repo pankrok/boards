@@ -1,0 +1,44 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+<div class="box">
+    <div class="box-head">
+        <h1>{{ trans('Starting new plot') }}</h1>  
+    </div>
+    <div class="box-body">
+    <div class="form-group">
+        <label for="PlotTopic">{{ trans('Topic') }}</label>
+        <input id="newPlotTopic" type="text" id="PlotTopic" placeholder="{{ trans('enter topic') }}">
+      </div>
+        <textarea id="editor" class="loader"></textarea>
+        <input type="hidden" id="boardID" value="{{ board_id }}">
+        <div class="col-12 my2 row flex-justify-space-between">
+        <button id="goback" type="button" class="btn btn-dark">Go back</button>
+        <button id="startnewplot" type="button" class="btn btn-green">Post!</button>
+        </div>
+    </div>
+</div> 
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block endBodyBlock %}
+<script>
+bReady().then(() => {
+    B.initJodit('#editor').then(function(done) {
+      if(done === true) {
+        document.getElementById('editor').classList.remove('loader');
+      }
+    });
+    document.getElementById('startnewplot').onclick = function(){
+        B.setNewPlot({
+            'id': document.getElementById('boardID').value,
+            'topic': document.getElementById('newPlotTopic').value,
+            'content': document.getElementById('editor').value
+        });
+    }
+});
+
+</script>
+{% endblock %}

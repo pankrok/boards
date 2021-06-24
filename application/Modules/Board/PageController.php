@@ -16,14 +16,14 @@ class PageController extends Controller
             $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
             $name = $routeContext->getRoute()->getName();
             $routeName = $routeContext->getRoutingResults()->getUri();
-            $this->cache->setName($name);
-            
-            $content = PagesModel::find($arg['id'])->toArray();
-            $this->cache->store($routeName, $content);
+            $this->cache->setPath($name);
+            if(($content = PagesModel::find($arg['id'])) === null) {
+                throw new \Slim\Exception\HttpNotFoundException($request);
+            }
+            $this->cache->set($routeName, $content->toArray());
         }
         
         $this->view->getEnvironment()->addGlobal('page', $content);
-        return $this->view->render($response, 'page.twig');
-        ;
+        return $this->view->render($response, 'pages/infopages/index.twig');
     }
 }

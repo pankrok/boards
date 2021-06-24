@@ -33,10 +33,10 @@ class Auth
     public function user() : array
     {
         if (isset($_SESSION['user'])) {
-            $a = UserModel::leftJoin('images', 'images.id', '=', 'users.avatar')->select('users.*', 'images._38', 'images._85', 'images._150')->find($_SESSION['user'])->makeHidden(['password']);
-            if (is_object($a)) {              
-                return $a->toArray();
-            }     
+            $a = UserModel::leftJoin('images', 'images.id', '=', 'users.avatar')->select('users.*', 'images._38', 'images._85', 'images._150')->find($_SESSION['user']);
+            if ($a !== null) {
+                return $a->makeHidden(['password'])->toArray();
+            }
         }
         return [];
     }
@@ -53,12 +53,23 @@ class Auth
   
     public function checkAdmin() : int
     {
-        return isset($_SESSION['user']) ? UserModel::select('admin_lvl')->find($_SESSION['user'])->toArray()['admin_lvl'] : 0;
+        if (isset($_SESSION['user'])) {
+            $model = UserModel::select('admin_lvl')->find($_SESSION['user']);
+            if ($model !== null) {
+                return $model->toArray()['admin_lvl'];
+            }
+        }
+        return 0;
     }
   
     public function checkBan()
     {
+        if (self::check() === 0) {
+           return null; 
+        }
+        
         $ban = UserModel::select('banned')->find($_SESSION['user']);
+        
         if ($ban->banned) {
             $_SESSION['user'] = null;
             unset($_SESSION['user']);

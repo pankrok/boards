@@ -4,12 +4,12 @@
 
 
 {% block content %}
-<h1>{{ trans('admin.users and groups') }}</h1>
+<h1>{{ trans('users and groups') }}</h1>
 <div class="row">
     <div class="col mx-5 px-5 my-2">
         <div class="list-group">
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.users') }}"><span class="fas fa-user mr-3"></span> {{ trans('admin.users') }}</a>
-            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.groups') }}"><span class="fas fa-users mr-3"></span> {{ trans('admin.groups') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.users') }}"><span class="fas fa-user mr-3"></span> {{ trans('users') }}</a>
+            <a class="list-group-item list-group-item-action" href="{{ path_for('admin.groups') }}"><span class="fas fa-users mr-3"></span> {{ trans('groups') }}</a>
         </div>
     </div>
 </div>

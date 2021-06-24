@@ -31,7 +31,7 @@ class BreadcrumbsMiddleware extends Middleware
         $name = $route->getName();
         $routeName = $routeContext->getRoutingResults()->getUri();
         
-        if (!$breadcrumbs = $cache->receive($routeName.'-breadcrumbs')) {
+        if (!$breadcrumbs = $cache->get($routeName.'-breadcrumbs')) {
             if ($name === 'page' || $name === 'category.getCategory' || $name === 'board.getBoard' || $name === 'board.getPlot' ||  $name === 'home') {
                 $atr['plot'] = $route->getArgument('plot_id') ?? null;
                 $atr['board'] = $route->getArgument('board_id') ?? null;
@@ -186,7 +186,7 @@ class BreadcrumbsMiddleware extends Middleware
                                 'name' => $this->container->get('translator')->get($name)
                                 ];
             }
-            $cache->store($routeName.'-breadcrumbs', $breadcrumbs, 0);
+            $cache->set($routeName.'-breadcrumbs', $breadcrumbs, 0);
         }
         
         $this->container->get('view')->getEnvironment()->addGlobal('breadcrumbs', $breadcrumbs);

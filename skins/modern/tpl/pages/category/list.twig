@@ -1,0 +1,14 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+<div class="box">
+    <div class="box-body">
+        <h2>{{ category.name | raw}}</h2>   
+    </div>
+</div>
+ {% include 'boxes//category/list.twig' %}       
+
+{% endblock %}
+{% endembed %}
+{% endblock %}

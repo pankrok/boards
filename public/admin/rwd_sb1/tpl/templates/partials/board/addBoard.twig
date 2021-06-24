@@ -3,7 +3,7 @@
 <form action="{{ path_for('admin.add.board') }}" method="post" id="addBoard">
   <div class="row">
 		<div class="form-group col-3">
-		<label for="SelectCategory">{{ trans('admin.select category') }}:</label>
+		<label for="SelectCategory">{{ trans('select category') }}:</label>
 		<select class="form-control" id="SelectCategory" name="cat_id">
 		  {% for category in categories %}
 		  <option value="{{ category.id }}" {% if category.id == data.id %}selected{% endif %}>{{ stripTags(category.name) }}</option>	  
@@ -11,7 +11,7 @@
 		</select>
 	  </div>
      <div class="form-group col-2">
-		<label for="SelectCategory">{{ trans('admin.select parent board') }}:</label>
+		<label for="SelectCategory">{{ trans('select parent board') }}:</label>
 		<select class="form-control" id="SelectParent" name="parent_id">
           <option value="" selected> </option>
 		  {% for parent in parents %}
@@ -20,26 +20,26 @@
 		</select>
 	  </div>
 	  <div class="form-group col-3">
-		<label for="boardName">{{ trans('admin.board name') }}</label>
+		<label for="boardName">{{ trans('board name') }}</label>
 		<input type="text" class="form-control" id="boardName" name="name" value="{{ data.board_name }}">
 	  </div>
 	  <div class="form-group col-2">
-		<label for="boardOrder">{{ trans('admin.order') }}</label>
+		<label for="boardOrder">{{ trans('order') }}</label>
 		<input type="text" class="form-control" id="boardOrder" name="order" value="{{ data.board_order }}">
 	  </div>
 	  <div class="control-group col-2 mt-4">
-	  <label class="control control-checkbox mt-2" for="Active">{{ trans('admin.active') }}
+	  <label class="control control-checkbox mt-2" for="Active">{{ trans('active') }}
 		<input type="checkbox" id="Active" name="visability" checked>
 		<div class="control_indicator mt-1"></div>
 	  </label>
 	  </div>
   </div> 
   <div class="form-group">
-    <label for="BoardDesc">{{ trans('admin.board description') }}</label>
+    <label for="BoardDesc">{{ trans('board description') }}</label>
     <textarea class="form-control" id="BoardDesc" rows="3" name="desc"></textarea>
   </div>
   <div>
-      <button type="submit" class="btn btn-primary">{{ trans('admin.submit') }}</button>
+      <button type="submit" class="btn btn-primary">{{ trans('submit') }}</button>
    </div>
 </form>
 </div>

@@ -1,0 +1,83 @@
+<div id="editPlot" class="modal" data-toggle="#editPlot" data-visibility="hide">
+  <div class="modal-content mw500">
+  <form action="{{ path_for('board.moderate.plot') }}" method="post">
+      <div class="box">
+        <div class="box-header">
+            <span class="close float-right mt1" data-toggle="#editPlot">&times;</span>
+            <h3>{{ trans('edit') }}: {{ title }}</h3>
+        </div>
+        <div class="box-body">
+        <div class="control-group">
+       
+            <input type="hidden" name="id" value="{{ plot.plot_id }}">
+            <div class="form-group">
+                <input type="text" name="plot_name" class="form-control" aria-describedby="plotNameHelp" id="plot_name" value="{{ title }}">
+                <small id="plotNameHelp" class="form-text text-muted">{{ trans('edit plot name') }}.</small>
+            </div>
+            <div class="form-group">
+            <label for="boardSelect">{{ trans('board') }}</label>
+            <select class="form-control" id="boardSelect" name="board_select">
+              {% for boardSelect in board_list %}
+              <option value="{{ boardSelect.id }}" {% if boardSelect.id == plot.board_id %}selected{% endif %}>{{ boardSelect.board_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+            <div class="row">
+                <div class="col-auto">
+                    <label class="control control-checkbox" for="hidden">{{ trans('hidden') }}
+                        <input type="checkbox" id="hidden" name="hidden" {% if hidden %}checked{% endif %}>
+                         <div class="control_indicator"></div>
+                    </label>
+                </div>
+                <div class="col-auto">	
+                    <label class="control control-checkbox" for="lock">{{ trans('locked') }}
+                        <input type="checkbox" id="lock" name="lock" {% if locked %}checked{% endif %}>
+                         <div class="control_indicator"></div>	
+                    </label>
+                </div>
+            </div>
+        </div>		
+      </div>
+      <div class="box-footer flex-justify-end">
+        <button type="submit" class="btn btn-green">{{ trans('submit') }}</button>
+      </div>
+      </div>
+    </form>
+</div>
+</div>
+
+<div id="editPost" class="modal" data-toggle="#editPost" data-visibility="hide">
+  <div class="modal-content">
+      <div class="box">
+        <div class="box-header">
+            <span class="close float-right mt1" data-toggle="#editPost">&times;</span>
+            <h3>{{ trans('Edit Post') }}</h3>
+        </div>
+        <div class="box-body">
+            <form id="editPostForm" action="{{ path_for('board.edit') }}" method="post">
+            <input type="hidden" id="post_id" name="post_id" value="">
+            
+				<div class="input-group text-left">
+					<textarea id="editPostJodit" name="content"></textarea>
+					</div>
+					{% if auth.admin > 1 %}
+					<div class="row my2">
+						<div class="col">
+						<div class="control-group text-left ">
+							<label class="control control-checkbox" for="hidePost">{{ trans('hide post') }}
+								<input type="checkbox" id="hidePost" name="hide">
+								<div class="control_indicator mt-1"></div>
+							</label>
+						</div>
+						</div>
+						<div class="col row flex-justify-end">
+							<button id="post-edit-btn" type="submit" class="btn btn-green">{{ trans('submint edit') }}</button>
+						</div>
+					</div>
+					{% endif %}
+                    {{ csrf.field | raw }}
+			</form>
+        </div>
+      </div>
+      </div>
+</div>

@@ -17,30 +17,30 @@
 			  </span>
 			  <div class="col p-2">
 				  <button class="btn btn-primary mx-4" type="button" data-toggle="collapse" data-target="#plugin-{{ plugin.id }}" aria-expanded="false" aria-controls="plugin-{{ plugin.id }}">
-					{{ trans('admin.plugin info') }}
+					{{ trans('plugin info') }}
 				  </button>
 			  </div>
 			  <div class="col float-right m-auto">
 			  {% if plugin.active %}
 				<form action="{{ path_for('admin.plugins.deactive') }}" method="post">
 				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-				<button type="submit" class="btn btn-warning float-right mx-2">{{ trans('admin.deactive') }}</button>
+				<button type="submit" class="btn btn-warning float-right mx-2">{{ trans('deactive') }}</button>
 				</form>
 			  {% else %}
 				<form action="{{ path_for('admin.plugins.active') }}" method="post">
 				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-				<button type="submit" class="btn btn-success float-right mx-2" {% if not plugin.install %}disabled{% endif %}>{{ trans('admin.activate') }}</button>
+				<button type="submit" class="btn btn-success float-right mx-2" {% if not plugin.install %}disabled{% endif %}>{{ trans('activate') }}</button>
 				</form>
 			  {% endif %}
 			  {% if plugin.install %}
 				<form action="{{ path_for('admin.plugins.uninstall') }}" method="post">
 				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-				<button type="submit" class="btn btn-danger float-right mx-2" {% if plugin.active %}disabled{% endif %}>{{ trans('admin.uninstall') }}</button>
+				<button type="submit" class="btn btn-danger float-right mx-2" {% if plugin.active %}disabled{% endif %}>{{ trans('uninstall') }}</button>
 				</form>
 			  {% else %}
 				<form action="{{ path_for('admin.plugins.install') }}" method="post">
 				<input type="hidden" name="plugin_name" value="{{ plugin.plugin_name }}">
-				<button type="submit" class="btn btn-success float-right mx-2">{{ trans('admin.install') }}</button>
+				<button type="submit" class="btn btn-success float-right mx-2">{{ trans('install') }}</button>
 				</form>
 			  {% endif %}
 			  </div>
@@ -49,11 +49,11 @@
 		  <div class="collapse" id="plugin-{{ plugin.id }}">
 		  <div class="card card-body">
 			  <div class="row text-dark">
-				<div class="col p-2">{{ trans('admin.version') }}: {{ plugin.info.version }}</div>
-				<div class="col p-2">{{ trans('admin.author') }}: {{ plugin.info.author }}</div>
-				<div class="col p-2">{{ trans('admin.author website') }}: {{ plugin.info.website }}</div>
+				<div class="col p-2">{{ trans('version') }}: {{ plugin.info.version }}</div>
+				<div class="col p-2">{{ trans('author') }}: {{ plugin.info.author }}</div>
+				<div class="col p-2">{{ trans('author website') }}: {{ plugin.info.website }}</div>
 				<div class="col-12">	
-					<p>{{ trans('admin.description') }}:</p><hr>
+					<p>{{ trans('description') }}:</p><hr>
 					<p>{{ include(template_from_string(plugin.info.desc | raw)) }}</p>
 				</div>
 			  </div>

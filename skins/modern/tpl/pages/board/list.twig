@@ -1,0 +1,24 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+<div class="box">
+    <div class="box-body">
+        <h2>{{ board_name | raw}}</h2>   
+    </div>
+</div>
+<div class="row flex-justify-end px2">
+    <div>
+        <a href="{{ path_for('board.newPlot', {'board_id': board.board_id}) }}" class="btn btn-dark header-btn float-right"><i class="fas fa-plus"></i> {{ trans('Start new plot') }}</a>
+    </div>
+</div>
+	{% include 'boxes/board/sublist.twig' %}  
+	{% include 'boxes/board/list.twig' %}   
+<div class="row flex-justify-end px2">
+    <div>
+        <a href="{{ path_for('board.newPlot', {'board_id': board.board_id}) }}" class="btn btn-dark header-btn float-right"><i class="fas fa-plus"></i> {{ trans('Start new plot') }}</a>
+    </div>
+</div>    
+{% endblock %}
+{% endembed %}
+{% endblock %}

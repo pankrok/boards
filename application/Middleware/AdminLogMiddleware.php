@@ -18,7 +18,7 @@ use Application\Models\AdminLogModel;
 class AdminLogMiddleware extends Middleware
 {
     public function __invoke(Request $request, RequestHandler $handler)
-    {   
+    {
         if ($request->getMethod() === 'POST') {
             $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
             $name = $routeContext->getRoute()->getName();

@@ -22,10 +22,10 @@ $app->group('/plot', function (RouteCollectorProxy $plot) {
     $plot->get('/{plot}/{plot_id:[0-9]+}[/[{page:[0-9]+}]]', 'PlotController:getPlot')->setName('board.getPlot');
     $plot->post('/editpost', 'PlotController:editPost')->setName('board.edit');
     $plot->get('/new/create/{board_id:[0-9]+}', 'PlotController:newPlot')->setName('board.newPlot');
-    $plot->post('/new/send/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
+    //$plot->post('/new/send/post', 'PlotController:newPlotPost')->setName('board.newPlotPost');
     $plot->post('/replyPost', 'PlotController:replyPost')->setName('board.replyPost');
     $plot->post('/likePost', 'PlotController:likeit')->setName('board.likeit');
-    $plot->post('/lockplot', 'PlotController:lockPlot')->setName('board.lock.plot');
+    $plot->post('/moderate', 'PlotController:moderatePlot')->setName('board.moderate.plot');
     $plot->post('/rate-plot', 'PlotController:ratePlot')->setName('board.rate.plot');
 });
 #sign
@@ -43,13 +43,7 @@ $app->group('/auth', function (RouteCollectorProxy $auth) {
     $auth->get('/forgetpassword', 'ForgetPasswordController:index')->setName('auth.forget.pass');
     $auth->post('/forgetpassword/post', 'ForgetPasswordController:sendMail')->setName('auth.forget.pass.post');
     $auth->get('/forgetpassword/change/{id}/{hash}', 'ForgetPasswordController:chengePassword')->setName('auth.change.pass');
-});
-#chatbox
-$app->group('/chatbox', function (RouteCollectorProxy $chatbox) {
-    $chatbox->post('/postmessage', 'ChatboxController:postChatMessage')->setName('postChatbox');
-    $chatbox->post('/loadmore', 'ChatboxController:loadMoreMessages')->setName('loadChatbox');
-    $chatbox->post('/checknew', 'ChatboxController:checkNewMessage')->setName('checkNewMessage');
-    $chatbox->post('/edit', 'ChatboxController:editMessage')->setName('editMessage');
+    $auth->post('/forgetpassword/confirm/change/pass/true', 'ForgetPasswordController:chengePasswordPost')->setName('auth.change.pass.post');
 });
 #user
 $app->group('/user', function (RouteCollectorProxy $user) {
@@ -68,11 +62,28 @@ $app->group('/mailbox', function (RouteCollectorProxy $mailbox) {
     $mailbox->post('/send/message', 'MessageController:sendMessage')->setname('mailbox.send');
     $mailbox->post('/delete/message', 'MessageController:deleteMessage')->setname('mailbox.delete');
     $mailbox->post('/move/moveMessage', 'MessageController:moveMessage')->setname('mailbox.move');
+    $mailbox->get('/messanger/test/{topic}', 'MessageController:test')->setname('mailbox.test');
 });
+
+#messenger
+$app->group('/messenger', function (RouteCollectorProxy $messenger) {
+    $messenger->map(['GET', 'POST'], '/conversation[/{id}]', 'MessengerController:get')->setname('get.conversation');
+    $messenger->map(['GET', 'POST'], '/list', 'MessengerController:list')->setname('list.conversation');
+    $messenger->map(['GET', 'POST'], '/find', 'MessengerController:find')->setname('find.user.conversation');
+    $messenger->map(['GET', 'POST'], '/start', 'MessengerController:start')->setname('start.conversation');
+    $messenger->post('/post', 'MessengerController:post')->setname('post.conversation');
+    $messenger->post('/check', 'MessengerController:check')->setname('check.conversation');
+});
+
+#search query
+$app->get('/search/{search_in}/{find_results}/{find}[/[{query}]]', 'SearchController:index')->setname('search');
+$app->post('/search/router', 'SearchController:searchRouter')->setname('search.router');
 
 #skin chang
 $app->get('/setskin/{skin}', 'SkinController:change')->setName('changeskin');
 
+#ajax
+$app->map(['GET', 'POST'], '/ajax', 'AjaxController:ajax')->setname('ajax');
 
 #################
 # ADMIN SECTION #

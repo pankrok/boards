@@ -1,0 +1,22 @@
+<li class="list-group-item px0 chatbox-li" value="{{ shout.id }}">
+    <div class="row flex-align-center">
+        <div class="col-1 col-sm-2 text-center">
+            <img src="{{ shout.avatar }}" class="rounded-circle avatar-sm" alt="">
+        </div>
+        <div class="col-11 col-sm-10 fs-12">
+            <div class="row">
+                <div class="col-12">
+                    <span><b class="float-left"><a href="{{ shout.uurl }}">{{ shout.username_html | raw }}</a>
+                        </b><i class="float-right fc-g">{{ shout.updated_at}}</i> 
+                        {% if auth.admin > 1 or (shout.created_at|date("U") > "-1 days"|date("U") and shout.user_id == auth.check) %}
+                            <span class="badge warning pointer fs9" data-content-id="{{ shout.id }}" data-toggle="modal" data-target="#chatMessageEdit">E</span>
+                        {% endif %}    
+                    </span>
+                </div>
+                <div id="shout-content-10" class="col-12">
+                    {{ shout.content }}
+                </div>
+            </div>	  
+        </div>
+    </div>		
+</li>

@@ -1,0 +1,65 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+
+{% for category in categories %}
+<div class="box">
+    <div class="box-header border-0">
+        <button class="btn btn-light float-right dropdown" data-toggle="#category-{{ category.id }}">
+            <i class="fas fa-toggle-on" data-toggle="#category-{{ category.id }}"></i>
+        </button>
+        <h2><a href="{{ category.url }}">{{ category.name|raw }}</a></h2>
+        
+    </div>
+    <div id="category-{{ category.id }}" class="box-body">
+        {% for board in (boards[category.id]) %}{# start boards loop #}
+        <div class="row flex-align-center my2 text-center">
+            <div class="col-1 col-sm-2">
+                        <i class=" fas fa-comment fa-2x"></i>
+             </div>
+            <div class="col-8 col-sm-8">
+                <div class="row flex-align-center text-center">
+                    <div class="col-10 text-left">
+                        <div class="box-header border-0">
+                            <h3><a href="{{ board.url }}">{{ board.board_name|raw }}</a></h3>
+                        </div>
+                        <div class="box-body">    
+                            <div class="row text-left">
+                                {% for  childboard in board.childboard%} {# start subboards loop #}
+                                <div class="col-4">
+                                    <a href="{{ childboard.url }}"><i class="fas fa-arrow-right"></i> {{ childboard.board_name | raw}}</a>
+                                </div>
+                                {% endfor %}{# end subboards loop #}
+                                <div class="col-12">{{ board.board_description | raw }}</div>
+                            </div>   
+                        </div>
+                    </div>
+                    <div class="col-2 d-sm-none">    
+                        <strong>{{ board.plots_number }} <i class="fas fa-comments"></i> / {{ board.posts_number }} <i class="fas fa-comment-dots"></i></strong>
+                    </div>
+                </div>
+            </div>
+            {% if board.last_post_date %}
+            <div class="col-3 col-sm-2">
+            <div class="row flex-dir-row flex-justify-center">
+            <div class="flex-dir-column p1 d-sm-none text-right">
+                    <div class="m1"><a href="{{ board.last_post_author_url }}">{{ board.last_post_author | raw }}</a></div>
+                    <div class="m1"><a href="{{ board.last_post_url }}">{{ board.plot_name }}</a></div>
+                </div>
+                <div class="flex-dir-row p1">
+                    <a href="{{ board.last_post_author_url }}"><img class="avatar avatar-sm" src="{{ board.last_post_avatar }}" alt="Message User Image"></a>
+                </div>
+                
+            </div>
+            </div>
+            {% endif %}{# board.last_post_date #}
+        </div>
+        {% endfor %}{# /end boards loop #}
+    </div>
+</div>
+{% endfor %}{# /for category in categories #}
+
+{% endblock %}
+{% endembed %}
+{% endblock %}

@@ -108,7 +108,7 @@ class UserPanelController extends Controller
                 $this->view->getEnvironment()->addGlobal('additional', $additionalData);
             }
         }
-        return $this->view->render($response, 'user/profile.twig');
+        return $this->view->render($response, 'pages/users/index.twig');
     }
     
     public function postProfilePicture($request, $response)
@@ -126,7 +126,6 @@ class UserPanelController extends Controller
             $user->avatar = null;
             $user->save();
             $delete->delete();
-            $this->cache->clearCache();
         }
             
         // handle single input with single file upload
@@ -195,7 +194,7 @@ class UserPanelController extends Controller
                 $user->sex = $request->getParsedBody()['sex'];
             }
             if ($request->getParsedBody()['website']) {
-                $disallowed = array('http://', 'https://');
+                $disallowed = ['http://', 'https://'];
                 foreach ($disallowed as $d) {
                     if (strpos($request->getParsedBody()['website'], $d) === 0) {
                         $user->website =  str_replace($d, '', $url);

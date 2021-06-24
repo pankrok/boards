@@ -25,10 +25,11 @@ class ForgetPasswordController extends Controller
         $user->lostpw = $hash;
         $user->save();
         $path = self::base_url(true) . $this->router->urlFor('auth.change.pass', ['id' => $user->id, 'hash' => $hash]);
-        $subject = 'Forget Password ' . $this->settings["board"]["main_page_name"];
+        $subject = $this->translator->get('Forget Password') . ' ' . $this->settings["board"]["main_page_name"];
         $variables = [
             'path' =>  $path,
             'username' =>  $user->username,
+            'main_name' => $this->settings['board']['main_page_name'],
         ];
         
         
@@ -38,7 +39,7 @@ class ForgetPasswordController extends Controller
 
         return $response
             ->withHeader('Location', $this->router->urlFor('home'))
-            ->withStatus(302);
+            ->withStatus(303);
     }
     
     
@@ -47,10 +48,11 @@ class ForgetPasswordController extends Controller
         $user = UserModel::find($arg['id']);
         if ($user->lostpw === $arg['hash']) {
             $this->view->getEnvironment()->addGlobal('id', $arg['id']);
-            $this->view->render($response, 'auth/change_lost_pw.twig');
+            $this->view->getEnvironment()->addGlobal('hash', $arg['hash']);
+            return $this->view->render($response, 'auth/change_lost_pw.twig');
         }
         return $response->withHeader('Location', $this->router->urlFor('home'))
-            ->withStatus(302);
+            ->withStatus(303);
     }
     
     public function chengePasswordPost($request, $response)
@@ -59,18 +61,32 @@ class ForgetPasswordController extends Controller
         $validation = $this->validator->validate($request, [
             'vpassword'      => v::notEmpty()->equals($body['password'])
         ]);
+        
+        $passlenght = strlen($body['password']);
+        if (32 < $passlenght || $passlenght < 8) {
+            $this->flash->addMessage('danger', 'Password must be bettwen 8 and and 32 characters');
+            return $response->withHeader('Location', $this->router->urlFor('auth.change.pass', ['id' => $body['id'], 'hash' => $body['hash']]))
+            ->withStatus(303);
+        }
 
         if ($validation->faild()) {
-            $this->flash->addMessage('danger', 'Something went wrong!');
+            $this->flash->addMessage('danger', 'Something went wrong, try again!');
+            return $response->withHeader('Location', $this->router->urlFor('auth.change.pass', ['id' => $body['id'], 'hash' => $body['hash']]))
+            ->withStatus(303);
         } else {
             $user = UserModel::find($body['id']);
+            if($user->lostpw === null) {
+                $this->flash->addMessage('danger', 'Something went wrong, try again!');
+                return $response->withHeader('Location', $this->router->urlFor('home'))
+                ->withStatus(302);
+            }
             $user->password = password_hash($request->getParsedBody()['password'], PASSWORD_DEFAULT);
-            $user->lost_pw = '';
+            $user->lostpw = null;
             $user->save();
             $this->flash->addMessage('success', 'Password changed.');
         }
         
         return $response->withHeader('Location', $this->router->urlFor('home'))
-            ->withStatus(302);
+            ->withStatus(303);
     }
 }

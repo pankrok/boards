@@ -144,7 +144,7 @@ function checkReq()
     if (intval($php[0]) === 8) {
        $php_check = true;
     }    
-    if (intval($php[0]) === 7 && intval($php[1]) === 4) {
+    if (intval($php[0]) === 7 && intval($php[1]) > 2) {
        $php_check = true ;
     }
     

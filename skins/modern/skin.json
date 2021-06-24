@@ -1,0 +1,19 @@
+{
+    "name": "modern",
+    "author": "PanKrok",
+    "version": "1.0",
+	"assets": {
+        "css": [
+            "main.css",
+            "chat.css",
+			"loader.css",
+			"noscript.css"
+        ],
+        "js": [
+            "main.js",
+            "chatbox.js",
+            "darkmode.js",
+            "userpanel.js"
+        ]
+    }
+}

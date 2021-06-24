@@ -1,0 +1,15 @@
+<!-- statistics module -->
+<div class="box">
+    <div class="box-header text-center  border-0">
+        <h3>{{ trans('Statistics') }}</h3>
+    </div>
+    <div class="box-body">
+      <ul class="list-group list-group-flush ">
+            <li class="list-group-item py1">{{ trans('Members') }}: <span class="float-right">{{ stats.users_count }}</span></li>
+             <li class="list-group-item py1">{{ trans('Posts') }}: <span class="float-right">{{ stats.posts_count }}</span></li>
+             <li class="list-group-item py1">{{ trans('Threads') }}: <span class="float-right">{{ stats.plots_count }}</span></li>
+             <li class="list-group-item py1">{{ trans('Newest Member') }}: <span class="float-right"><b>{{ stats.last_user | raw }}</b></span></li>
+    </ul>
+    </div>
+</div>
+<!-- /statistics module -->

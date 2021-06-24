@@ -148,7 +148,7 @@ class Guard implements MiddlewareInterface
         $this->validateStorage();
 
         // Validate POST, PUT, DELETE, PATCH requests
-        if (in_array($request->getMethod(), ['POST', 'PUT', 'DELETE', 'PATCH'])) {
+        if (in_array($request->getMethod(), ['POST', 'PUT', 'DELETE', 'PATCH'], true)) {
             $body = $request->getParsedBody();
             $body = $body ? (array)$body : [];
             $name = $body[$this->prefix . '_name'] ?? false;

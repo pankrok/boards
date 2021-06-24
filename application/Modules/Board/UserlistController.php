@@ -17,14 +17,18 @@ class UserlistController extends Controller
         if (!isset($data)) {
             $routeName = \Slim\Routing\RouteContext::fromRequest($request)->getRoutingResults()->getUri();
             $data = self::getUsers($page);
-            $this->cache->store($routeName, $data, $this->settings['cache']['cache_time']);
+            $this->cache->set($routeName, $data, $this->settings['cache']['cache_time']);
+        }
+        
+        if($data['paginator']->getNumPages() < $page) {
+                throw new \Slim\Exception\HttpNotFoundException($request);
         }
         
         $this->view->getEnvironment()->addGlobal('users', $data['users']);
         $this->view->getEnvironment()->addGlobal('paginator', $data['paginator']);
         $this->view->getEnvironment()->addGlobal('title', $this->translator->get('lang.userlist'));
         
-        return $this->view->render($response, 'userlist.twig');
+        return $this->view->render($response, 'pages/users/list.twig');
         ;
     }
     

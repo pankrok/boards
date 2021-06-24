@@ -76,7 +76,7 @@ class AdminSkinsController extends Controller
                 $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
                 $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
                 $vname = explode('.', $v)[0];
-                $paths['js'][$vname] = '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
+                $paths['js'][$vname] = '<script async type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
             }
             if (!isset($paths['css'])) {
                 $paths['css'] = null;
@@ -208,7 +208,7 @@ class AdminSkinsController extends Controller
     protected function compareVersion(string $skinVersion) : bool
     {
         $skinVersion = explode('.', $skinVersion);
-        $boardVersion = explode('.', base64_decode($this->settings['core']['version']));
+        $boardVersion = explode('.', base64_decode($this->settings['core']['version'], true));
         foreach ($skinVersion as $k => $v) {
             if ($v === $boardVersion[$k] || $v === '*') {
                 $return = true;
@@ -240,7 +240,7 @@ class AdminSkinsController extends Controller
                 $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
                 $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
                 $vname = explode('.', $v)[0];
-                $paths['js'][$vname] = '<script type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
+                $paths['js'][$vname] = '<script async type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
             }
             
             if (!isset($paths['css'])) {

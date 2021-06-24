@@ -9,10 +9,10 @@ use Slim\Interfaces\ErrorRendererInterface;
 class ErrorMessageController implements ErrorRendererInterface
 {
     public function __invoke(\Throwable $e, bool $displayErrorDetails): string
-    {       
+    {
         $data = file_get_contents(MAIN_DIR . '/public/pages/error.html');
         $displayErrorDetails ? $style = 'body{padding:1em;} *{padding:0px;margin:3px;}' : $style = file_get_contents(MAIN_DIR . '/public/pages/style.css');
-        $displayErrorDetails ? $html = self::renderExceptionFragment($e) : $html = '';
+        $displayErrorDetails ? $html = self::renderExceptionFragment($e) : $html =  '<p class="output"><strong>Message:</strong> '.htmlentities($e->getMessage());
         $message = sprintf($data, $style, 'Error: ', $e->getCode(), $html);
         return $message;
     }

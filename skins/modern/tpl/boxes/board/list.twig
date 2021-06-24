@@ -1,0 +1,56 @@
+<div class="box">
+     <div class="box-header">
+        <strong>Topics:</strong>
+    </div>
+    {% for plot in board.plots %}
+	{% if plot.hidden == 0 or auth.admin %}
+    <div id="plot-1" class="box-body">
+        <div class="row flex-align-center my2 text-center">
+            <div class="col-1 col-sm-2">
+            {% if plot.locked %}
+                    <i class="fas fa-lock fa-2x text-danger m1"></i>
+            {% else %}
+                <i class="{% if not unread_plot(plot.id) %}text-success{% endif %} fas fa-file fa-2x"></i>
+            {% endif %}
+            {% if plot.hidden %}
+               <i class="far fa-eye-slash fa-2x text-info m1"></i>
+            {% endif %}
+             </div>
+            <div class="col-8 col-sm-8">
+                <div class="row flex-align-center text-center">
+                    <div class="col-10 text-left">
+                        <div class="box-header border-0">
+                            <strong><a href="{{ plot.url }}">{{ plot.plot_name }}</a><strong>
+                        </div>
+                        <div class="box-body">    
+                                <div class="col-12">{{ trans('by') }} <a href="{{ plot.user_url }}">{{ plot.username_html | raw }}</a>
+                                <span class="mx2">
+                                {% for i in 1..5 %}
+                                    {% set starClass = (plot.stars|round >= i ? "fas fa-star" : "far fa-star")  %}
+                                    <i class="{{ starClass }}"></i>
+                                {% endfor %}
+                                </span>
+                                </div>
+                            </div>   
+                        </div>   
+                    <div class="col-2 d-sm-none">    
+                        <strong>{{ plot.all_posts }} <i class="fas fa-comments"></i> /  {{ plot.views }} <i class="fas fa-eye"></i></strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3 col-sm-2">
+            <div class="row flex-dir-row flex-justify-center">
+                <div class="flex-dir-column p1 d-sm-none text-right">
+                    <div class="m1"><a href="{{ plot.last_post_autor_url }}">{{ plot.last_post_autor | raw }}</a></div>
+                    <div class="m1"><i class="far fa-clock"></i> {{  plot.last_post_date }}</div>
+                </div>
+                <div class="flex-dir-row p1">
+                    <img class="avatar avatar-sm" src="https://crooket.ct8.pl/public/upload/avatars/mqv1IWuc_150.png" alt="Message User Image">
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}{# if plot.hidden == 0 or auth.admin #}
+    {% endfor %}{# for plot in board.plots #}
+</div>

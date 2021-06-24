@@ -1,0 +1,9 @@
+{% if modules.left %}
+	<!-- left module -->
+	<div class="col-3">
+	{% for sidebar in modules.left %}
+		{% include 'boxes/modules/'~sidebar.engine~'.twig' %}
+	{% endfor %}
+	</div>
+	<!-- /left module -->
+{% endif %}

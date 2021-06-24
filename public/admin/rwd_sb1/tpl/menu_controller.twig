@@ -6,7 +6,7 @@
 {% block content %}
 	<ul class="nav justify-content-end">
 	  <li class="nav-item">
-		<a class="nav-link btn btn-success active" href="{{ path_for('admin.menu.manage') }}">{{ trans('admin.add menu link') }}</a>
+		<a class="nav-link btn btn-success active" href="{{ path_for('admin.menu.manage') }}">{{ trans('add menu link') }}</a>
 	  </li>
 	</ul>
 <hr />
@@ -16,7 +16,7 @@
 			<a href="{{ path_for('admin.menu.manage', {'id': link.id}) }}">{{ link.name|raw }}</a>
 			<!-- Button trigger modal -->
 				<button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#page-{{ link.id }}">
-				  {{ trans('admin.delete') }}
+				  {{ trans('delete') }}
 				</button>
 
 				<!-- Modal -->
@@ -24,7 +24,7 @@
 				  <div class="modal-dialog" role="document">
 					<div class="modal-content">
 					  <div class="modal-header">
-						<h5 class="modal-title" id="modal-page-{{ link.id }}">{{ trans('admin.delete page') }}: {{ link.name|raw }}?</h5>
+						<h5 class="modal-title" id="modal-page-{{ link.id }}">{{ trans('delete page') }}: {{ link.name|raw }}?</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						  <span aria-hidden="true">&times;</span>
 						</button>
@@ -32,7 +32,7 @@
 					  <div class="modal-footer">
 						<form action="{{ path_for('admin.menu.delete') }}" method="post">
 							<input type="hidden" name="id" value="{{ link.id }}">
-							<button type="submit" class="btn btn-danger">{{ trans('admin.delete') }}</button>
+							<button type="submit" class="btn btn-danger">{{ trans('delete') }}</button>
 						</form>
 					  </div>
 					</div>

@@ -2,11 +2,11 @@
 
 
 {% block content %}
-<h2>{{ trans('admin.user.edit') }}: {{ user.username }}</h2>
+<h2>{{ trans('user.edit') }}: {{ user.username }}</h2>
 <div class="row">
 	<ul class="nav">
 	  <li class="nav-item">
-		<a class="nav-link active" href="{{ path_for('admin.users') }}">{{ trans('admin.back') }}</a>
+		<a class="nav-link active" href="{{ path_for('admin.users') }}">{{ trans('back') }}</a>
 	  </li>
 	</ul>
 </div><hr />
@@ -62,8 +62,8 @@
                     </div>
                     <div class="col-sm-9 text-secondary">
                     <select class="form-control" name="confirmed">
-						<option value="1" {% if user.confirmed %}selected{% endif %}>{{ trans('admin.yes') }}</option>
-						<option value="0" {% if not user.confirmed %}selected{% endif %}>{{ trans('admin.no') }}</option>
+						<option value="1" {% if user.confirmed %}selected{% endif %}>{{ trans('yes') }}</option>
+						<option value="0" {% if not user.confirmed %}selected{% endif %}>{{ trans('no') }}</option>
 					</select>
                     </div>
                   </div>
@@ -98,8 +98,8 @@
                     </div>
                     <div class="col-sm-9 text-secondary">
                     <select class="form-control" name="banned">
-						<option value="1" {% if user.banned %}selected{% endif %}>{{ trans('admin.yes') }}</option>
-						<option value="0" {% if not user.banned %}selected{% endif %}>{{ trans('admin.no') }}</option>
+						<option value="1" {% if user.banned %}selected{% endif %}>{{ trans('yes') }}</option>
+						<option value="0" {% if not user.banned %}selected{% endif %}>{{ trans('no') }}</option>
 					</select>
                     </div>
                   </div>
@@ -110,8 +110,8 @@
                     </div>
                     <div class="col-sm-9 text-secondary">
                     <select class="form-control" name="tfa">
-						<option value="1" {% if user.tfa %}selected{% endif %}>{{ trans('admin.yes') }}</option>
-						<option value="0" {% if not user.tfa %}selected{% endif %}>{{ trans('admin.no') }}</option>
+						<option value="1" {% if user.tfa %}selected{% endif %}>{{ trans('yes') }}</option>
+						<option value="0" {% if not user.tfa %}selected{% endif %}>{{ trans('no') }}</option>
 					</select>
                     </div>
                   </div>
@@ -134,7 +134,7 @@
               </div>
 			</div>
 		</div>
-		<button type="submit" class="btn btn-success float-right">{{ trans('admin.submit') }}</button>
+		<button type="submit" class="btn btn-success float-right">{{ trans('submit') }}</button>
 </form>	
 		
 {% endblock %}

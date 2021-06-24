@@ -10,7 +10,7 @@
         <input type="hidden" name="file_type" value="{{ type }}">
 		<input type="hidden" name="twig_id" value="{{ id }}">
 		<input type="hidden" name="skin_id" value="{{ skin_id }}">
-		<span class="p-2 float-right"  data-toggle="tooltip" data-placement="top" title="{{ trans('admin.delete file') }}">
+		<span class="p-2 float-right"  data-toggle="tooltip" data-placement="top" title="{{ trans('delete file') }}">
 			<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete">
 			  <i class="fas fa-trash"></i>
 			</button>
@@ -21,7 +21,7 @@
 			  <div class="modal-dialog" role="document">
 				<div class="modal-content">
 				  <div class="modal-header">
-					<h5 class="modal-title" id="saveTplModalLabel">{{ trans('admin.delete') }}</h5>
+					<h5 class="modal-title" id="saveTplModalLabel">{{ trans('delete') }}</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					  <span aria-hidden="true">&times;</span>
 					</button>
@@ -30,7 +30,7 @@
 					Are you sure wanna delete in {{ attribute(list, id) }}?
 				  </div>
 				  <div class="modal-footer">
-					<button type="submit" class="btn btn-danger">{{ trans('admin.delete') }}</button>
+					<button type="submit" class="btn btn-danger">{{ trans('delete') }}</button>
 				  </div>
 				</div>
 			  </div>
@@ -55,7 +55,7 @@
 		<textarea name="code" id="editor">{{ code }}</textarea>
 		<span class="p-2 float-right">
 			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#saveTpl">
-			  {{ trans('admin.save') }}
+			  {{ trans('save') }}
 			</button>
 		</span>
 		
@@ -64,7 +64,7 @@
 			  <div class="modal-dialog" role="document">
 				<div class="modal-content">
 				  <div class="modal-header">
-					<h5 class="modal-title" id="saveTplModalLabel">{{ trans('admin.submit') }}</h5>
+					<h5 class="modal-title" id="saveTplModalLabel">{{ trans('submit') }}</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					  <span aria-hidden="true">&times;</span>
 					</button>
@@ -73,7 +73,7 @@
 					Are you sure wanna save changes in {{ attribute(list, id) }}?
 				  </div>
 				  <div class="modal-footer">
-					<button type="submit" class="btn btn-success">{{ trans('admin.save') }}</button>
+					<button type="submit" class="btn btn-success">{{ trans('save') }}</button>
 				  </div>
 				</div>
 			  </div>

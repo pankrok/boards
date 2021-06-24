@@ -1,0 +1,20 @@
+{% if msg_users %}
+<ul class="clear">
+
+{% for msg_user in msg_users %}
+<li data-un="{{ msg_user.username }}">
+ <span class="row" href="#">
+      <img class="contacts-list-img msg-users" src="{{ avatar(msg_user._38) }}">   
+      <div class="contacts-list-info">
+            <span class="contacts-list-name msg-users">
+              {{ msg_user.username }}
+            </span>
+            <input data-msg-checkbox type="checkbox" name="userId" value="{{ msg_user.id }}">
+      </div>
+      <!-- /.contacts-list-info -->
+    </span>
+</li>
+{% endfor %}
+
+</ul>
+{% endif %}

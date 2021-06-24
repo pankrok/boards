@@ -1,0 +1,58 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+<div id="post-list">
+    <div id="plot-id" class="box" data-plot_id="{{ plot.plot_id }}">
+        <div class="box-header">
+        <div class="row flex-1 row flex-1 flex-align-center">
+            {% if locked %}<i class="fas fa-lock fa-2x text-danger mx2" data-tooltip="tooltip" title="{{ trans('locked') }}"></i> {% endif %}
+            {% if hidden %}<i class="far fa-eye-slash fa-2x text-info mx2" data-tooltip="tooltip" title="{{ trans('hidden') }}"></i> {% endif %}
+            <h2>{{ title }}</h2>
+            <div class="flex-dir-row flex-1 flex-justify-end flex-align-center">
+                {% if auth.admin %} 
+                <button type="button" class="btn btn-yellow float-right mx2" data-post="editPlot">
+                  {{ trans('edit') }}
+                </button>
+                {% endif %}
+                <div id="star-rating" class="mx2">
+                {% for i in 1..5 %}
+                    {% set starClass = (stars|round >= i ? "fas fa-star rate" : "far fa-star rate")  %}
+                    <i class="{{ starClass }} pointer" data-rate="{{ i }}"></i>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="box-body">
+            <div class="row flex-dir-row">
+                <div class="flex-row px2">
+                    <img class="avatar avatar-sm" src="{{ avatar(plot._38) }}" alt="{{ plot.username }}">
+                </div>
+                <div class="flex-collumn">
+                    <div class="m1">Added by: <a href="{{ plot.user_url }}">{{ plot.username_html |raw }}</a></div>
+                    <div class="m1">20.05.2021</div>
+                </div>
+                <div class="flex-row flex-1 flex-justify-center">
+                     <button class="btn btn-light float-right">Subscribe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% include 'boxes/plot/post.twig' %}
+</div>
+{% include 'boxes/plot/edit.twig' %}
+{% include 'boxes/plot/editor.twig' %}
+{% endblock %}
+{% endembed %}
+{% endblock %}
+
+{% block endBodyBlock %}
+<script>
+bReady().then(() => {
+    B.getScript(assets+'/scripts/plot.js');
+});
+</script>
+
+{% endblock %}

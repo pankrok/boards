@@ -1,0 +1,37 @@
+<form action="{{ path_for('search.router') }}" method="post">
+<input type="text" name="query" placeholder="Search" class="combine" autocomplete="off" data-toggle="#search">
+<button type="submit" class="btn btn-dark combine-submit">Find <i class="fa fa-search"></i></button>   
+<div id="search" class="box search d-none" data-visibility="hide">
+    <div class="box-body">
+     <input type="hidden" name="search_in" value="plots">
+     <fieldset id="find_results">
+    <div class="form-check justify-content-start">
+      <input class="form-check-input" type="radio" name="find_results" id="find_results1"  value="topics" checked>
+      <label class="form-check-label" for="find_results1">
+       Tylko tematy
+      </label>
+    </div>
+    <div class="form-check justify-content-start">
+      <input class="form-check-input" type="radio" name="find_results" id="find_results2"  value="all">
+      <label class="form-check-label" for="find_results2">
+        Tematy i posty
+      </label>
+    </div>
+    </fieldset>
+     <fieldset id="find">
+    <div class="form-check justify-content-start">
+      <input class="form-check-input" type="radio" name="find" id="find1" value="phrase" checked>
+      <label class="form-check-label" for="find1">
+        Wszystkie wyrazy z frazy
+      </label>
+    </div>
+    <div class="form-check justify-content-start">
+      <input class="form-check-input" type="radio" name="find" id="find2" value="any">
+      <label class="form-check-label" for="find2">
+        Dowolny wyraz z frazy
+      </label>
+    </div>
+    </fieldset>
+    </div>
+</div> 
+</form>

@@ -17,26 +17,31 @@ class CategoryController extends Controller
             $cache = $request->getAttribute('cache');
             if (!isset($cache)) {
                 $routeName = \Slim\Routing\RouteContext::fromRequest($request)->getRoutingResults()->getUri();
+                if(($category = CategoryModel::where('id', $arg['category_id'])->first()) === null) {
+                    throw new \Slim\Exception\HttpNotFoundException($request);
+                }
                 
                 $data = self::getCategoryData($arg['category_id']);
-                $category = CategoryModel::find($arg['category_id'])->get()->toArray()[0];
-                $this->cache->store($routeName, ['data' => $data, 'category' => $category], $this->settings['cache']['cache_time']);
+                $category = $category->toArray();
+                $this->cache->set($routeName, ['data' => $data, 'category' => $category], $this->settings['cache']['cache_time']);
             } else {
                 $data = $cache['data'];
                 $category =  $cache['category'];
             }
+        } else {
+            throw new \Slim\Exception\HttpNotFoundException($request);
         }
 
         $this->view->getEnvironment()->addGlobal('boards', $data);
         $this->view->getEnvironment()->addGlobal('category', $category);
         $this->view->getEnvironment()->addGlobal('title', $category['name']);
         
-        return $this->view->render($response, 'category.twig');
+        return $this->view->render($response, 'pages/category/list.twig');
     }
     
     public function categoryCleanCache($id, $name = null)
     {
-        $this->cache->setName('category.getCategory');
+        $this->cache->setPath('category.getCategory');
         $pages = ceil(BoardsModel::where([['category_id', $id], ['active', '=', '1']])->count() / $this->settings['pagination']['boards']);
         if (!isset($name)) {
             $name = $this->urlMaker->toUrl(CategoryModel::select('name')->find($id)->toArray()['name']);
@@ -72,6 +77,7 @@ class CategoryController extends Controller
                 ]);
             $lastpost = PlotsModel::orderBy('updated_at', 'DESC')
                                                 ->where('board_id', '=', $v['id'])
+                                                ->where('hidden', 0)
                                                 ->leftJoin('users', 'users.id', 'plots.author_id')
                                                 ->select('plots.*', 'users.username')
                                                 ->first();
@@ -79,15 +85,16 @@ class CategoryController extends Controller
                 $lastpost->toArray();
                 $lastPostId = PostsModel::orderBy('updated_at', 'DESC')
                                         ->where('plot_id', '=', $lastpost['id'])
+                                        ->where('hidden', 0)
                                         ->first()->id;
                 
-                $plots = PlotsModel::where('board_id', $v['id'])->get();
+                $plots = PlotsModel::where('board_id', $v['id'])->where('hidden', 0)->get();
                 $countPosts = 0;
                 foreach ($plots as $plot) {
                     $countPosts += PostsModel::where([['plot_id', $plot->id], ['hidden', 0]])->count();
                 }
 
-                $count =  ceil(PlotsModel::where('board_id', '=', $v['id'])->count() / $this->settings['pagination']['plots']);
+                $count =  ceil(PlotsModel::where('board_id', '=', $v['id'])->where('hidden', 0)->count() / $this->settings['pagination']['plots']);
                 $data[$v['id']]['last_post_url'] = $this->router->urlFor('board.getPlot', [
                     'plot' => $this->urlMaker->toUrl($lastpost['plot_name']),
                     'plot_id' => $lastpost['id'],

@@ -1,16 +1,16 @@
 	<!-- cat -->
 	<form action="{{ path_for('admin.board.order.post') }}" method="post" id="submitOrder">
 	<div class="row">
-	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right" >{{ trans('admin.submit') }}</button></div>
+	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right" >{{ trans('submit') }}</button></div>
 	</div>
 			<div class="card border mb-3">
 				<div class="card-header">
 					<div class="row">
 						<div class="col-sm-auto col-md-11">
-							{{ trans('admin.name') }}
+							{{ trans('name') }}
 						</div>
 						<div class="col-sm-auto col-md-1">
-							{{ trans('admin.order') }}
+							{{ trans('order') }}
 						</div>
 					</div>
 				</div>
@@ -26,9 +26,9 @@
 				</div>
 				<div class="col-sm-auto col-md-11 order-1">
 					<strong>{{ category.name|raw }}</strong> <a href="{{ path_for('admin.edit.category', {'id': category.id}) }}" class="btn btn-outline-success btn-sm fas fa-edit mx-2">edit</a>
-					<a href="{{ path_for('admin.delete.board', {'element': 'category', 'id': category.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('admin.delete') }}</a>
+					<a href="{{ path_for('admin.delete.board', {'element': 'category', 'id': category.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('delete') }}</a>
 					<span class="float-right px-3">
-					<label class="control control-checkbox" for="CategoryChecbox-{{ category.id }}">{{ trans('admin.active') }}
+					<label class="control control-checkbox" for="CategoryChecbox-{{ category.id }}">{{ trans('active') }}
 						<input type="checkbox" class="form-check-input" id="CategoryChecbox-{{ category.id }}" name="CategoryChecbox-{{ category.id }}" {% if category.active %}checked{% endif %}>
 						<div class="control_indicator mt-1"></div>
 					</label>
@@ -58,10 +58,10 @@
 											<a href="{{ path_for('admin.edit.board', {'id': board.id}) }}" class="btn btn-outline-success btn-sm fas fa-edit">edit</a>
 											
 										</div>
-										<div class="col-auto order-2"><a href="{{ path_for('admin.delete.board', {'element': 'board', 'id': board.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('admin.delete') }}</a></div>
+										<div class="col-auto order-2"><a href="{{ path_for('admin.delete.board', {'element': 'board', 'id': board.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('delete') }}</a></div>
 										<div class="col-auto ml-auto order-3">
 												<span class=" float-right">
-												<label class="control control-checkbox" for="BoardChecbox-{{ board.id }}">{{ trans('admin.active') }}
+												<label class="control control-checkbox" for="BoardChecbox-{{ board.id }}">{{ trans('active') }}
 													<input type="checkbox" class="form-check-input" id="BoardChecbox-{{ board.id }}" name="BoardChecbox-{{ board.id }}" {% if board.active %}checked{% endif %}>
 													<div class="control_indicator mt-1"></div>
 												</label>
@@ -106,10 +106,10 @@
                                                 <a href="{{ path_for('admin.edit.board', {'id': childboard.id}) }}" class="btn btn-outline-success btn-sm fas fa-edit">edit</a>
                                                 
                                             </div>
-                                            <div class="col-auto order-2"><a href="{{ path_for('admin.delete.board', {'element': 'board', 'id': childboard.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('admin.delete') }}</a></div>
+                                            <div class="col-auto order-2"><a href="{{ path_for('admin.delete.board', {'element': 'board', 'id': childboard.id }) }}" class="btn btn-danger btn-sm m-2">{{ trans('delete') }}</a></div>
                                             <div class="col-auto ml-auto order-3">
                                                     <span class=" float-right">
-                                                    <label class="control control-checkbox" for="BoardChecbox-{{ childboard.id }}">{{ trans('admin.active') }}
+                                                    <label class="control control-checkbox" for="BoardChecbox-{{ childboard.id }}">{{ trans('active') }}
                                                         <input type="checkbox" class="form-check-input" id="BoardChecbox-{{ childboard.id }}" name="BoardChecbox-{{ childboard.id }}" {% if childboard.active %}checked{% endif %}>
                                                         <div class="control_indicator mt-1"></div>
                                                     </label>
@@ -148,6 +148,6 @@
 			{% endfor %}
 			<!-- /cat -->	 
 	<div class="row">
-	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right">{{ trans('admin.submit') }}</button></div>
+	<div class="col-12 p-2"><button type="submit" class="btn btn-primary float-right">{{ trans('submit') }}</button></div>
 	</div>
 	</form>

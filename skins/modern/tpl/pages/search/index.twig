@@ -1,0 +1,244 @@
+{% extends 'main.twig' %}
+{% block content %}
+{% embed 'partials/container.twig' %}
+{% block container %}
+
+		<div class="box">
+        <div class="box-header mb2">
+			<h1>{{ trans('search') }}</h1>
+		</div>
+        <ul class="menu_container list_reset">
+             <li>
+                <a href="" data-target="plot" data-toggle="tab" class="nav-link{% if results.type == 'plot' %} active{% endif %}">{{ trans('plots') }}</a>
+            </li>
+            <li>
+                <a href="" data-target="page" data-toggle="tab" class="nav-link{% if results.type == 'page' %} active{% endif %}">{{ trans('pages') }}</a>
+            </li>
+            <li>
+                 <a href="" data-target="user" data-toggle="tab" class="nav-link{% if results.type == 'user' %} active{% endif %}">{{ trans('users') }}</a>
+            </li>
+        </ul>
+       
+        <div class="tab-content" id="searchTabContent">
+          <div class="tab-pane fade {% if results.type == 'plot' or results.type == NULL  %}show active{% endif %}" id="plot" role="tabpanel" aria-labelledby="plot-tab">
+           <div class="box-body w100 px2" id="plotSearchBody">
+            <form action="{{ path_for('search.router') }}" method="post">
+            <input type="hidden" name="search_in" value="pages">
+             <fieldset id="find_results">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find_results" id="find_results1"  value="topics" checked>
+              <label class="form-check-label" for="find_results1">
+               Tytuły
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find_results" id="find_results2"  value="all">
+              <label class="form-check-label" for="find_results2">
+                Tytuły i treść
+              </label>
+            </div>
+            </fieldset>
+             <fieldset id="find">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find" id="find1" value="phrase" checked>
+              <label class="form-check-label" for="find1">
+                Wszystkie wyrazy z frazy
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find" id="find2" value="any">
+              <label class="form-check-label" for="find2">
+                Dowolny wyraz z frazy
+              </label>
+            </div>
+            </fieldset>
+              <div class="form-group mt-2">
+                <input type="text" class="form-control" placeholder="{{ trans('find on boards') }}" name="query">
+              </div>
+            <input type="submit" class="btn btn-primary" value="Submit">
+            </form>
+            </div>
+          </div>
+          <div class="tab-pane fade {% if results.type == 'page' %}show active{% endif %}" id="page" role="tabpanel" aria-labelledby="page-tab">
+           <div class="box-body w100 px2" id="plotSearchBody">
+            <form action="{{ path_for('search.router') }}" method="post">
+            <input type="hidden" name="search_in" value="plots">
+             <fieldset id="find_results">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find_results" id="find_results1"  value="topics" checked>
+              <label class="form-check-label" for="find_results1">
+               Tylko tematy
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find_results" id="find_results2"  value="all">
+              <label class="form-check-label" for="find_results2">
+                Tematy i posty
+              </label>
+            </div>
+            </fieldset>
+             <fieldset id="find">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find" id="find1" value="phrase" checked>
+              <label class="form-check-label" for="find1">
+                Wszystkie wyrazy z frazy
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find" id="find2" value="any">
+              <label class="form-check-label" for="find2">
+                Dowolny wyraz z frazy
+              </label>
+            </div>
+            </fieldset>
+              <div class="form-group mt-2">
+                <input type="text" class="form-control" placeholder="{{ trans('find on boards') }}" name="query">
+              </div>
+            <input type="submit" class="btn btn-primary" value="Submit">
+            </form>
+            </div>
+          </div>
+          <div class="tab-pane fade {% if results.type == 'user' %}show active{% endif %}" id="user" role="tabpanel" aria-labelledby="user-tab">
+          
+          <div class="box-body w100 px2" id="plotSearchBody">
+            <form action="{{ path_for('search.router') }}" method="post">
+            <input type="hidden" name="search_in" value="users">
+            <input type="hidden" name="find_results" value="name">
+             <fieldset id="find">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find" id="find1" value="phrase" checked>
+              <label class="form-check-label" for="find1">
+                Wszystkie wyrazy z frazy
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="find" id="find2" value="any">
+              <label class="form-check-label" for="find2">
+                Dowolny wyraz z frazy
+              </label>
+            </div>
+            </fieldset>
+              <div class="form-group mt-2">
+                <input type="text" class="form-control" placeholder="{{ trans('find on boards') }}" name="query">
+              </div>
+            <input type="submit" class="btn btn-primary" value="Submit">
+            </form>
+            </div>
+          
+          </div>
+        </div>   
+        </div>
+        
+    <div class="box">
+    {% if results.type == 'plot' %}
+    <div class="box-header my-2">
+       <h2>{{ trans('found') }}: {{ results|length }} {{ trans('items') }}</h2>
+    </div>
+    <div class="box-body px-0 py-1" id="found">
+            <ul class="list-group list-group-flush">
+                <!-- board legend -->
+                {% for result in results %}
+                <!-- one plot -->
+                <li class="list-group-item bg-light">
+                <div class="row w-100">
+                    
+                    <div class="col-9">
+                        <div class="row">   
+                            <div class="col-12"><h2><a href="{{ path_for('board.getPlot', {
+                                'plot': toUrl(result.plot_name),
+                                'plot_id': result.plot_id,
+                                'page': 1
+                                })
+                            }}"> {{ result.plot_name }} </a></h2></div>
+                            <div class="col-12"> {{ (result.content|striptags) | slice(0, 256)  }}
+                            {% if (result.content|striptags)|length > 259 %}...{% endif %}      
+                            </div>
+                        </div>
+                    </div>	
+                    <div class="col-3 d-none d-md-block text-center">
+                        <div class="row text-center fs-12">
+                            <div class="col-12"><i class="far fa-clock"></i> {{ result.created_at }} 
+                            <p>{{ trans('by') }} <a href="{{ path_for('user.profile', { 
+                            'username': toUrl(result.username),
+                            'uid': result.uid
+                                }) 
+                            }}"> {{ result.username }}</a></p>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- /one plot -->	
+                {% endfor %}
+            </ul>
+    
+    </div>
+    {% elseif results.type == 'page' %}
+    <div class="box-header my-2">
+       <h2>{{ trans('found') }}: {{ results|length - 1 }} {{ trans('items') }}</h2>
+    </div>
+    <div class="box-body px-0 py-1" id="found">
+        <ul class="list-group list-group-flush">
+            <!-- board legend -->
+            {% for result in results %}
+            <!-- one plot -->
+            <li class="list-group-item bg-light">
+
+            <div class="row">   
+                <div class="col-12"><h2><a href="{{ path_for('page', {
+                    'id': result.id
+                    })
+                }}"> {{ result.name | raw }} </a></h2></div>
+                <div class="col-12"> {{ (result.content|striptags) | slice(0, 256)  }}
+                {% if (result.content|striptags)|length > 259 %}...{% endif %}      
+                </div>
+            </div>
+
+            </li>
+            <!-- /one plot -->	
+            {% endfor %}
+        </ul>
+
+    </div>
+    {% elseif results.type == 'user' %}
+    <div class="box-header my-2">
+       <h2>{{ trans('found') }}: {{ results|length - 1 }} {{ trans('items') }}</h2>
+    </div>
+    <div class="box-body px-0 py-1" id="found">
+        <div class="row mx-2">
+        {% for result in results.data %}
+        <div class="card col-auto pt-1" style="max-width: 18rem;">
+        <div class="avatar-status {% if isOnline(result.id) %}online{% else %}offline{% endif %}"></div> 
+          <img src="{{ result.avatar }}" class="box-img-top rounded-circle profile-av mx-auto fluid rounded-circle d-block bg-white" alt="{{ result.username|striptags }}">
+          <div class="box-body text-center">
+            <h5 class="box-title">{{ result.username_html | raw }}</h5>
+            <p class="box-text">
+            <p>{{ trans('Join') }}: {{ result.created_at }}</p>
+            <p>{{ trans('reputation') }}: {{ result.reputation }}</p>
+            </p>
+            <p>
+            <a href="{{ path_for('user.profile', {
+                'username': toUrl(result.username),
+                'uid': result.id
+            }) }}" class="btn btn-outline-secondary">{{ trans('show profile') }}</a>
+            <p>
+          </div>
+        </div>
+        
+        {% endfor %}
+        </div>
+    </div>
+    
+    
+    {% endif %}
+    </div>
+	<!-- paginator -->
+	
+	<!-- /paginator -->
+				
+
+
+
+{% endblock %}
+{% endembed %}
+{% endblock %}

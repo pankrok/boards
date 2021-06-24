@@ -9,11 +9,11 @@
 	</ul>
 </div><hr />
 
-<h2>{{ trans('admin.edit') }}: {{ file }}</h2>
+<h2>{{ trans('edit') }}: {{ trans(file) }}</h2>
 <form action="{{ path_for('admin.mail.template.save') }}" method="post">
 <input type="hidden" name="twig" value="{{ file }}">
 <textarea class="form-control" id="editor" rows="3" name="desc">{{ content }}</textarea>
-<button type="submit" class="btn btn-success float-right mt-3">{{ trans('admin.submit') }}</button>
+<button type="submit" class="btn btn-success float-right mt-3">{{ trans('submit') }}</button>
 </form>
 {% endblock %}
 {% block endcontent %}

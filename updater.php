@@ -14,6 +14,10 @@ use Monolog\Handler\StreamHandler;
 session_set_cookie_params(60*60*24, '/; samesite=Lax');
 session_start();
 
+if(!isset($_SESSION['user'])) {
+    die();
+}
+
 require MAIN_DIR . '/libraries/autoload.php';
 
 $container = new Container();

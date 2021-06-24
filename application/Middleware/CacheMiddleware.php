@@ -18,13 +18,14 @@ class CacheMiddleware extends Middleware
 {
     public function __invoke(Request $request, RequestHandler $handler)
     {
+        $cache = $this->container->get('cache');
         $routeContext  = \Slim\Routing\RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
         $name = $route->getName();
         $this->container->get('adminView')->getEnvironment()->addGlobal('route_name', $name);
         
         if (explode('.', $name)[0] === 'admin' && $request->getMethod() == 'POST') {
-            $this->container->get('cache')->clearCache();
+            $cache->clear();
             return $handler->handle($request);
         }
         
@@ -33,11 +34,8 @@ class CacheMiddleware extends Middleware
         }
         
         $routeName = $routeContext->getRoutingResults()->getUri();
-        $cache = $this->container->get('cache');
-        $cache->deleteExpired();
-        
-        $cache->setName($name);
-        if (!$cacheData = $cache->receive($routeName)) {
+        $cache->setPath($name);
+        if (!$cacheData = $cache->get($routeName)) {
             $cacheData = null;
         }
         

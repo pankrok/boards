@@ -11,6 +11,33 @@ use Application\Models\UserModel;
 
 class MessageController extends Controller
 {
+    public function test($request, $response, $arg) 
+    {
+        $message = MessageModel::where('topic', $arg['topic']);
+        $message->where('mailbox', 'inbox');
+        $message->where(function($message){
+                        $message->where('recipient_id', $_SESSION['user']);
+                        $message->orWhere('sender_id', $_SESSION['user']);
+                    });
+
+        $message->rightJoin('mailbox', 'message.id', 'mailbox.message_id');
+        $message->leftJoin('users', 'users.id', 'message.sender_id');
+        
+        $message->leftJoin('images', 'users.avatar', 'images.id');
+        $message = $message->get()->toArray();
+        foreach ($message as $k => $v) {
+             if (isset($message[$k]['avatar'])) {
+                $message[$k]['avatar'] = self::base_url() . '/public/upload/avatars/'.$v['_38'];
+            } else {
+                $message[$k]['avatar'] = self::base_url() . '/public/img/avatar.png'; 
+            }   
+            $message[$k]['username_html'] = $this->group->getGroupDate($v['main_group'], $v['username'])['username'];
+        }
+
+        $this->view->getEnvironment()->addGlobal('messages', $message);
+        return $this->view->render($response, 'messanger.twig');
+    }
+    
     public function index($request, $response, $arg)
     {
         if (isset($_SESSION['user'])) {
@@ -78,14 +105,17 @@ class MessageController extends Controller
     public function getMessage($request, $response, $arg)
     {
         $message = MessageModel::where('id', $arg['id'])->first();
-       
+        if($message === null) {
+            throw new \Slim\Exception\HttpNotFoundException($request);
+        }        
+        
         if ($message->sender_id === $_SESSION['user'] || $message->recipient_id === $_SESSION['user']) {
             if ($message->recipient_id === $_SESSION['user']) {
                 $unread = MailboxModel::where([
                     ['user_id', $_SESSION['user']],
                     ['message_id', $arg['id']]
                 ])->first();
-                $this->cache->setName('unread-messages');
+                $this->cache->setPath('unread-messages');
                 $this->cache->delete('user-'.$_SESSION['user']);
                 $unread->unread = 0;
                 $unread->save();
@@ -129,14 +159,14 @@ class MessageController extends Controller
     
     public function countUnreadMessages(): int
     {
-        $this->cache->setName('unread-messages');
+        $this->cache->setPath('unread.messages');
         if (isset($_SESSION['user'])) {
-            if (!$unread = $this->cache->receive('user-'.$_SESSION['user'])) {
+            if (!$unread = $this->cache->get('user-'.$_SESSION['user'])) {
                 $unread =  MailboxModel::where([
                         ['user_id', $_SESSION['user']],
                         ['unread', 1]
                     ])->count();
-                $this->cache->store('user-'.$_SESSION['user'], $unread, $this->settings['cache']['cache_time']);
+                $this->cache->set('user-'.$_SESSION['user'], $unread, $this->settings['cache']['cache_time']);
             }
         } else {
             $unread = 0;
