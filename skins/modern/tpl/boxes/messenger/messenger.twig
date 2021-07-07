@@ -1,5 +1,5 @@
-<div id="boards-messenger" style="background-image: url({{ base_url() }}/public/img/envlop.png); transform: translate3d(0px, 0px, 0px);" class="boards-messenger-smooth">
-    <span id="boards-messenger-badge" class="badge badge-pill badge-success fs-12 position-absolute" style="display: none;"></span>
+<div id="boards-messenger" style="background-image: url({{ base_url() }}/public/img/envlop.png); transform: translate3d(0px, 0px, 0px);" class="boards-messenger-smooth d-none" data-visibility="hide">
+    <span class="badge success pointer msg-badge d-none">0</span>
 </div>
 <div id="boards-messenger-snippet" class="row chat-module br1 d-none">
       <!-- DIRECT CHAT PRIMARY -->
@@ -8,13 +8,13 @@
           <h3 class="chat-box-title">Direct Chat</h3>
     
           <div class="chat-box-tools pull-right">
-            {# <button type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="minimalise"><i class="fa fa-minus"></i> #}
+            <button type="button" class="btn btn-chat-box-tool tooltip top" data-toggle="#boards-messenger-snippet" data-tooltip="{{ trans('minimalise') }}"><i class="fa fa-minus" data-toggle="#boards-messenger-snippet"></i>
             </button>
-            <button id="msg-manager-btn" type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="conversation manager"><i class="fa fa-plus"></i>
+            <button id="msg-manager-btn" type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="{{ trans('conversation manager') }}"><i class="fa fa-plus"></i>
             </button>
-            <button id="msg-list-btn" type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="conversations list" title="Contacts" data-widget="chat-pane-toggle">
+            <button id="msg-list-btn" type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="{{ trans('conversations list') }}" title="Contacts" data-widget="chat-pane-toggle">
               <i class="fa fa-comments"></i></button>
-            {# <button type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="close"><i class="fa fa-times"></i></button> #}
+            <button id="msg-close-btn" type="button" class="btn btn-chat-box-tool tooltip top" data-tooltip="{{ trans('close') }}" ><i class="fa fa-times"></i></button>
           </div>
         </div>
         <!-- /.chat-box-header -->

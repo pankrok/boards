@@ -1,14 +1,14 @@
 {% if conversations %}
 {% for conversation in conversations %}
 
-<li data-msg-list-id="{{ conversation.id }}">
+<li class="pointer" data-msg-list-id="{{ conversation.id }}">
 <span class="row" href="#">
   <img class="contacts-list-img" src="{{ avatar(conversation._38) }}">
-
   <div class="contacts-list-info">
         <span class="contacts-list-name">
           {% for user in conversation.users %} {{ user.username}}{% endfor %}
           <small class="contacts-list-date pull-right">{{ conversation.updated_at }}</small>
+          {% if conversation.unread > 0 %}<span class="badge success pointer">{{ conversation.unread }}</span>{% endif %}
         </span>
     <span class="contacts-list-msg">{{ conversation.message.body }}</span>
   </div>

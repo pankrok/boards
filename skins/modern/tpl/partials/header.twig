@@ -10,7 +10,7 @@
         <div id="menu-ico" class="flex-mobile">
         {% if auth.check %}
             {% if mod.notifications %}<li id="bell"><a href="#"><i class="far fa-bell fa-lg" ></i></a></li>{% endif %}
-            <li id="message"><a href="#"><i id="messenger-ico" class="far fa-envelope fa-lg"></i></a></li>
+            <li id="message"><span class="badge success pointer msg-badge d-none">0</span><a href="#"><i id="messenger-ico" class="far fa-envelope fa-lg"></i></a></li>
         {% else %}    
             <li id="signin"><a href="{{ path_for('auth.signin') }}"  data-toggle="#signInModal" data-prevent="true"><i class="fas fa-sign-in-alt fa-lg" data-toggle="#signInModal" data-prevent="true"></i></a></li>
             <li id="signup"><a href="{{ path_for('auth.signup') }}"><i class="fas fa-user-plus fa-lg"></i></a></li>

@@ -296,6 +296,10 @@ input[type=submit]:hover {
 	color: var(--gray);
 }
 
+.msg-badge { 
+    position: absolute;
+}
+
 .breadcrumbs {
     max-height: 3rem;
     color: var(--black);

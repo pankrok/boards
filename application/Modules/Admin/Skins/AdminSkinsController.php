@@ -68,7 +68,7 @@ class AdminSkinsController extends Controller
                 $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/css/'.$v);
                 $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css');
                 $vname = explode('.', $v)[0];
-                $paths['css'][$vname] =  '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
+                $paths['css'][$vname] =  '<link rel="stylesheet" href="'. $this->router->urlFor('home') . 'skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
             }
                 
             foreach ($skinData['assets']['js'] as $v) {
@@ -76,7 +76,7 @@ class AdminSkinsController extends Controller
                 $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
                 $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
                 $vname = explode('.', $v)[0];
-                $paths['js'][$vname] = '<script async type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
+                $paths['js'][$vname] = '<script async type="text/javascript" src="' . $this->router->urlFor('home') . 'skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
             }
             if (!isset($paths['css'])) {
                 $paths['css'] = null;
@@ -232,7 +232,7 @@ class AdminSkinsController extends Controller
                 $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/css/'.$v);
                 $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css');
                 $vname = explode('.', $v)[0];
-                $paths['css'][$vname] =  '<link rel="stylesheet" href="'. self::base_url() . '/skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
+                $paths['css'][$vname] =  '<link rel="stylesheet" href="'. $this->router->urlFor('home') . 'skins/' . $skinDir . '/cache/css/'. md5($v).'.min.css">';
             }
                 
             foreach ($skinData['assets']['js'] as $v) {
@@ -240,7 +240,7 @@ class AdminSkinsController extends Controller
                 $minifier->add(MAIN_DIR . '/skins/' . $skinDir . '/assets/js/'.$v);
                 $minifier->minify(MAIN_DIR . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js');
                 $vname = explode('.', $v)[0];
-                $paths['js'][$vname] = '<script async type="text/javascript" src="' .self::base_url() . '/skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
+                $paths['js'][$vname] = '<script async type="text/javascript" src="' . $this->router->urlFor('home') . 'skins/' . $skinDir . '/cache/js/'. md5($v).'.min.js"></script>';
             }
             
             if (!isset($paths['css'])) {

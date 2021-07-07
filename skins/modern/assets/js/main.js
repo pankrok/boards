@@ -77,8 +77,18 @@ bReady().then(() => {
                 if (event.target.getAttribute('data-chat-post') === 'true') {
                     chatbox.postShout();
                 }
+                if (event.target.getAttribute('data-edit-chat-post') === 'true') {
+                    chatbox.editMessage();
+                }
                 if (event.target.getAttribute('data-load-shouts') === 'true') {
                     chatbox.loadMoreShouts();
+                }
+                if (event.target.getAttribute('data-toggle') === '#chatMessageEdit') {
+                    let sid = event.target.getAttribute('data-content-id');
+                    let txt = document.getElementById('shout-content-'+sid).innerHTML;
+                    console.log({data: txt, id: sid});
+                    document.getElementById('chat-edit-input').value = txt.replace(/\n                    /g, '');
+                    document.getElementById('chat-edit-id').value = sid;
                 }
                 if (event.target.getAttribute('data-action') === 'showEditor') {
                     
